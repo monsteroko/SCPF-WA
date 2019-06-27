@@ -175,6 +175,78 @@ PrefabInstance:
       propertyPath: _mainCamera
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 11420392, guid: 854ff41f32f746459e30f4205d414a6f, type: 3}
+      propertyPath: _showCities
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11420392, guid: 854ff41f32f746459e30f4205d414a6f, type: 3}
+      propertyPath: _earthStyle
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 11420392, guid: 854ff41f32f746459e30f4205d414a6f, type: 3}
+      propertyPath: _countryLabelsSize
+      value: 0.096
+      objectReference: {fileID: 0}
+    - target: {fileID: 11420392, guid: 854ff41f32f746459e30f4205d414a6f, type: 3}
+      propertyPath: _countryLabelsAbsoluteMinimumSize
+      value: 0.197
+      objectReference: {fileID: 0}
+    - target: {fileID: 11420392, guid: 854ff41f32f746459e30f4205d414a6f, type: 3}
+      propertyPath: _showProvinces
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11420392, guid: 854ff41f32f746459e30f4205d414a6f, type: 3}
+      propertyPath: _provincesColor.a
+      value: 0.69803923
+      objectReference: {fileID: 0}
+    - target: {fileID: 11420392, guid: 854ff41f32f746459e30f4205d414a6f, type: 3}
+      propertyPath: _allowUserKeys
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11420392, guid: 854ff41f32f746459e30f4205d414a6f, type: 3}
+      propertyPath: _allowUserZoom
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11420392, guid: 854ff41f32f746459e30f4205d414a6f, type: 3}
+      propertyPath: _allowScrollOnScreenEdges
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11420392, guid: 854ff41f32f746459e30f4205d414a6f, type: 3}
+      propertyPath: _minPopulation
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11420392, guid: 854ff41f32f746459e30f4205d414a6f, type: 3}
+      propertyPath: _highlightAllCountryRegions
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11420392, guid: 854ff41f32f746459e30f4205d414a6f, type: 3}
+      propertyPath: _frontiersColor.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11420392, guid: 854ff41f32f746459e30f4205d414a6f, type: 3}
+      propertyPath: _frontiersColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11420392, guid: 854ff41f32f746459e30f4205d414a6f, type: 3}
+      propertyPath: _frontiersColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11420392, guid: 854ff41f32f746459e30f4205d414a6f, type: 3}
+      propertyPath: _cityClassFilter
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11420392, guid: 854ff41f32f746459e30f4205d414a6f, type: 3}
+      propertyPath: _citiesCountryCapitalColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11420392, guid: 854ff41f32f746459e30f4205d414a6f, type: 3}
+      propertyPath: _citiesCountryCapitalColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11420392, guid: 854ff41f32f746459e30f4205d414a6f, type: 3}
+      propertyPath: _citiesCountryCapitalColor.b
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4007507674208312532, guid: 854ff41f32f746459e30f4205d414a6f,
         type: 3}
       propertyPath: m_Layer
@@ -264,6 +336,36 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &149346595
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 149346596}
+  m_Layer: 5
+  m_Name: Surfaces
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &149346596
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 149346595}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -0.001}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1324665654}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &204138702
 GameObject:
   m_ObjectHideFlags: 0
@@ -333,7 +435,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!1 &357772022
+--- !u!1 &428139091
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -341,129 +443,84 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 357772024}
-  - component: {fileID: 357772023}
+  - component: {fileID: 428139092}
+  - component: {fileID: 428139093}
   m_Layer: 0
-  m_Name: Audio Source (1)
+  m_Name: DecoratorGroup0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!82 &357772023
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 357772022}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 24300002, guid: 67b35a6bdefdf3e498026e51baf6d6ce,
-    type: 2}
-  m_audioClip: {fileID: 8300000, guid: 242c9f510b67dda429c94f6b331f4f6b, type: 3}
-  m_PlayOnAwake: 1
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
---- !u!4 &357772024
+--- !u!4 &428139092
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 357772022}
+  m_GameObject: {fileID: 428139091}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.0186825, y: -7.801756, z: 21.876297}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_Father: {fileID: 812285826}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &428139093
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 428139091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edd7bc046dfc4c29aa15ca6ca18c3166, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _active: 1
+  groupIndex: 0
+  decorators: []
+--- !u!1 &812285825
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 812285826}
+  m_Layer: 5
+  m_Name: DecoratorLayer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &812285826
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 812285825}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 428139092}
+  m_Father: {fileID: 1324665654}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1324665648 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 191994, guid: 854ff41f32f746459e30f4205d414a6f,
+    type: 3}
+  m_PrefabInstance: {fileID: 59014646}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1324665654 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 459182, guid: 854ff41f32f746459e30f4205d414a6f,
     type: 3}
   m_PrefabInstance: {fileID: 59014646}
   m_PrefabAsset: {fileID: 0}
@@ -482,3 +539,86 @@ MonoBehaviour:
   timer: 0
   ispuse: 0
   guipuse: 0
+--- !u!114 &1324665656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1324665648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1554451438}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  operationMode: 0
+  reshapeRegionMode: 0
+  reshapeCityMode: 0
+  reshapeMountPointMode: 0
+  createMode: 0
+  cursor: {x: -0.0222362, y: 0.2969119, z: 0}
+  circleMoveConstant: 0
+  circleCurrentRegionOnly: 0
+  reshapeCircleWidth: 0.01
+  shouldHideEditorMesh: 0
+  magnetAgressiveMode: 0
+  keepNearbyFrontiers: 0
+  infoMsg: 
+  editingMode: 0
+  editingCountryFile: 1
+  undoRegionsDummyFlag: 0
+  undoCitiesDummyFlag: 0
+  undoMountPointsDummyFlag: 0
+  newShape: []
+  lastMinPopulation: 0
+  GUICityIndex: -1
+  GUICityName: 
+  GUICityNewName: 
+  GUICityPopulation: 3019
+  GUICityClass: 1
+  cityIndex: -1
+  cityChanges: 0
+  GUICountryIndex: 121
+  GUICountryName: Ireland
+  GUICountryNewName: Ireland
+  GUICountryNewContinent: Europe
+  GUICountryTransferToCountryIndex: 18
+  groupByParentAdmin: 1
+  countryIndex: 74
+  countryRegionIndex: 0
+  countryChanges: 0
+  _GUICountryHidden: 0
+  GUIMountPointIndex: -1
+  GUIMountPointName: 
+  GUIMountPointNewName: 
+  GUIMountPointNewType: 
+  GUIMountPointNewTagKey: 
+  GUIMountPointNewTagValue: 
+  GUIMountPointMassPopulationMin: 1
+  GUIMountPointMassPopulationMax: 3
+  GUIMountPointMassPopulationSeparation: 10
+  GUIMountPointMassPopulationType: 
+  mountPointIndex: -1
+  mountPointChanges: 0
+  provinceIndex: -1
+  provinceRegionIndex: -1
+  GUIProvinceIndex: -1
+  GUIProvinceName: 
+  GUIProvinceNewName: 
+  GUIProvinceNewCountryName: 
+  GUIProvinceTransferToCountryIndex: -1
+  provinceChanges: 0
+--- !u!115 &1554451438
+MonoScript:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  serializedVersion: 5
+  m_Script: 
+  m_DefaultReferences: {}
+  m_Icon: {fileID: 0}
+  m_ExecutionOrder: 0
+  m_ClassName: WorldMap2D_Editor
+  m_Namespace: WPMF
