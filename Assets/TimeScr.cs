@@ -10,22 +10,23 @@ public class TimeScr : MonoBehaviour
     public Text dttxt;
     private DateTime dt;
     public Canvas cv;
+    public float timer;
     public void Play()
     {
-        Time.timeScale = 1.0f;
+        timer = 1f;
     }
 
     public void Stop()
     {
-        Time.timeScale = 0.0f;
+        timer = 0;
     }
     public void TwoPl()
     {
-        Time.timeScale = 2.0f;
+        timer = 2f;
     }
     public void FourPl()
     {
-        Time.timeScale = 4.0f;
+        timer = 4f;   
     }
     void Start()
     {
@@ -34,6 +35,7 @@ public class TimeScr : MonoBehaviour
     }
     void Update()
     {
+        Time.timeScale = timer;
         dt = dt.AddSeconds(Time.timeScale);
         string s = dt.ToLongTimeString();
         string sd = dt.ToLongDateString();
