@@ -16,6 +16,9 @@ public class EntryManager {
         var info = new DirectoryInfo(Path.Combine(Directory.GetCurrentDirectory(), AppendedSubPath("")));
         var fileInfo = info.GetFiles();
         foreach (var file in fileInfo) {
+            if (file.Name.EndsWith(".meta")) {
+                continue;
+            } 
             var entry = EntryModel.LoadFromFile(file.Name);
             if (entry != null) {
                 generalPool.Add(entry);
@@ -28,5 +31,7 @@ public class EntryManager {
         return Path.Combine(SubPath, filname);
     }
 
-
+    public EntryModel GetRandomEntry() {
+        return generalPool[Random.Range(0, generalPool.Count)];
+    }
 }
