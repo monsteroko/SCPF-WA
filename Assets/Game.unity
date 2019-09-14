@@ -1697,7 +1697,7 @@ MonoBehaviour:
   reshapeCityMode: 0
   reshapeMountPointMode: 0
   createMode: 0
-  cursor: {x: -0.0222362, y: 0.2969119, z: 0}
+  cursor: {x: 0.0025215, y: 0.0471361, z: 0}
   circleMoveConstant: 0
   circleCurrentRegionOnly: 0
   reshapeCircleWidth: 0.01
@@ -1706,7 +1706,7 @@ MonoBehaviour:
   keepNearbyFrontiers: 0
   infoMsg: 
   editingMode: 0
-  editingCountryFile: 0
+  editingCountryFile: 1
   undoRegionsDummyFlag: 0
   undoCitiesDummyFlag: 0
   undoMountPointsDummyFlag: 0
@@ -1715,19 +1715,19 @@ MonoBehaviour:
   GUICityIndex: -1
   GUICityName: 
   GUICityNewName: 
-  GUICityPopulation: 3019
+  GUICityPopulation: 835457
   GUICityClass: 1
   cityIndex: -1
-  cityChanges: 0
+  cityChanges: 1
   GUICountryIndex: -1
   GUICountryName: 
   GUICountryNewName: 
-  GUICountryNewContinent: Europe
-  GUICountryTransferToCountryIndex: 18
+  GUICountryNewContinent: Africa
+  GUICountryTransferToCountryIndex: 13
   groupByParentAdmin: 1
   countryIndex: -1
   countryRegionIndex: -1
-  countryChanges: 0
+  countryChanges: 1
   _GUICountryHidden: 0
   GUIMountPointIndex: -1
   GUIMountPointName: 
@@ -1740,7 +1740,7 @@ MonoBehaviour:
   GUIMountPointMassPopulationSeparation: 10
   GUIMountPointMassPopulationType: 
   mountPointIndex: -1
-  mountPointChanges: 0
+  mountPointChanges: 1
   provinceIndex: -1
   provinceRegionIndex: -1
   GUIProvinceIndex: -1
@@ -1748,106 +1748,7 @@ MonoBehaviour:
   GUIProvinceNewName: 
   GUIProvinceNewCountryName: 
   GUIProvinceTransferToCountryIndex: -1
-  provinceChanges: 0
---- !u!114 &1324665657
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1324665648}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1212926596}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  operationMode: 0
-  reshapeRegionMode: 0
-  reshapeCityMode: 0
-  reshapeMountPointMode: 0
-  createMode: 0
-  cursor: {x: 0, y: 0, z: 0}
-  circleMoveConstant: 0
-  circleCurrentRegionOnly: 0
-  reshapeCircleWidth: 0.01
-  shouldHideEditorMesh: 0
-  magnetAgressiveMode: 0
-  keepNearbyFrontiers: 0
-  infoMsg: 
-  editingMode: 0
-  editingCountryFile: 0
-  undoRegionsDummyFlag: 0
-  undoCitiesDummyFlag: 0
-  undoMountPointsDummyFlag: 0
-  newShape: []
-  lastMinPopulation: 0
-  GUICityIndex: -1
-  GUICityName: 
-  GUICityNewName: 
-  GUICityPopulation: 
-  GUICityClass: 1
-  cityIndex: -1
-  cityChanges: 0
-  GUICountryIndex: -1
-  GUICountryName: 
-  GUICountryNewName: 
-  GUICountryNewContinent: 
-  GUICountryTransferToCountryIndex: -1
-  groupByParentAdmin: 1
-  countryIndex: -1
-  countryRegionIndex: -1
-  countryChanges: 0
-  _GUICountryHidden: 0
-  GUIMountPointIndex: -1
-  GUIMountPointName: 
-  GUIMountPointNewName: 
-  GUIMountPointNewType: 
-  GUIMountPointNewTagKey: 
-  GUIMountPointNewTagValue: 
-  GUIMountPointMassPopulationMin: 1
-  GUIMountPointMassPopulationMax: 3
-  GUIMountPointMassPopulationSeparation: 10
-  GUIMountPointMassPopulationType: 
-  mountPointIndex: -1
-  mountPointChanges: 0
-  provinceIndex: -1
-  provinceRegionIndex: -1
-  GUIProvinceIndex: 0
-  GUIProvinceName: 
-  GUIProvinceNewName: 
-  GUIProvinceNewCountryName: 
-  GUIProvinceTransferToCountryIndex: -1
-  provinceChanges: 0
---- !u!1 &1350678167
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1350678168}
-  m_Layer: 5
-  m_Name: Surfaces
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1350678168
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1350678167}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.001}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1324665654}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  provinceChanges: 1
 --- !u!1 &1404379996
 GameObject:
   m_ObjectHideFlags: 0
@@ -2778,6 +2679,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1890688400}
   m_CullTransparentMesh: 0
+--- !u!1 &1973686049
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1973686050}
+  m_Layer: 5
+  m_Name: Surfaces
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1973686050
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1973686049}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -0.001}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1324665654}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1988705906
 GameObject:
   m_ObjectHideFlags: 0
