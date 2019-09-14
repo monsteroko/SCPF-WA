@@ -8,7 +8,7 @@ public class MenuControl : MonoBehaviour
 {
     public void PlayPressed()
     {
-        SceneManager.LoadScene("Game");
+        SceneManager.LoadScene("CounterpartsSelection");
 
     }
     public void ExitPressed()
