@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class NewBehaviourScript : MonoBehaviour
 {
-    public float timer;
+    public float timer=1f;
 
     public void MenuPressed()
     {

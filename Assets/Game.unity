@@ -123,6 +123,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: WorldMap2D
       objectReference: {fileID: 0}
+    - target: {fileID: 191994, guid: 854ff41f32f746459e30f4205d414a6f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 459182, guid: 854ff41f32f746459e30f4205d414a6f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -360,7 +364,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!108 &204138703
 Light:
   m_ObjectHideFlags: 0
@@ -602,6 +606,7 @@ MonoBehaviour:
   timetxt: {fileID: 1547970081}
   dttxt: {fileID: 919213488}
   cv: {fileID: 1186766783}
+  timer: 0
 --- !u!114 &299355649
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1172,7 +1177,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1186766781
 MonoBehaviour:
   m_ObjectHideFlags: 0
