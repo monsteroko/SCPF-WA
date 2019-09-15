@@ -253,6 +253,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 11420392, guid: 854ff41f32f746459e30f4205d414a6f, type: 3}
       propertyPath: _frontiersDetail
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11420392, guid: 854ff41f32f746459e30f4205d414a6f, type: 3}
+      propertyPath: isDirty
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4007507674208312532, guid: 854ff41f32f746459e30f4205d414a6f,
@@ -1461,6 +1465,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 841079791}
   m_CullTransparentMesh: 0
+--- !u!1 &877748982
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 877748983}
+  m_Layer: 5
+  m_Name: Surfaces
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &877748983
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 877748982}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -0.001}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1324665654}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &919213486
 GameObject:
   m_ObjectHideFlags: 0
@@ -1677,9 +1711,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bff7a7ab877388d44bfb242ba51ae856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timer: 0
-  ispuse: 0
-  guipuse: 0
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1324665656
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1693,11 +1726,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   operationMode: 0
-  reshapeRegionMode: 0
+  reshapeRegionMode: 6
   reshapeCityMode: 0
   reshapeMountPointMode: 0
   createMode: 0
-  cursor: {x: -0.0222362, y: 0.2969119, z: 0}
+  cursor: {x: 0.2898632, y: 0.1644459, z: 0}
   circleMoveConstant: 0
   circleCurrentRegionOnly: 0
   reshapeCircleWidth: 0.01
@@ -1706,8 +1739,8 @@ MonoBehaviour:
   keepNearbyFrontiers: 0
   infoMsg: 
   editingMode: 0
-  editingCountryFile: 0
-  undoRegionsDummyFlag: 0
+  editingCountryFile: 1
+  undoRegionsDummyFlag: 6
   undoCitiesDummyFlag: 0
   undoMountPointsDummyFlag: 0
   newShape: []
@@ -1715,19 +1748,19 @@ MonoBehaviour:
   GUICityIndex: -1
   GUICityName: 
   GUICityNewName: 
-  GUICityPopulation: 3019
+  GUICityPopulation: 90138
   GUICityClass: 1
   cityIndex: -1
-  cityChanges: 0
+  cityChanges: 1
   GUICountryIndex: -1
   GUICountryName: 
   GUICountryNewName: 
-  GUICountryNewContinent: Europe
-  GUICountryTransferToCountryIndex: 18
+  GUICountryNewContinent: Asia
+  GUICountryTransferToCountryIndex: 15
   groupByParentAdmin: 1
   countryIndex: -1
   countryRegionIndex: -1
-  countryChanges: 0
+  countryChanges: 1
   _GUICountryHidden: 0
   GUIMountPointIndex: -1
   GUIMountPointName: 
@@ -1740,7 +1773,7 @@ MonoBehaviour:
   GUIMountPointMassPopulationSeparation: 10
   GUIMountPointMassPopulationType: 
   mountPointIndex: -1
-  mountPointChanges: 0
+  mountPointChanges: 1
   provinceIndex: -1
   provinceRegionIndex: -1
   GUIProvinceIndex: -1
@@ -1748,106 +1781,7 @@ MonoBehaviour:
   GUIProvinceNewName: 
   GUIProvinceNewCountryName: 
   GUIProvinceTransferToCountryIndex: -1
-  provinceChanges: 0
---- !u!114 &1324665657
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1324665648}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1212926596}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  operationMode: 0
-  reshapeRegionMode: 0
-  reshapeCityMode: 0
-  reshapeMountPointMode: 0
-  createMode: 0
-  cursor: {x: 0, y: 0, z: 0}
-  circleMoveConstant: 0
-  circleCurrentRegionOnly: 0
-  reshapeCircleWidth: 0.01
-  shouldHideEditorMesh: 0
-  magnetAgressiveMode: 0
-  keepNearbyFrontiers: 0
-  infoMsg: 
-  editingMode: 0
-  editingCountryFile: 0
-  undoRegionsDummyFlag: 0
-  undoCitiesDummyFlag: 0
-  undoMountPointsDummyFlag: 0
-  newShape: []
-  lastMinPopulation: 0
-  GUICityIndex: -1
-  GUICityName: 
-  GUICityNewName: 
-  GUICityPopulation: 
-  GUICityClass: 1
-  cityIndex: -1
-  cityChanges: 0
-  GUICountryIndex: -1
-  GUICountryName: 
-  GUICountryNewName: 
-  GUICountryNewContinent: 
-  GUICountryTransferToCountryIndex: -1
-  groupByParentAdmin: 1
-  countryIndex: -1
-  countryRegionIndex: -1
-  countryChanges: 0
-  _GUICountryHidden: 0
-  GUIMountPointIndex: -1
-  GUIMountPointName: 
-  GUIMountPointNewName: 
-  GUIMountPointNewType: 
-  GUIMountPointNewTagKey: 
-  GUIMountPointNewTagValue: 
-  GUIMountPointMassPopulationMin: 1
-  GUIMountPointMassPopulationMax: 3
-  GUIMountPointMassPopulationSeparation: 10
-  GUIMountPointMassPopulationType: 
-  mountPointIndex: -1
-  mountPointChanges: 0
-  provinceIndex: -1
-  provinceRegionIndex: -1
-  GUIProvinceIndex: 0
-  GUIProvinceName: 
-  GUIProvinceNewName: 
-  GUIProvinceNewCountryName: 
-  GUIProvinceTransferToCountryIndex: -1
-  provinceChanges: 0
---- !u!1 &1350678167
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1350678168}
-  m_Layer: 5
-  m_Name: Surfaces
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1350678168
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1350678167}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.001}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1324665654}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  provinceChanges: 1
 --- !u!1 &1404379996
 GameObject:
   m_ObjectHideFlags: 0
