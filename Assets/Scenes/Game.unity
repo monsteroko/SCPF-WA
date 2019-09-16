@@ -125,11 +125,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 459182, guid: 854ff41f32f746459e30f4205d414a6f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 0.06
       objectReference: {fileID: 0}
     - target: {fileID: 459182, guid: 854ff41f32f746459e30f4205d414a6f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.01
       objectReference: {fileID: 0}
     - target: {fileID: 459182, guid: 854ff41f32f746459e30f4205d414a6f, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1465,36 +1465,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 841079791}
   m_CullTransparentMesh: 0
---- !u!1 &877748982
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 877748983}
-  m_Layer: 5
-  m_Name: Surfaces
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &877748983
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 877748982}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.001}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1324665654}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &919213486
 GameObject:
   m_ObjectHideFlags: 0
@@ -1712,7 +1682,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1324665656
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1725,12 +1694,12 @@ MonoBehaviour:
   m_Script: {fileID: 1212926596}
   m_Name: 
   m_EditorClassIdentifier: 
-  operationMode: 0
+  operationMode: 3
   reshapeRegionMode: 6
   reshapeCityMode: 0
   reshapeMountPointMode: 0
   createMode: 0
-  cursor: {x: 0.2898632, y: 0.1644459, z: 0}
+  cursor: {x: 0.2797242, y: -0.0010655001, z: 0}
   circleMoveConstant: 0
   circleCurrentRegionOnly: 0
   reshapeCircleWidth: 0.01
@@ -1748,7 +1717,7 @@ MonoBehaviour:
   GUICityIndex: -1
   GUICityName: 
   GUICityNewName: 
-  GUICityPopulation: 90138
+  GUICityPopulation: 219674
   GUICityClass: 1
   cityIndex: -1
   cityChanges: 1
@@ -1756,7 +1725,7 @@ MonoBehaviour:
   GUICountryName: 
   GUICountryNewName: 
   GUICountryNewContinent: Asia
-  GUICountryTransferToCountryIndex: 15
+  GUICountryTransferToCountryIndex: 13
   groupByParentAdmin: 1
   countryIndex: -1
   countryRegionIndex: -1
@@ -1773,7 +1742,7 @@ MonoBehaviour:
   GUIMountPointMassPopulationSeparation: 10
   GUIMountPointMassPopulationType: 
   mountPointIndex: -1
-  mountPointChanges: 1
+  mountPointChanges: 0
   provinceIndex: -1
   provinceRegionIndex: -1
   GUIProvinceIndex: -1
