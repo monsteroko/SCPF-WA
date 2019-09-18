@@ -6,12 +6,14 @@ using UnityEngine.Events;
 
 public class EntryPopup : MonoBehaviour {
 
-    public float timer;
     public Text nameText;
     public Text classText;
     public Text descriptionText;
     public Button okButton;
     public Button cancButton;
+    public float timer;
+    public GameObject Cube;
+    public int x, y;
 
     public GameObject entryPopupObject;
 
@@ -21,7 +23,6 @@ public class EntryPopup : MonoBehaviour {
         entryPopup = FindObjectOfType(typeof(EntryPopup)) as EntryPopup;
         entryPopupObject.SetActive(false);
     }
-
     public static EntryPopup Instance() {
         return entryPopup;
     }
@@ -30,12 +31,13 @@ public class EntryPopup : MonoBehaviour {
         nameText.text = "SCP-" + entry.code + ": " + entry.name;
         classText.text = "Класс: " + entry.type;
         descriptionText.text = "Описание: " + entry.description;
+        okButton.onClick.AddListener(ClosePopup);
         okButton.onClick.RemoveAllListeners();
         okButton.onClick.AddListener(ClosePopup);
         cancButton.onClick.RemoveAllListeners();
         cancButton.onClick.AddListener(ClosePopup);
         entryPopupObject.SetActive(true);
-        timer = 0;
+        
         Time.timeScale = timer;
     }
 
@@ -43,5 +45,11 @@ public class EntryPopup : MonoBehaviour {
         timer = 1f;
         Time.timeScale = timer;
         entryPopupObject.SetActive(false);
+    }
+    public void OnButtonDown()
+    {
+        x = Random.Range(0, 200);
+        y = Random.Range(-100, 0);
+        Cube.transform.Translate(x, y,-2);
     }
 }
