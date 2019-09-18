@@ -13,7 +13,7 @@ public class TimeScr : MonoBehaviour
     public float timer;
     public void Play()
     {
-        timer = 1f;
+        timer = 4f;
     }
 
     public void Stop()
@@ -22,11 +22,11 @@ public class TimeScr : MonoBehaviour
     }
     public void TwoPl()
     {
-        timer = 2f;
+        timer = 16f;
     }
     public void FourPl()
     {
-        timer = 4f;   
+        timer = 32f;   
     }
     void Start()
     {

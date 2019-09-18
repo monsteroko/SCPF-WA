@@ -6,10 +6,12 @@ using UnityEngine.Events;
 
 public class EntryPopup : MonoBehaviour {
 
+    public float timer;
     public Text nameText;
     public Text classText;
     public Text descriptionText;
     public Button okButton;
+    public Button cancButton;
 
     public GameObject entryPopupObject;
 
@@ -30,10 +32,16 @@ public class EntryPopup : MonoBehaviour {
         descriptionText.text = "Описание: " + entry.description;
         okButton.onClick.RemoveAllListeners();
         okButton.onClick.AddListener(ClosePopup);
+        cancButton.onClick.RemoveAllListeners();
+        cancButton.onClick.AddListener(ClosePopup);
         entryPopupObject.SetActive(true);
+        timer = 0;
+        Time.timeScale = timer;
     }
 
     void ClosePopup() {
+        timer = 1f;
+        Time.timeScale = timer;
         entryPopupObject.SetActive(false);
     }
 }

@@ -16,7 +16,7 @@ public class ZoneMenuOpen : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Current < Limit && Limit == 500)
+        if (Current < Limit && Limit == 300)
         {
             ZoneManagement.transform.Translate(v * -1, 0, 0);
             Current += v;
@@ -35,10 +35,10 @@ public class ZoneMenuOpen : MonoBehaviour
         Debug.Log("Gavno!");
         if (Current == 0)
         {
-            Limit = 500;
+            Limit = 300;
         }
 
-        if (Current == 500)
+        if (Current == 300)
         {
             Limit = 0;
         }

@@ -14,10 +14,12 @@ public class CounterpartsSelectionScript : MonoBehaviour {
     public Image saImage;
     public Image eeuImage;
     public Button proceedButton;
+    public float timer;
 
     private Dictionary<string, Image> counterpartImages = new Dictionary<string, Image>();
 
     void Start() {
+        timer = 4f;
         counterpartImages["na"] = naImage;
         counterpartImages["sa"] = saImage;
         counterpartImages["eeu"] = eeuImage;
@@ -51,6 +53,7 @@ public class CounterpartsSelectionScript : MonoBehaviour {
 
     private void Proceed() {
         SceneManager.LoadScene("Game");
+        Time.timeScale = timer;
     }
 
 }
