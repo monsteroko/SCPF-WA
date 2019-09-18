@@ -11,11 +11,11 @@ public class TimeScr : MonoBehaviour
     private DateTime dt;
     public Canvas cv;
     public float timer;
+
     public void Play()
     {
         timer = 4f;
     }
-
     public void Stop()
     {
         timer = 0;

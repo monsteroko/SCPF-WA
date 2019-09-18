@@ -14,20 +14,23 @@ public class EntryPopup : MonoBehaviour {
     public float timer;
     public GameObject Cube;
     public int x, y;
-
+    
     public GameObject entryPopupObject;
 
     private static EntryPopup entryPopup;
 
-    private void Start() {
+    private void Start()
+    {
         entryPopup = FindObjectOfType(typeof(EntryPopup)) as EntryPopup;
         entryPopupObject.SetActive(false);
     }
-    public static EntryPopup Instance() {
+    public static EntryPopup Instance()
+    {
         return entryPopup;
     }
 
-    public void OpenWithEntry(EntryModel entry) {
+    public void OpenWithEntry(EntryModel entry)
+    {
         nameText.text = "SCP-" + entry.code + ": " + entry.name;
         classText.text = "Класс: " + entry.type;
         descriptionText.text = "Описание: " + entry.description;
@@ -41,7 +44,8 @@ public class EntryPopup : MonoBehaviour {
         Time.timeScale = timer;
     }
 
-    void ClosePopup() {
+    void ClosePopup()
+    {
         timer = 1f;
         Time.timeScale = timer;
         entryPopupObject.SetActive(false);

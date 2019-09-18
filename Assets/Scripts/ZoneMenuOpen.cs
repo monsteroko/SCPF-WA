@@ -6,7 +6,7 @@ using UnityEngine;
 public class ZoneMenuOpen : MonoBehaviour
 {
     public GameObject ZoneManagement;
-    int Current = 0, Limit = 0, v = 100;
+    int Current = 0, Limit = 0, v = 100, width = 280;
     // Start is called before the first frame update
     void Start()
     {
@@ -16,7 +16,7 @@ public class ZoneMenuOpen : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Current < Limit && Limit == 300)
+        if (Current < Limit && Limit == width)
         {
             ZoneManagement.transform.Translate(v * -1, 0, 0);
             Current += v;
@@ -32,13 +32,12 @@ public class ZoneMenuOpen : MonoBehaviour
 
     void OnMouseDown()
     {
-        Debug.Log("Gavno!");
         if (Current == 0)
         {
-            Limit = 300;
+            Limit = width;
         }
 
-        if (Current == 300)
+        if (Current > 0)
         {
             Limit = 0;
         }
