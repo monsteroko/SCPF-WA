@@ -11,7 +11,7 @@ public class TimeScr : MonoBehaviour
     private DateTime dt;
     public Canvas cv;
     public float timer;
-
+    public GameObject entryPopupObject;
     public void Play()
     {
         timer = 4f;
@@ -35,7 +35,10 @@ public class TimeScr : MonoBehaviour
     }
     void Update()
     {
-        Time.timeScale = timer;
+        if (entryPopupObject.activeSelf==true)
+            Time.timeScale = 0;
+        else
+            Time.timeScale = timer;
         dt = dt.AddSeconds(Time.timeScale);
         string s = dt.ToLongTimeString();
         string sd = dt.ToLongDateString();

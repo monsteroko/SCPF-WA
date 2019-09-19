@@ -11,7 +11,6 @@ public class EntryPopup : MonoBehaviour {
     public Text descriptionText;
     public Button okButton;
     public Button cancButton;
-    public float timer;
     public GameObject Cube;
     public int x, y;
     
@@ -40,14 +39,10 @@ public class EntryPopup : MonoBehaviour {
         cancButton.onClick.RemoveAllListeners();
         cancButton.onClick.AddListener(ClosePopup);
         entryPopupObject.SetActive(true);
-        
-        Time.timeScale = timer;
     }
 
     void ClosePopup()
     {
-        timer = 1f;
-        Time.timeScale = timer;
         entryPopupObject.SetActive(false);
     }
     public void OnButtonDown()
