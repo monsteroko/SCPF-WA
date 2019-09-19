@@ -452,7 +452,7 @@ namespace WPMF
 					isDirty = true;
 					ReloadFont();
 //					if (labelsFont == null) {
-//						labelsFont = GameObject.Instantiate (Resources.Load <Font> ("WPMF/Font/Lato"));
+//						labelsFont = GameObject.Instantiate (Resources.Load <Font> ("Font/Lato"));
 //						labelsFont.name = "Lato";
 //						labelsFont.hideFlags = HideFlags.DontSave;
 //					}

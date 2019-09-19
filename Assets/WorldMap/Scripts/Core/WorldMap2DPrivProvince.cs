@@ -117,7 +117,7 @@ namespace WPMF
 		{
 
 			lastProvinceLookupCount = -1;
-			TextAsset ta = Resources.Load<TextAsset> ("WPMF/Geodata/provinces10");
+			TextAsset ta = Resources.Load<TextAsset> ("Geodata/provinces10");
 			string s = ta.text;
 			string[] provincesPackedStringData = s.Split (new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
 			char[] separatorProvinces = new char[] { '$' };

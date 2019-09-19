@@ -30,7 +30,7 @@ namespace WPMF {
 		#region System initialization
 
 		void ReadMountPointsPackedString () {
-			string mountPointsCatalogFileName = "WPMF/Geodata/mountPoints";
+			string mountPointsCatalogFileName = "Geodata/mountPoints";
 			TextAsset ta = Resources.Load<TextAsset> (mountPointsCatalogFileName);
 			if (ta!=null) {
 				string s = ta.text;
