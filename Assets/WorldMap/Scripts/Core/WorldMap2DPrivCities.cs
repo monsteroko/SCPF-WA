@@ -27,7 +27,7 @@ namespace WPMF {
 		#region IO stuff
 
 		void ReadCitiesPackedString () {
-			string cityCatalogFileName = "Geodata/cities10";
+			string cityCatalogFileName = "Geodata/zone_places";
 			TextAsset ta = Resources.Load<TextAsset> (cityCatalogFileName);
 			string s = ta.text;
 			

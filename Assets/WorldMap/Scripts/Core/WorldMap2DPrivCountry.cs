@@ -91,7 +91,7 @@ namespace WPMF
 		void ReadCountriesPackedString()
 		{
 			lastCountryLookupCount = -1;
-			string frontiersFileName = _frontiersDetail == FRONTIERS_DETAIL.Low ? "Geodata/countries110" : "Geodata/countries10";
+			string frontiersFileName = "Geodata/counterparts";
 			TextAsset ta = Resources.Load<TextAsset>(frontiersFileName);
 			string s = ta.text;
 			string[] countryList = s.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
@@ -840,65 +840,6 @@ namespace WPMF
 					country.mainRegionIndex = 0;
 				Region region = country.regions[country.mainRegionIndex];
 
-#if WPM_STANDARD_MAP
-				float zoomFactor = transform.localScale.x / 200.0f;
-				// Special countries adjustements
-				if (_frontiersDetail == FRONTIERS_DETAIL.Low)
-				{
-					switch (countryIndex)
-					{
-						case 6: // Antartica
-							center.y += 3f * zoomFactor;
-							break;
-						case 65: // Greenland
-							center.y -= 3f * zoomFactor;
-							break;
-						case 22: // Brazil
-							center.y += 4f * zoomFactor;
-							center.x += 1.0f * zoomFactor;
-							break;
-						case 73: // India
-							center.x -= 2f * zoomFactor;
-							break;
-						case 168: // USA
-							center.x -= 1f * zoomFactor;
-							break;
-						case 27: // Canada
-							center.x -= 3f * zoomFactor;
-							break;
-						case 30: // China
-							center.x -= 1f * zoomFactor;
-							center.y -= 1f * zoomFactor;
-							break;
-					}
-				}
-				else
-				{
-					switch (countryIndex)
-					{
-						case 114: // Russia
-							center.x -= 4f * zoomFactor;
-							center.y += 1f * zoomFactor;
-							break;
-						case 92: // Canada
-							center.x -= 5f * zoomFactor;
-							break;
-						case 185: // USA
-							center.x -= 2f * zoomFactor;
-							break;
-						case 37: // Antartica
-							center.y += 2f * zoomFactor;
-							break;
-						case 84: // Brazil
-							center.y += 4f * zoomFactor;
-							center.x += 2f * zoomFactor;
-							break;
-						case 95: // China
-							center.x -= 3f * zoomFactor;
-							break;
-					}
-				}
-#endif
 				// Adjusts country name length
 				string countryName = country.customLabel != null ? country.customLabel : country.name.ToUpper();
 				bool introducedCarriageReturn = false;

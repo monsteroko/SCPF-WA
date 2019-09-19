@@ -13,12 +13,6 @@ using System.Text;
 namespace WPMF
 {
 
-	public enum FRONTIERS_DETAIL
-	{
-		Low = 0,
-		High = 1
-	}
-
 	public delegate void OnCountryEvent(int countryIndex, int regionIndex);
 	public delegate void OnCountryHighlightEvent(int countryIndex, int regionIndex, ref bool allowHighlight);
 
@@ -284,21 +278,6 @@ namespace WPMF
 					if (outlineMat != null && _outlineColor != outlineMat.color) {
 						outlineMat.color = _outlineColor;
 					}
-				}
-			}
-		}
-
-		[SerializeField]
-		FRONTIERS_DETAIL
-			_frontiersDetail = FRONTIERS_DETAIL.Low;
-
-		public FRONTIERS_DETAIL frontiersDetail {
-			get { return _frontiersDetail; }
-			set { 
-				if (_frontiersDetail != value) {
-					_frontiersDetail = value;
-					isDirty = true;
-					ReloadData ();
 				}
 			}
 		}

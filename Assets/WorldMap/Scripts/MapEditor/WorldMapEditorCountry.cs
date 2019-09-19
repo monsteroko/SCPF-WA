@@ -565,7 +565,7 @@ namespace WPMF
 		/// </summary>
 		public string GetCountryGeoDataFileName()
 		{
-			return map.frontiersDetail == FRONTIERS_DETAIL.Low ? "countries110.txt" : "countries10.txt";
+			return "counterparts.txt";
 		}
 
 		/// <summary>
