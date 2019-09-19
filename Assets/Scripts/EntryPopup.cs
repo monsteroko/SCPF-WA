@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using System;
+using WPMF;
 
 public class EntryPopup : MonoBehaviour {
 
@@ -13,7 +15,8 @@ public class EntryPopup : MonoBehaviour {
     public Button cancButton;
     public GameObject Cube;
     public int x, y;
-    
+    public WorldMap2D map;
+
     public GameObject entryPopupObject;
 
     private static EntryPopup entryPopup;
@@ -47,8 +50,14 @@ public class EntryPopup : MonoBehaviour {
     }
     public void OnButtonDown()
     {
-        x = Random.Range(0, 200);
-        y = Random.Range(-100, 0);
+        
+        map = WorldMap2D.instance;
+        x = UnityEngine.Random.Range(0, 200);
+        y = UnityEngine.Random.Range(-100, 0);
         Cube.transform.Translate(x, y,-2);
+        float a= Convert.ToSingle(x)-105;
+        float b = Convert.ToSingle(y)+62;
+        //Vector3 SCPCoord = new Vector3(a, b, 99);
+        //map.FlyToProvince(map.GetProvinceNearToPoint(SCPCoord));
     }
 }
