@@ -32,20 +32,22 @@ class Counterpart
 public class MapManager
 {
     Dictionary<int, Counterpart> counterparts = new Dictionary<int, Counterpart>();
-    
-    public MapManager(MapSaveModel mapSave) 
+	WorldMap2D map = WorldMap2D.instance;
+
+	public MapManager(MapSaveModel mapSave) 
     {
-        WorldMap2D map = WorldMap2D.instance;
-        // Init data from map
-        foreach (Country country in map.countries)
+		// Setup map
+		map.showProvinces = true;
+		// Init data from map
+		foreach (Country country in map.countries)
         {
             counterparts[map.GetCountryIndex(country.name)] = new Counterpart(country);
         }
         foreach (Province province in map.provinces)
         {
             counterparts[province.countryIndex].addRegion(new Region(province));
-        }
-        Debug.Log("kek");
+		}
+        // Init data from save
         foreach (string regionName in mapSave.unlockedRegions)
         {
             Debug.Log(regionName);
@@ -54,8 +56,9 @@ public class MapManager
                 if (counterpart.regions.ContainsKey(regionName))
                 {
                     counterpart.regions[regionName].unlocked = true;
-                    bool res = map.FlyToProvince(counterpart.name, regionName, 3, 100);
-                }
+					map.ToggleProvinceSurface(regionName, false, Color.cyan);
+					map.FlyToProvince(counterpart.name, regionName, 0, 100);
+				}
             }
         }
     }
