@@ -50,6 +50,7 @@ public class CounterpartsSelectionScript : MonoBehaviour {
     }
 
     private void Proceed() {
+        StartGameSettings.mapSave = MapSaveModel.NewGameSave(selectedCounterpart);
         SceneManager.LoadScene("Game");
     }
 
