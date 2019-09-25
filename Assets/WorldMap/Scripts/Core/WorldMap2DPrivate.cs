@@ -61,7 +61,8 @@ namespace WPMF
 		Quaternion flyToStartQuaternion, flyToEndQuaternion;
 		Vector3 flyToStartLocation, flyToEndLocation;
 		bool flyToActive;
-		float flyToStartTime, flyToDuration;
+        DateTime flyToStartTime; 
+        float flyToDuration; // In Seconds
 
 		// UI interaction variables
 		int mapUnityLayer;
@@ -1337,18 +1338,14 @@ namespace WPMF
 				distance = Mathf.Min(frustumDistanceH, frustumDistanceW);
 			}
 			return distance * zoomLevel;
-
 		}
 
-		void SetDestination(Vector2 point, float duration)
+		void SetDestination(Vector2 point, float _duration = -1, float _zoomLevel = -1)
 		{
-			SetDestination(point, duration, GetZoomLevel());
-		}
-
-		void SetDestination(Vector2 point, float duration, float zoomLevel)
-		{
-			// setup lerping parameters
-			if (_staticCamera)
+            float duration = _duration >= 0 ? _duration : _navigationTime;
+            float zoomLevel = _zoomLevel >= 0 ? _zoomLevel : GetZoomLevel();
+            // setup lerping parameters
+            if (_staticCamera)
 			{
 				flyToStartQuaternion = transform.rotation;
 				flyToStartLocation = transform.position;
@@ -1364,7 +1361,7 @@ namespace WPMF
 			}
 			flyToDuration = duration;
 			flyToActive = true;
-			flyToStartTime = Time.time;
+			flyToStartTime = DateTime.Now;
 			if (flyToDuration == 0)
 				MoveToDestination();
 		}
@@ -1385,7 +1382,7 @@ namespace WPMF
 			}
 			else
 			{
-				delta = (Time.time - flyToStartTime);
+                delta = (float)(DateTime.Now - flyToStartTime).TotalMilliseconds/1000.0f;
 				float t = delta / flyToDuration;
 				rotation = Quaternion.Lerp(flyToStartQuaternion, flyToEndQuaternion, Mathf.SmoothStep(0, 1, t));
 				destination = Vector3.Lerp(flyToStartLocation, flyToEndLocation, Mathf.SmoothStep(0, 1, t));

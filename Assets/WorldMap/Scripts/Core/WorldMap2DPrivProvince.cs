@@ -115,7 +115,6 @@ namespace WPMF
 
 		void ReadProvincesPackedString ()
 		{
-
 			lastProvinceLookupCount = -1;
 			TextAsset ta = Resources.Load<TextAsset> ("Geodata/regions");
 			string s = ta.text;
@@ -134,7 +133,8 @@ namespace WPMF
 				if (countryIndex >= 0) {
 					Province province = new Province (name, countryIndex);
 					province.packedRegions = provinceInfo [2];
-					newProvinces.Add (province);
+                    ReadProvincePackedString(province);
+                    newProvinces.Add (province);
 					if (countryProvinces [countryIndex] == null)
 						countryProvinces [countryIndex] = new List<Province> (50);
 					countryProvinces [countryIndex].Add (province);

@@ -593,17 +593,27 @@ namespace WPMF
             surf.SetActive(true);
         }
 
+        /// <summary>
+        /// Starts navigation to target province/state by index in the provinces collection and duration in seconds.
+        /// </summary>
+        public bool FlyToProvince(int provinceIndex, float duration = -1, float zoomLevel = -1)
+        {
+            if (provinces == null || provinceIndex < 0 || provinceIndex >= provinces.Length)
+                return false;
+            SetDestination(provinces[provinceIndex].center, duration, zoomLevel);
+            return true;
+        }
 
         /// <summary>
         /// Starts navigation to target province/state. Returns false if not found.
         /// </summary>
-        public bool FlyToProvince(string name, double duration)
+        public bool FlyToProvince(string name, float duration = -1, float zoomLevel = -1)
         {
             for (int k = 0; k < provinces.Length; k++)
             {
                 if (name.Equals(provinces[k].name))
                 {
-                    FlyToProvince(k);
+                    FlyToProvince(k, duration, zoomLevel);
                     return true;
                 }
             }
@@ -611,25 +621,11 @@ namespace WPMF
         }
 
         /// <summary>
-        /// Starts navigation to target province. with specified duration, ignoring NavigationTime property.
-        /// Set duration to zero to go instantly.
-        /// Returns false if country is not found. 
-        /// </summary>
-        public bool FlyToProvince(string countryName, string provinceName, float duration)
-        {
-            int countryIndex = GetCountryIndex(countryName);
-            if (countryIndex < 0)
-                return false;
-            int provinceIndex = GetProvinceIndex(countryIndex, provinceName);
-            return FlyToProvince(provinceIndex, duration);
-        }
-
-        /// <summary>
         /// Starts navigation to target province. with specified duration and zoom level, ignoring NavigationTime property.
         /// Set duration to zero to go instantly.
         /// Returns false if country is not found. 
         /// </summary>
-        public bool FlyToProvince(string countryName, string provinceName, float duration, float zoomLevel)
+        public bool FlyToProvince(string countryName, string provinceName, float duration = -1, float zoomLevel = -1)
         {
             int countryIndex = GetCountryIndex(countryName);
             if (countryIndex < 0)
@@ -637,40 +633,7 @@ namespace WPMF
             int provinceIndex = GetProvinceIndex(countryIndex, provinceName);
             if (provinceIndex < 0)
                 return false;
-            return FlyToProvince(countryIndex, duration, zoomLevel);
-        }
-
-        /// <summary>
-        /// Starts navigation to target province/state by index in the provinces collection. Returns false if not found.
-        /// </summary>
-        public bool FlyToProvince(int provinceIndex)
-        {
-            if (provinces == null || provinceIndex < 0 || provinceIndex >= provinces.Length)
-                return false;
-            SetDestination(provinces[provinceIndex].center, _navigationTime);
-            return true;
-        }
-
-        /// <summary>
-        /// Starts navigation to target province/state by index in the provinces collection and duration in seconds.
-        /// </summary>
-        public bool FlyToProvince(int provinceIndex, float duration)
-        {
-            if (provinces == null || provinceIndex < 0 || provinceIndex >= provinces.Length)
-                return false;
-            SetDestination(provinces[provinceIndex].center, duration);
-            return true;
-        }
-
-        /// <summary>
-        /// Starts navigation to target province/state by index in the provinces collection, duration in seconds and custom zoom level.
-        /// </summary>
-        public bool FlyToProvince(int provinceIndex, float duration, float zoomLevel)
-        {
-            if (provinces == null || provinceIndex < 0 || provinceIndex >= provinces.Length)
-                return false;
-            SetDestination(provinces[provinceIndex].center, duration, zoomLevel);
-            return true;
+            return FlyToProvince(provinceIndex, duration, zoomLevel);
         }
 
         /// <summary>

@@ -57,7 +57,7 @@ public class MapManager
                 {
                     counterpart.regions[regionName].unlocked = true;
 					map.ToggleProvinceSurface(regionName, false, Color.cyan);
-					map.FlyToProvince(counterpart.name, regionName, 0, 100);
+					map.FlyToProvince(counterpart.name, regionName, 1, 0.2f);
 				}
             }
         }
