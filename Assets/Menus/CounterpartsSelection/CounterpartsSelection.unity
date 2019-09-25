@@ -1536,9 +1536,8 @@ MonoBehaviour:
   eeuButton: {fileID: 144944439}
   naImage: {fileID: 997292681}
   saImage: {fileID: 113714070}
-  eeuImage: {fileID: 144944440}
+  eeuImage: {fileID: 1992269578}
   proceedButton: {fileID: 1971321409}
-  timer: 0
 --- !u!1 &2092273362
 GameObject:
   m_ObjectHideFlags: 0
