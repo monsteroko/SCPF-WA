@@ -6,7 +6,18 @@ using UnityEngine.SceneManagement;
 
 public class MenuControl : MonoBehaviour
 {
+    public Canvas Canvas;
 
+    string lname;
+    private void Start()
+    {
+        //Canvas.gameObject.SetActive(false);
+        lname = SceneManager.GetActiveScene().name;
+        if (lname == "tecnologies")
+        {
+            SceneManager.LoadScene("Menu");
+        }
+    }
 
     public void PlayPressed()
     {
@@ -15,6 +26,5 @@ public class MenuControl : MonoBehaviour
     public void ExitPressed()
     {
         Application.Quit();
-        Debug.Log("Exit pressed!");
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class TimeScr : MonoBehaviour
 {
@@ -28,6 +29,8 @@ public class TimeScr : MonoBehaviour
     {
         timer = 32f;   
     }
+
+    
     void Start()
     {
         cv.gameObject.SetActive(true);

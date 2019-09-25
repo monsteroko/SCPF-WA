@@ -14,6 +14,7 @@ public class CounterpartsSelectionScript : MonoBehaviour {
     public Image saImage;
     public Image eeuImage;
     public Button proceedButton;
+    
 
     private Dictionary<string, Image> counterpartImages = new Dictionary<string, Image>();
 
