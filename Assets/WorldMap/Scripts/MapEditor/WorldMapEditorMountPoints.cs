@@ -269,14 +269,28 @@ namespace WPMF {
 			}
 		}
 
-		#endregion
+        void TransferProvinceRegionMountPoints(int provinceIndex, int targetProvinceIndex)
+        {
+            int mpCount = _map.mountPoints.Count;
+            for (int k = 0; k < mpCount; k++)
+            {
+                MountPoint mp = _map.mountPoints[k];
+                if (mp.provinceIndex == provinceIndex)
+                {
+                    mp.provinceIndex = targetProvinceIndex;
+                    mountPointChanges = true;
+                }
+            }
+        }
 
-		#region IO stuff
+        #endregion
 
-		/// <summary>
-		/// Returns the file name corresponding to the current mount point data file
-		/// </summary>
-		public string GetMountPointGeoDataFileName() {
+        #region IO stuff
+
+        /// <summary>
+        /// Returns the file name corresponding to the current mount point data file
+        /// </summary>
+        public string GetMountPointGeoDataFileName() {
 			return "mountPoints.txt";
 		}
 		

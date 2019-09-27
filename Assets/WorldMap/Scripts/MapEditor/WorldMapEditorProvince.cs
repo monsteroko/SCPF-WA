@@ -6,625 +6,789 @@ using System.Collections.Generic;
 using System.Globalization;
 using WPMF.PolygonClipping;
 
-namespace WPMF {
+namespace WPMF
+{
 
-				public partial class WorldMap2D_Editor : MonoBehaviour {
+    public partial class WorldMap2D_Editor : MonoBehaviour
+    {
 
-								public int provinceIndex = -1, provinceRegionIndex = -1;
-								public int GUIProvinceIndex;
-								public string GUIProvinceName = "";
-								public string GUIProvinceNewName = "";
-								public string GUIProvinceNewCountryName = "";
-								public int GUIProvinceTransferToCountryIndex = -1;
-								public bool provinceChanges;
-								// if there's any pending change to be saved
+        public int provinceIndex = -1, provinceRegionIndex = -1, targetProvinceIndex = -1;
+        public int GUIProvinceIndex;
+        public string GUIProvinceName = "";
+        public string GUIProvinceNewName = "";
+        public string GUIProvinceNewCountryName = "";
+        public int GUIProvinceTransferToCountryIndex = -1;
+        public int GUITargetProvinceIndex;
+        public bool provinceChanges;
+        // if there's any pending change to be saved
 
-								int lastProvinceCount = -1;
-								string[] _provinceNames;
+        int lastProvinceCount = -1;
+        string[] _provinceNames;
 
-								public string[] provinceNames {
-												get {
-																if (countryIndex == -1)
-																				return new string[0];
-																if (map.countries [countryIndex].provinces != null && lastProvinceCount != map.countries [countryIndex].provinces.Length) {
-																				provinceIndex = -1;
-																				ReloadProvinceNames ();
-																}
-																return _provinceNames;
-												}
-								}
-
-		
-								#region Editor functionality
-
-		
-								public void ClearProvinceSelection () {
-												map.HideProvinceRegionHighlights (true);
-												map.HideProvinces ();
-												provinceIndex = -1;
-												provinceRegionIndex = -1;
-												GUIProvinceName = "";
-												GUIProvinceNewName = "";
-												GUIProvinceNewCountryName = "";
-												GUIProvinceIndex = -1;
-								}
+        public string[] provinceNames {
+            get {
+                if (countryIndex == -1)
+                    return new string[0];
+                if (map.countries[countryIndex].provinces != null && lastProvinceCount != map.countries[countryIndex].provinces.Length)
+                {
+                    provinceIndex = -1;
+                    ReloadProvinceNames();
+                }
+                return _provinceNames;
+            }
+        }
 
 
-								public bool ProvinceSelectByScreenClick (Ray ray) {
-												int targetProvinceIndex, targetRegionIndex;
-												if (map.GetProvinceIndex (ray, out targetProvinceIndex, out targetRegionIndex)) {
-																if (countryIndex != map.provinces [targetProvinceIndex].countryIndex) {
-																				countryIndex = map.provinces [targetProvinceIndex].countryIndex;
-																				countryRegionIndex = 0;
-																				CountryRegionSelect ();
-																}
-																provinceIndex = targetProvinceIndex;
-																if (provinceIndex >= 0 && countryIndex != map.provinces [provinceIndex].countryIndex) { // sanity check
-																				ClearSelection ();
-																				countryIndex = map.provinces [provinceIndex].countryIndex;
-																				countryRegionIndex = map.countries [countryIndex].mainRegionIndex;
-																				CountryRegionSelect ();
-																}
-																provinceRegionIndex = targetRegionIndex;
-																ProvinceRegionSelect ();
-																return true;
-												}
-												return false;
-								}
-
-								bool GetProvinceIndexByGUISelection () {
-												if (GUIProvinceIndex < 0 || GUIProvinceIndex >= provinceNames.Length)
-																return false;
-												string[] s = provinceNames [GUIProvinceIndex].Split (new char[] {
-																'(',
-																')'
-												}, System.StringSplitOptions.RemoveEmptyEntries);
-												if (s.Length >= 2) {
-																GUIProvinceName = s [0].Trim ();
-																if (int.TryParse (s [1], out provinceIndex)) {
-																				provinceRegionIndex = map.provinces [provinceIndex].mainRegionIndex;
-																				return true;
-																}
-												}
-												return false;
-								}
-
-								public void ProvinceSelectByCombo (int selection) {
-												GUIProvinceName = "";
-												GUIProvinceIndex = selection;
-												if (GetProvinceIndexByGUISelection ()) {
-																if (Application.isPlaying) {
-																				map.BlinkProvince (provinceIndex, Color.black, Color.green, 1.2f, 0.2f);
-																}
-												}
-												ProvinceRegionSelect ();
-								}
-
-								public void ReloadProvinceNames () {
-												if (map == null || map.provinces == null || countryIndex < 0 || countryIndex >= map.countries.Length) {
-																return;
-												}
-												_provinceNames = map.GetProvinceNames (countryIndex);
-												lastProvinceCount = _provinceNames.Length; 
-												SyncGUIProvinceSelection ();
-												ProvinceRegionSelect (); // refresh selection
-								}
-
-		
-								public void ProvinceRegionSelect () {
-												if (countryIndex < 0 || countryIndex >= map.countries.Length || provinceIndex < 0 || provinceIndex >= map.provinces.Length || editingMode != EDITING_MODE.PROVINCES)
-																return;
-
-												// Checks country selected is correct
-												Province province = map.provinces [provinceIndex];
-												if (province.countryIndex != countryIndex) {
-																ClearSelection ();
-																countryIndex = province.countryIndex;
-																countryRegionIndex = map.countries [countryIndex].mainRegionIndex;
-																CountryRegionSelect ();
-												}
-
-												// Just in case makes GUICountryIndex selects appropiate value in the combobox
-												GUIProvinceName = province.name;
-												SyncGUIProvinceSelection ();
-												if (provinceIndex >= 0 && provinceIndex < map.provinces.Length) {
-																GUIProvinceNewName = province.name;
-																ProvinceHighlightSelection ();
-												}
-								}
+        #region Editor functionality
 
 
-								void ProvinceHighlightSelection () {
-			
-												if (highlightedRegions == null)
-																highlightedRegions = new List<Region> ();
-												else
-																highlightedRegions.Clear ();
-												map.HideProvinceRegionHighlights (true);
-
-												if (provinceIndex < 0 || provinceIndex >= map.provinces.Length || countryIndex < 0 || countryIndex >= map.countries.Length || map.countries [countryIndex].provinces == null ||
-												provinceRegionIndex < 0 || map.provinces [provinceIndex].regions == null || provinceRegionIndex >= map.provinces [provinceIndex].regions.Count)
-																return;
-
-												// Highlight current province
-												for (int p = 0; p < map.countries [countryIndex].provinces.Length; p++) {
-																Province province = map.countries [countryIndex].provinces [p];
-																if (province.regions == null)
-																				continue;
-																// if province is current province then highlight it
-																if (province.name.Equals (map.provinces [provinceIndex].name)) {
-																				map.HighlightProvinceRegion (provinceIndex, provinceRegionIndex, false);
-																				highlightedRegions.Add (map.provinces [provinceIndex].regions [provinceRegionIndex]);
-																} else {
-																				// if this province belongs to the country but it's not current province, add to the collection of highlighted (not colorize because country is already colorized and that includes provinces area)
-																				highlightedRegions.Add (province.regions [province.mainRegionIndex]);
-																}
-												}
-												shouldHideEditorMesh = true;
-								}
-
-								void SyncGUIProvinceSelection () {
-												// recover GUI country index selection
-												if (GUIProvinceName.Length > 0 && provinceNames != null) {
-																for (int k = 0; k < _provinceNames.Length; k++) {
-																				if (_provinceNames [k].TrimStart ().StartsWith (GUIProvinceName)) {
-																								GUIProvinceIndex = k;
-																								provinceIndex = map.GetProvinceIndex (countryIndex, GUIProvinceName);
-																								return;
-																				}
-																}
-												}
-												GUIProvinceIndex = -1;
-												GUIProvinceName = "";
-								}
-
-		
-								public bool ProvinceRename () {
-												if (countryIndex < 0 || provinceIndex < 0)
-																return false;
-												string prevName = map.provinces [provinceIndex].name;
-												GUIProvinceNewName = GUIProvinceNewName.Trim ();
-												if (prevName.Equals (GUIProvinceNewName))
-																return false;
-												if (map.ProvinceRename (countryIndex, prevName, GUIProvinceNewName)) {
-																GUIProvinceName = GUIProvinceNewName;
-																lastProvinceCount = -1;
-																ReloadProvinceNames ();
-																provinceChanges = true;
-																return true;
-												}
-												return false;
-								}
+        public void ClearProvinceSelection()
+        {
+            map.HideProvinceRegionHighlights(true);
+            map.HideProvinces();
+            provinceIndex = -1;
+            provinceRegionIndex = -1;
+            GUIProvinceName = "";
+            GUIProvinceNewName = "";
+            GUIProvinceNewCountryName = "";
+            GUIProvinceIndex = -1;
+        }
 
 
-								/// <summary>
-								/// Deletes current region or province if this was the last region
-								/// </summary>
-								public void ProvinceDelete () {
-												if (provinceIndex < 0 || provinceIndex >= map.provinces.Length)
-																return;
+        public bool ProvinceSelectByScreenClick(Ray ray)
+        {
+            int rayProvinceIndex, rayRegionIndex;
+            if (map.GetProvinceIndex(ray, out rayProvinceIndex, out rayRegionIndex))
+            {
+                if (countryIndex != map.provinces[rayProvinceIndex].countryIndex)
+                {
+                    countryIndex = map.provinces[rayProvinceIndex].countryIndex;
+                    countryRegionIndex = 0;
+                    CountryRegionSelect();
+                }
+                provinceIndex = rayProvinceIndex;
+                if (provinceIndex >= 0 && countryIndex != map.provinces[provinceIndex].countryIndex)
+                { // sanity check
+                    ClearSelection();
+                    countryIndex = map.provinces[provinceIndex].countryIndex;
+                    countryRegionIndex = map.countries[countryIndex].mainRegionIndex;
+                    CountryRegionSelect();
+                }
+                provinceRegionIndex = rayRegionIndex;
+                ProvinceRegionSelect();
+                return true;
+            }
+            return false;
+        }
 
-												// Apply boolean operations on country polygons
-												Province province = map.provinces [provinceIndex];
-												Region provinceRegion = province.regions [provinceRegionIndex];
-												Country sourceCountry = map.countries [countryIndex];
+        bool GetProvinceIndexByGUISelection()
+        {
+            if (GUIProvinceIndex < 0 || GUIProvinceIndex >= provinceNames.Length)
+                return false;
+            string[] s = provinceNames[GUIProvinceIndex].Split(new char[] {
+                                                                '(',
+                                                                ')'
+                                                }, System.StringSplitOptions.RemoveEmptyEntries);
+            if (s.Length >= 2)
+            {
+                GUIProvinceName = s[0].Trim();
+                if (int.TryParse(s[1], out provinceIndex))
+                {
+                    provinceRegionIndex = map.provinces[provinceIndex].mainRegionIndex;
+                    return true;
+                }
+            }
+            return false;
+        }
 
-												// Extract from source country - only if province is in the frontier or is crossing the country
-												for (int k = 0; k < sourceCountry.regions.Count; k++) {
-																Region otherSourceRegion = sourceCountry.regions [k];
-																otherSourceRegion.sanitized = true;
-												}
-												for (int k = 0; k < sourceCountry.regions.Count; k++) {
-																Region otherSourceRegion = sourceCountry.regions [k];
-																PolygonClipper pc = new PolygonClipper (otherSourceRegion, provinceRegion);
-																if (pc.OverlapsSubjectAndClipping ()) {
-																				otherSourceRegion.sanitized = false;
-																				pc.Compute (PolygonOp.DIFFERENCE);
-																}
-												}
+        bool GetTargetProvinceIndexByGUISelection()
+        {
+            if (GUITargetProvinceIndex < 0 || GUITargetProvinceIndex >= provinceNames.Length)
+                return false;
+            string[] s = provinceNames[GUITargetProvinceIndex].Split(new char[] {
+                                                                '(',
+                                                                ')'
+                                                }, System.StringSplitOptions.RemoveEmptyEntries);
+            if (s.Length >= 2)
+            {
+                if (int.TryParse(s[1], out targetProvinceIndex))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
-												// Remove invalid regions from source country
-												for (int k = 0; k < sourceCountry.regions.Count; k++) {
-																Region otherSourceRegion = sourceCountry.regions [k];
-																if (!otherSourceRegion.sanitized && otherSourceRegion.points.Length < 5) {
-																				sourceCountry.regions.RemoveAt (k);
-																				k--;
-																}
-												}
+        public void ProvinceSelectByCombo(int selection)
+        {
+            GUIProvinceName = "";
+            GUIProvinceIndex = selection;
+            if (GetProvinceIndexByGUISelection())
+            {
+                if (Application.isPlaying)
+                {
+                    map.BlinkProvince(provinceIndex, Color.black, Color.green, 1.2f, 0.2f);
+                }
+            }
+            ProvinceRegionSelect();
+        }
 
-												// Remove it from the country array
-												List<Province> newProvinces = new List<Province> (map.countries [countryIndex].provinces.Length - 1);
-												for (int k = 0; k < map.countries [countryIndex].provinces.Length; k++)
-																if (!map.countries [countryIndex].provinces [k].name.Equals (GUIProvinceName))
-																				newProvinces.Add (map.countries [countryIndex].provinces [k]);
-												map.countries [countryIndex].provinces = newProvinces.ToArray ();
-												// Remove from the global array
-												newProvinces = new List<Province> (map.provinces.Length - 1);
-												for (int k = 0; k < map.provinces.Length; k++) {
-																if (k != provinceIndex) {
-																				newProvinces.Add (map.provinces [k]);
-																}
-												}
-												map.provinces = newProvinces.ToArray ();
+        public void TargetProvinceSelectByCombo(int selection)
+        {
+            GUITargetProvinceIndex = selection;
+            GetTargetProvinceIndexByGUISelection();
+        }
 
-												// Finish operation
-												map.HideCountryRegionHighlights (true);
-												map.HideProvinceRegionHighlights (true);
-												map.RefreshCountryDefinition (countryIndex, null);
-												ClearProvinceSelection ();
-												map.OptimizeFrontiers();
-												map.Redraw();
-												countryChanges = true;
-												provinceChanges = true;
-												CountryRegionSelect ();
-								}
-
-								/// <summary>
-								/// Deletes current region or province if this was the last region
-								/// </summary>
-								public void ProvinceRegionDelete () {
-												if (provinceIndex < 0 || provinceIndex >= map.provinces.Length)
-																return;
-			
-												if (map.provinces [provinceIndex].regions != null && map.provinces [provinceIndex].regions.Count > 1) {
-																map.provinces [provinceIndex].regions.RemoveAt (provinceRegionIndex);
-																map.RefreshProvinceDefinition (provinceIndex);
-												} 
-												ClearProvinceSelection ();
-												map.OptimizeFrontiers();
-												map.Redraw();
-												provinceChanges = true;
-								}
-
-								/// <summary>
-								/// Delete all provinces of current country. Called from DeleteCountry.
-								/// </summary>
-								void mDeleteCountryProvinces () {
-												if (map.provinces == null)
-																return;
-												if (countryIndex < 0)
-																return;
-			
-												map.HideProvinceRegionHighlights (true);
-												map.countries [countryIndex].provinces = new Province[0];
-												map.CountryDeleteProvinces (countryIndex);
-												provinceChanges = true;
-								}
-
-								public void DeleteCountryProvinces () {
-												mDeleteCountryProvinces ();
-												ClearSelection ();
-												RedrawFrontiers ();
-												map.RedrawMapLabels ();
-								}
+        public void ReloadProvinceNames()
+        {
+            if (map == null || map.provinces == null || countryIndex < 0 || countryIndex >= map.countries.Length)
+            {
+                return;
+            }
+            _provinceNames = map.GetProvinceNames(countryIndex);
+            lastProvinceCount = _provinceNames.Length;
+            SyncGUIProvinceSelection();
+            ProvinceRegionSelect(); // refresh selection
+        }
 
 
-								/// <summary>
-								/// Creates a new province with the current shape
-								/// </summary>
-								public void ProvinceCreate () {
-												if (newShape.Count < 3 || countryIndex < 0)
-																return;
+        public void ProvinceRegionSelect()
+        {
+            if (countryIndex < 0 || countryIndex >= map.countries.Length || provinceIndex < 0 || provinceIndex >= map.provinces.Length || editingMode != EDITING_MODE.PROVINCES)
+                return;
 
-												provinceIndex = map.provinces.Length;
-												provinceRegionIndex = 0;
-												Province newProvince = new Province ("New Province" + (provinceIndex + 1).ToString (), countryIndex);
-												Region region = new Region (newProvince, 0);
-												region.points = newShape.ToArray ();
-												newProvince.regions = new List<Region> ();
-												newProvince.regions.Add (region);
-												map.ProvinceAdd (newProvince);
-												map.RefreshProvinceDefinition (provinceIndex);
-												lastProvinceCount = -1;
-												ReloadProvinceNames ();
-												ProvinceRegionSelect ();
-												provinceChanges = true;
-								}
+            // Checks country selected is correct
+            Province province = map.provinces[provinceIndex];
+            if (province.countryIndex != countryIndex)
+            {
+                ClearSelection();
+                countryIndex = province.countryIndex;
+                countryRegionIndex = map.countries[countryIndex].mainRegionIndex;
+                CountryRegionSelect();
+            }
 
-								/// <summary>
-								/// Adds a new province to current province
-								/// </summary>
-								public void ProvinceRegionCreate () {
-												if (newShape.Count < 3 || provinceIndex < 0)
-																return;
-			
-												Province province = map.provinces [provinceIndex];
-												if (province.regions == null)
-																province.regions = new List<Region> ();
-												provinceRegionIndex = province.regions.Count;
-												Region region = new Region (province, provinceRegionIndex);
-												region.points = newShape.ToArray ();
-												if (province.regions == null)
-																province.regions = new List<Region> ();
-												province.regions.Add (region);
-												map.RefreshProvinceDefinition (provinceIndex);
-												provinceChanges = true;
-												ProvinceRegionSelect ();
-								}
+            // Just in case makes GUICountryIndex selects appropiate value in the combobox
+            GUIProvinceName = province.name;
+            SyncGUIProvinceSelection();
+            if (provinceIndex >= 0 && provinceIndex < map.provinces.Length)
+            {
+                GUIProvinceNewName = province.name;
+                ProvinceHighlightSelection();
+            }
+        }
 
-								/// <summary>
-								/// Changes province's owner to specified country
-								/// </summary>
-								public void ProvinceTransferTo () {
-												if (provinceIndex < 0 || GUIProvinceTransferToCountryIndex < 0 || GUIProvinceTransferToCountryIndex >= countryNames.Length)
-																return;
 
-												// Get target country
-												// recover GUI country index selection
-												int targetCountryIndex = -1;
-												string[] s = countryNames [GUIProvinceTransferToCountryIndex].Split (new char[] {
-																'(',
-																')'
-												}, System.StringSplitOptions.RemoveEmptyEntries);
-												if (s.Length >= 2) {
-																if (!int.TryParse (s [1], out targetCountryIndex)) {
-																				return;
-																}
-												}
-												ProvinceTransferTo (targetCountryIndex, provinceIndex);
-												countryIndex = targetCountryIndex;
-												countryRegionIndex = _map.countries [targetCountryIndex].mainRegionIndex;
-												ProvinceRegionSelect ();
-								}
+        void ProvinceHighlightSelection()
+        {
 
-								public void ProvinceTransferTo (int targetCountryIndex, int provinceIndex) {
-												// Remove province form source country
-												Province province = map.provinces [provinceIndex];
-												Country sourceCountry = map.countries [countryIndex];
-												if (map.countries [countryIndex].provinces != null) {
-																List<Province> sourceProvinces = new List<Province> (sourceCountry.provinces);
-																int provIndex = -1;
-																for (int k = 0; k < sourceCountry.provinces.Length; k++)
-																				if (sourceCountry.provinces [k].name.Equals (province.name))
-																								provIndex = k;
-																if (provIndex >= 0) {
-																				sourceProvinces.RemoveAt (provIndex);
-																				sourceCountry.provinces = sourceProvinces.ToArray ();
-																}
-												}
+            if (highlightedRegions == null)
+                highlightedRegions = new List<Region>();
+            else
+                highlightedRegions.Clear();
+            map.HideProvinceRegionHighlights(true);
 
-												// Adds province to target country
-												Country targetCountry = map.countries [targetCountryIndex];
-												if (targetCountry.provinces == null)
-																targetCountry.provinces = new Province[0];
-												List<Province> destProvinces = new List<Province> (targetCountry.provinces);
-												destProvinces.Add (province);
-												targetCountry.provinces = destProvinces.ToArray ();
+            if (provinceIndex < 0 || provinceIndex >= map.provinces.Length || countryIndex < 0 || countryIndex >= map.countries.Length || map.countries[countryIndex].provinces == null ||
+            provinceRegionIndex < 0 || map.provinces[provinceIndex].regions == null || provinceRegionIndex >= map.provinces[provinceIndex].regions.Count)
+                return;
 
-												// Apply boolean operations on country polygons
-												Region provinceRegion = province.regions [provinceRegionIndex];
-												Region sourceRegion = sourceCountry.regions [sourceCountry.mainRegionIndex];
-												Region targetRegion = targetCountry.regions [targetCountry.mainRegionIndex];
+            // Highlight current province
+            for (int p = 0; p < map.countries[countryIndex].provinces.Length; p++)
+            {
+                Province province = map.countries[countryIndex].provinces[p];
+                if (province.regions == null)
+                    continue;
+                // if province is current province then highlight it
+                if (province.name.Equals(map.provinces[provinceIndex].name))
+                {
+                    map.HighlightProvinceRegion(provinceIndex, provinceRegionIndex, false);
+                    highlightedRegions.Add(map.provinces[provinceIndex].regions[provinceRegionIndex]);
+                }
+                else
+                {
+                    // if this province belongs to the country but it's not current province, add to the collection of highlighted (not colorize because country is already colorized and that includes provinces area)
+                    highlightedRegions.Add(province.regions[province.mainRegionIndex]);
+                }
+            }
+            shouldHideEditorMesh = true;
+        }
 
-												// Extract from source country - only if province is in the frontier or is crossing the country
-												for (int k = 0; k < sourceCountry.regions.Count; k++) {
-																Region otherSourceRegion = sourceCountry.regions [k];
-																otherSourceRegion.sanitized = true;
-												}
-												PolygonClipper pc = new PolygonClipper (sourceRegion, provinceRegion);
-												if (pc.OverlapsSubjectAndClipping ()) {
-																sourceRegion.sanitized = false;
-																pc.Compute (PolygonOp.DIFFERENCE);
-												} else {
-																// Look for other regions to substract
-																for (int k = 0; k < sourceCountry.regions.Count; k++) {
-																				Region otherSourceRegion = sourceCountry.regions [k];
-																				pc = new PolygonClipper (otherSourceRegion, provinceRegion);
-																				if (pc.OverlapsSubjectAndClipping ()) {
-																								otherSourceRegion.sanitized = false;
-																								pc.Compute (PolygonOp.DIFFERENCE);
-																				}
-																}
-												}
+        void SyncGUIProvinceSelection()
+        {
+            // recover GUI country index selection
+            if (GUIProvinceName.Length > 0 && provinceNames != null)
+            {
+                for (int k = 0; k < _provinceNames.Length; k++)
+                {
+                    if (_provinceNames[k].TrimStart().StartsWith(GUIProvinceName))
+                    {
+                        GUIProvinceIndex = k;
+                        provinceIndex = map.GetProvinceIndex(countryIndex, GUIProvinceName);
+                        return;
+                    }
+                }
+            }
+            GUIProvinceIndex = -1;
+            GUIProvinceName = "";
+        }
 
-												// Remove invalid regions from source country
-												for (int k = 0; k < sourceCountry.regions.Count; k++) {
-																Region otherSourceRegion = sourceCountry.regions [k];
-																if (!otherSourceRegion.sanitized && otherSourceRegion.points.Length < 5) {
-																				sourceCountry.regions.RemoveAt (k);
-																				k--;
-																}
-												}
 
-												// Add region to target country's polygon - only if the province is touching or crossing target country frontier
-												pc = new PolygonClipper (targetRegion, provinceRegion);
-												if (pc.OverlapsSubjectAndClipping ()) {
-																pc.Compute (PolygonOp.UNION);
-												} else {
-																// Add new region to country
-																Region newCountryRegion = new Region (targetCountry, targetCountry.regions.Count);
-																newCountryRegion.points = new List<Vector3> (provinceRegion.points).ToArray ();
-																targetCountry.regions.Add (newCountryRegion);
-												}
+        public bool ProvinceRename()
+        {
+            if (countryIndex < 0 || provinceIndex < 0)
+                return false;
+            string prevName = map.provinces[provinceIndex].name;
+            GUIProvinceNewName = GUIProvinceNewName.Trim();
+            if (prevName.Equals(GUIProvinceNewName))
+                return false;
+            if (map.ProvinceRename(countryIndex, prevName, GUIProvinceNewName))
+            {
+                GUIProvinceName = GUIProvinceNewName;
+                lastProvinceCount = -1;
+                ReloadProvinceNames();
+                provinceChanges = true;
+                return true;
+            }
+            return false;
+        }
 
-												// Transfer cities
-												int cityCount = map.cities.Count;
-												for (int k = 0; k < cityCount; k++) {
-																City city = map.cities [k];
-																if (city.countryIndex == countryIndex && city.province.Equals (province.name)) {
-																				city.countryIndex = targetCountryIndex;
-																}
-												}
 
-												// Transfer mount points
-												int mountPointCount = map.mountPoints.Count;
-												for (int k = 0; k < mountPointCount; k++) {
-																MountPoint mp = map.mountPoints [k];
-																if (mp.countryIndex == countryIndex && mp.provinceIndex == provinceIndex) {
-																				mp.countryIndex = targetCountryIndex;
-																}
-												}
+        /// <summary>
+        /// Deletes current region or province if this was the last region
+        /// </summary>
+        public void ProvinceDelete()
+        {
+            if (provinceIndex < 0 || provinceIndex >= map.provinces.Length)
+                return;
 
-												// Finish operation
-												map.HideCountryRegionHighlights (true);
-												map.HideProvinceRegionHighlights (true);
-												map.RefreshCountryDefinition (province.countryIndex, null);
-												province.countryIndex = targetCountryIndex;
-												map.RefreshProvinceDefinition (provinceIndex);
-												map.RefreshCountryDefinition (targetCountryIndex, null);
-												countryChanges = true;
-												provinceChanges = true;
-												cityChanges = true;
-												mountPointChanges = true;
-								}
+            // Apply boolean operations on country polygons
+            Province province = map.provinces[provinceIndex];
+            Region provinceRegion = province.regions[provinceRegionIndex];
+            Country sourceCountry = map.countries[countryIndex];
 
-								/// <summary>
-								/// Separates a province from its current country producing a new country
-								/// </summary>
-								public void ProvinceSeparate (string newCountryName) {
-												if (provinceIndex < 0 || provinceIndex >= map.provinces.Length)
-																return;
-			
-												// Remove province form source country
-												Province province = map.provinces [provinceIndex];
-												Country sourceCountry = map.countries [countryIndex];
-												if (map.countries [countryIndex].provinces != null) {
-																List<Province> sourceProvinces = new List<Province> (sourceCountry.provinces);
-																int provIndex = -1;
-																for (int k = 0; k < sourceCountry.provinces.Length; k++)
-																				if (sourceCountry.provinces [k].name.Equals (province.name))
-																								provIndex = k;
-																if (provIndex >= 0) {
-																				sourceProvinces.RemoveAt (provIndex);
-																				sourceCountry.provinces = sourceProvinces.ToArray ();
-																}
-												}
-			
-												// Adds province region to a new country
-												Region regionProvince = province.regions [provinceRegionIndex];
-												Country targetCountry = new Country (newCountryName, sourceCountry.continent);
-												Region region = new Region (targetCountry, 0);
-												region.points = new List<Vector3> (regionProvince.points).ToArray ();
-												targetCountry.regions.Add (region);
-												map.CountryAdd (targetCountry);
-												int targetCountryIndex = map.countries.Length - 1;
-												map.RefreshCountryDefinition (targetCountryIndex, null);
-												lastCountryCount = -1;
+            // Extract from source country - only if province is in the frontier or is crossing the country
+            for (int k = 0; k < sourceCountry.regions.Count; k++)
+            {
+                Region otherSourceRegion = sourceCountry.regions[k];
+                otherSourceRegion.sanitized = true;
+            }
+            for (int k = 0; k < sourceCountry.regions.Count; k++)
+            {
+                Region otherSourceRegion = sourceCountry.regions[k];
+                PolygonClipper pc = new PolygonClipper(otherSourceRegion, provinceRegion);
+                if (pc.OverlapsSubjectAndClipping())
+                {
+                    otherSourceRegion.sanitized = false;
+                    pc.Compute(PolygonOp.DIFFERENCE);
+                }
+            }
 
-												// Add province to the new country
-												if (targetCountry.provinces == null)
-																targetCountry.provinces = new Province[0];
-												List<Province> destProvinces = new List<Province> (targetCountry.provinces);
-												destProvinces.Add (province);
-												targetCountry.provinces = destProvinces.ToArray ();
-			
-												// Apply boolean operations on country polygons
-												Region provinceRegion = province.regions [provinceRegionIndex];
-												Region sourceRegion = sourceCountry.regions [sourceCountry.mainRegionIndex];
+            // Remove invalid regions from source country
+            for (int k = 0; k < sourceCountry.regions.Count; k++)
+            {
+                Region otherSourceRegion = sourceCountry.regions[k];
+                if (!otherSourceRegion.sanitized && otherSourceRegion.points.Length < 5)
+                {
+                    sourceCountry.regions.RemoveAt(k);
+                    k--;
+                }
+            }
 
-												// Extract from source country - only if province is in the frontier or is crossing the country
-												for (int k = 0; k < sourceCountry.regions.Count; k++) {
-																Region otherSourceRegion = sourceCountry.regions [k];
-																otherSourceRegion.sanitized = true;
-												}
-												PolygonClipper pc = new PolygonClipper (sourceRegion, provinceRegion);
-												if (pc.OverlapsSubjectAndClipping ()) {
-																sourceRegion.sanitized = false;
-																pc.Compute (PolygonOp.DIFFERENCE);
-												} else {
-																// Look for other regions to substract
-																for (int k = 0; k < sourceCountry.regions.Count; k++) {
-																				Region otherSourceRegion = sourceCountry.regions [k];
-																				pc = new PolygonClipper (otherSourceRegion, provinceRegion);
-																				if (pc.OverlapsSubjectAndClipping ()) {
-																								otherSourceRegion.sanitized = false;
-																								pc.Compute (PolygonOp.DIFFERENCE);
-																				}
-																}
-												}
-			
-												// Remove invalid regions from source country
-												for (int k = 0; k < sourceCountry.regions.Count; k++) {
-																Region otherSourceRegion = sourceCountry.regions [k];
-																if (!otherSourceRegion.sanitized && otherSourceRegion.points.Length < 5) {
-																				sourceCountry.regions.RemoveAt (k);
-																				k--;
-																}
-												}
+            // Remove it from the country array
+            List<Province> newProvinces = new List<Province>(map.countries[countryIndex].provinces.Length - 1);
+            for (int k = 0; k < map.countries[countryIndex].provinces.Length; k++)
+                if (!map.countries[countryIndex].provinces[k].name.Equals(GUIProvinceName))
+                    newProvinces.Add(map.countries[countryIndex].provinces[k]);
+            map.countries[countryIndex].provinces = newProvinces.ToArray();
+            // Remove from the global array
+            newProvinces = new List<Province>(map.provinces.Length - 1);
+            for (int k = 0; k < map.provinces.Length; k++)
+            {
+                if (k != provinceIndex)
+                {
+                    newProvinces.Add(map.provinces[k]);
+                }
+            }
+            map.provinces = newProvinces.ToArray();
 
-												// Transfer cities
-												int cityCount = map.cities.Count;
-												for (int k = 0; k < cityCount; k++) {
-																City city = map.cities [k];
-																if (city.countryIndex == countryIndex && city.province.Equals (province.name)) {
-																				city.countryIndex = targetCountryIndex;
-																}
-												}
-			
-												// Transfer mount points
-												int mountPointCount = map.mountPoints.Count;
-												for (int k = 0; k < mountPointCount; k++) {
-																MountPoint mp = map.mountPoints [k];
-																if (mp.countryIndex == countryIndex && mp.provinceIndex == provinceIndex) {
-																				mp.countryIndex = targetCountryIndex;
-																}
-												}
+            // Finish operation
+            map.HideCountryRegionHighlights(true);
+            map.HideProvinceRegionHighlights(true);
+            map.RefreshCountryDefinition(countryIndex, null);
+            ClearProvinceSelection();
+            map.OptimizeFrontiers();
+            map.Redraw();
+            countryChanges = true;
+            provinceChanges = true;
+            CountryRegionSelect();
+        }
 
-												// Finish operation
-												map.HideCountryRegionHighlights (true);
-												map.HideProvinceRegionHighlights (true);
-												map.RefreshCountryDefinition (province.countryIndex, null);
-												province.countryIndex = targetCountryIndex;
-												map.RefreshProvinceDefinition (provinceIndex);
-												map.RefreshCountryDefinition (targetCountryIndex, null);
-												countryChanges = true;
-												provinceChanges = true;
-												cityChanges = true;
-												mountPointChanges = true;
-												ProvinceRegionSelect ();
-								}
+        /// <summary>
+        /// Deletes current region or province if this was the last region
+        /// </summary>
+        public void ProvinceRegionDelete()
+        {
+            if (provinceIndex < 0 || provinceIndex >= map.provinces.Length)
+                return;
 
-								#endregion
+            if (map.provinces[provinceIndex].regions != null && map.provinces[provinceIndex].regions.Count > 1)
+            {
+                map.provinces[provinceIndex].regions.RemoveAt(provinceRegionIndex);
+                map.RefreshProvinceDefinition(provinceIndex);
+            }
+            ClearProvinceSelection();
+            map.OptimizeFrontiers();
+            map.Redraw();
+            provinceChanges = true;
+        }
 
-								#region IO stuff
+        /// <summary>
+        /// Delete all provinces of current country. Called from DeleteCountry.
+        /// </summary>
+        void mDeleteCountryProvinces()
+        {
+            if (map.provinces == null)
+                return;
+            if (countryIndex < 0)
+                return;
 
-								/// <summary>
-								/// Returns the file name corresponding to the current province data file
-								/// </summary>
-								public string GetProvinceGeoDataFileName () {
-												return "provinces10.txt";
-								}
+            map.HideProvinceRegionHighlights(true);
+            map.countries[countryIndex].provinces = new Province[0];
+            map.CountryDeleteProvinces(countryIndex);
+            provinceChanges = true;
+        }
 
-								/// <summary>
-								/// Exports the geographic data in packed string format.
-								/// </summary>
-								public string GetProvinceGeoData () {
-			
-												StringBuilder sb = new StringBuilder ();
-												for (int k = 0; k < map.provinces.Length; k++) {
-																Province province = map.provinces [k];
-																int countryIndex = province.countryIndex;
-																if (countryIndex < 0 || countryIndex >= map.countries.Length)
-																				continue;
-																string countryName = map.countries [countryIndex].name;
-																if (k > 0)
-																				sb.Append ("|");
-																sb.Append (province.name + "$");
-																sb.Append (countryName + "$");
-																if (province.regions == null)
-																				map.ReadProvincePackedString (province);
-																for (int r = 0; r < province.regions.Count; r++) {
-																				if (r > 0)
-																								sb.Append ("*");
-																				Region region = province.regions [r];
-																				for (int p = 0; p < region.points.Length; p++) {
-																								if (p > 0)
-																												sb.Append (";");
-//						Vector2 point = region.points [p] * WorldMap2D.MAP_PRECISION;
-//						sb.Append (point.x.ToString () + ",");
-//						sb.Append (point.y.ToString ());
-																								int x = (int)(region.points [p].x * WorldMap2D.MAP_PRECISION);
-																								int y = (int)(region.points [p].y * WorldMap2D.MAP_PRECISION);
-																								sb.Append (x.ToString (CultureInfo.InvariantCulture));
-																								sb.Append (",");
-																								sb.Append (y.ToString (CultureInfo.InvariantCulture));
-																				}
-																}
-												}
-												return sb.ToString ();
-								}
+        public void DeleteCountryProvinces()
+        {
+            mDeleteCountryProvinces();
+            ClearSelection();
+            RedrawFrontiers();
+            map.RedrawMapLabels();
+        }
 
-								#endregion
 
-				}
+        /// <summary>
+        /// Creates a new province with the current shape
+        /// </summary>
+        public void ProvinceCreate()
+        {
+            if (newShape.Count < 3 || countryIndex < 0)
+                return;
+
+            provinceIndex = map.provinces.Length;
+            provinceRegionIndex = 0;
+            Province newProvince = new Province("New Province" + (provinceIndex + 1).ToString(), countryIndex);
+            Region region = new Region(newProvince, 0);
+            region.points = newShape.ToArray();
+            newProvince.regions = new List<Region>();
+            newProvince.regions.Add(region);
+            map.ProvinceAdd(newProvince);
+            map.RefreshProvinceDefinition(provinceIndex);
+            lastProvinceCount = -1;
+            ReloadProvinceNames();
+            ProvinceRegionSelect();
+            provinceChanges = true;
+        }
+
+        /// <summary>
+        /// Adds a new province to current province
+        /// </summary>
+        public void ProvinceRegionCreate()
+        {
+            if (newShape.Count < 3 || provinceIndex < 0)
+                return;
+
+            Province province = map.provinces[provinceIndex];
+            if (province.regions == null)
+                province.regions = new List<Region>();
+            provinceRegionIndex = province.regions.Count;
+            Region region = new Region(province, provinceRegionIndex);
+            region.points = newShape.ToArray();
+            if (province.regions == null)
+                province.regions = new List<Region>();
+            province.regions.Add(region);
+            map.RefreshProvinceDefinition(provinceIndex);
+            provinceChanges = true;
+            ProvinceRegionSelect();
+        }
+
+        /// <summary>
+        /// Changes province's owner to specified country
+        /// </summary>
+        public void ProvinceTransferTo()
+        {
+            if (provinceIndex < 0 || GUIProvinceTransferToCountryIndex < 0 || GUIProvinceTransferToCountryIndex >= countryNames.Length)
+                return;
+
+            // Get target country
+            // recover GUI country index selection
+            int targetCountryIndex = -1;
+            string[] s = countryNames[GUIProvinceTransferToCountryIndex].Split(new char[] {
+                                                                '(',
+                                                                ')'
+                                                }, System.StringSplitOptions.RemoveEmptyEntries);
+            if (s.Length >= 2)
+            {
+                if (!int.TryParse(s[1], out targetCountryIndex))
+                {
+                    return;
+                }
+            }
+            ProvinceTransferTo(targetCountryIndex, provinceIndex);
+            countryIndex = targetCountryIndex;
+            countryRegionIndex = _map.countries[targetCountryIndex].mainRegionIndex;
+            ProvinceRegionSelect();
+        }
+
+        public void ProvinceTransferTo(int targetCountryIndex, int provinceIndex)
+        {
+            // Remove province form source country
+            Province province = map.provinces[provinceIndex];
+            Country sourceCountry = map.countries[countryIndex];
+            if (map.countries[countryIndex].provinces != null)
+            {
+                List<Province> sourceProvinces = new List<Province>(sourceCountry.provinces);
+                int provIndex = -1;
+                for (int k = 0; k < sourceCountry.provinces.Length; k++)
+                    if (sourceCountry.provinces[k].name.Equals(province.name))
+                        provIndex = k;
+                if (provIndex >= 0)
+                {
+                    sourceProvinces.RemoveAt(provIndex);
+                    sourceCountry.provinces = sourceProvinces.ToArray();
+                }
+            }
+
+            // Adds province to target country
+            Country targetCountry = map.countries[targetCountryIndex];
+            if (targetCountry.provinces == null)
+                targetCountry.provinces = new Province[0];
+            List<Province> destProvinces = new List<Province>(targetCountry.provinces);
+            destProvinces.Add(province);
+            targetCountry.provinces = destProvinces.ToArray();
+
+            // Apply boolean operations on country polygons
+            Region provinceRegion = province.regions[provinceRegionIndex];
+            Region sourceRegion = sourceCountry.regions[sourceCountry.mainRegionIndex];
+            Region targetRegion = targetCountry.regions[targetCountry.mainRegionIndex];
+
+            // Extract from source country - only if province is in the frontier or is crossing the country
+            for (int k = 0; k < sourceCountry.regions.Count; k++)
+            {
+                Region otherSourceRegion = sourceCountry.regions[k];
+                otherSourceRegion.sanitized = true;
+            }
+            PolygonClipper pc = new PolygonClipper(sourceRegion, provinceRegion);
+            if (pc.OverlapsSubjectAndClipping())
+            {
+                sourceRegion.sanitized = false;
+                pc.Compute(PolygonOp.DIFFERENCE);
+            }
+            else
+            {
+                // Look for other regions to substract
+                for (int k = 0; k < sourceCountry.regions.Count; k++)
+                {
+                    Region otherSourceRegion = sourceCountry.regions[k];
+                    pc = new PolygonClipper(otherSourceRegion, provinceRegion);
+                    if (pc.OverlapsSubjectAndClipping())
+                    {
+                        otherSourceRegion.sanitized = false;
+                        pc.Compute(PolygonOp.DIFFERENCE);
+                    }
+                }
+            }
+
+            // Remove invalid regions from source country
+            for (int k = 0; k < sourceCountry.regions.Count; k++)
+            {
+                Region otherSourceRegion = sourceCountry.regions[k];
+                if (!otherSourceRegion.sanitized && otherSourceRegion.points.Length < 5)
+                {
+                    sourceCountry.regions.RemoveAt(k);
+                    k--;
+                }
+            }
+
+            // Add region to target country's polygon - only if the province is touching or crossing target country frontier
+            pc = new PolygonClipper(targetRegion, provinceRegion);
+            if (pc.OverlapsSubjectAndClipping())
+            {
+                pc.Compute(PolygonOp.UNION);
+            }
+            else
+            {
+                // Add new region to country
+                Region newCountryRegion = new Region(targetCountry, targetCountry.regions.Count);
+                newCountryRegion.points = new List<Vector3>(provinceRegion.points).ToArray();
+                targetCountry.regions.Add(newCountryRegion);
+            }
+
+            // Transfer cities
+            int cityCount = map.cities.Count;
+            for (int k = 0; k < cityCount; k++)
+            {
+                City city = map.cities[k];
+                if (city.countryIndex == countryIndex && city.province.Equals(province.name))
+                {
+                    city.countryIndex = targetCountryIndex;
+                }
+            }
+
+            // Transfer mount points
+            int mountPointCount = map.mountPoints.Count;
+            for (int k = 0; k < mountPointCount; k++)
+            {
+                MountPoint mp = map.mountPoints[k];
+                if (mp.countryIndex == countryIndex && mp.provinceIndex == provinceIndex)
+                {
+                    mp.countryIndex = targetCountryIndex;
+                }
+            }
+
+            // Finish operation
+            map.HideCountryRegionHighlights(true);
+            map.HideProvinceRegionHighlights(true);
+            map.RefreshCountryDefinition(province.countryIndex, null);
+            province.countryIndex = targetCountryIndex;
+            map.RefreshProvinceDefinition(provinceIndex);
+            map.RefreshCountryDefinition(targetCountryIndex, null);
+            countryChanges = true;
+            provinceChanges = true;
+            cityChanges = true;
+            mountPointChanges = true;
+        }
+
+        /// <summary>
+		/// Merge two provinces into one
+		/// </summary>
+		public void MergeProvinces()
+        {
+            if (provinceIndex < 0 || provinceIndex >= map.provinces.Length || 
+                targetProvinceIndex < 0 || targetProvinceIndex >= map.provinces.Length)
+                return;
+
+            Province sourceProvince = map.provinces[provinceIndex];
+            Debug.Log(sourceProvince.name);
+            Province targetProvince = map.provinces[targetProvinceIndex];
+            Debug.Log(targetProvince.name);
+
+            // Transfer all provinces records to target country
+            if (sourceProvince.regions != null && targetProvince.regions != null)
+            {
+                for (int i1 = 0; i1 < sourceProvince.regions.Count; i1++)
+                {
+                    Region sourceRegion = sourceProvince.regions[i1];
+                    bool didFindOverlap = false;
+                    for (int i2 = 0; i2 < targetProvince.regions.Count; i2++)
+                    {
+                        PolygonClipper pc = new PolygonClipper(targetProvince.regions[i2], sourceRegion);
+                        if (pc.OverlapsSubjectAndClipping())
+                        {
+                            pc.Compute(PolygonOp.UNION);
+                            didFindOverlap = true;
+                        }
+                    }
+                    if (!didFindOverlap)
+                    {
+                        Region newProvinceRegion = new Region(targetProvince, targetProvince.regions.Count);
+                        newProvinceRegion.points = new List<Vector3>(sourceRegion.points).ToArray();
+                        targetProvince.regions.Add(newProvinceRegion);
+                    }
+                }
+            }
+
+            // Transfer cities & mount points
+            TransferProvinceCities(sourceProvince, targetProvince);
+            TransferProvinceRegionMountPoints(countryIndex, targetProvinceIndex); 
+
+            // Finish operation
+            map.HideCountryRegionHighlights(true);
+            map.HideProvinceRegionHighlights(true);
+            map.RefreshProvinceDefinition(targetProvinceIndex);
+            ProvinceDelete();
+            provinceIndex = targetProvinceIndex;
+            provinceChanges = true;
+            cityChanges = true;
+            mountPointChanges = true;
+        }
+
+        /// <summary>
+        /// Separates a province from its current country producing a new country
+        /// </summary>
+        public void ProvinceSeparate(string newCountryName)
+        {
+            if (provinceIndex < 0 || provinceIndex >= map.provinces.Length)
+                return;
+
+            // Remove province form source country
+            Province province = map.provinces[provinceIndex];
+            Country sourceCountry = map.countries[countryIndex];
+            if (map.countries[countryIndex].provinces != null)
+            {
+                List<Province> sourceProvinces = new List<Province>(sourceCountry.provinces);
+                int provIndex = -1;
+                for (int k = 0; k < sourceCountry.provinces.Length; k++)
+                    if (sourceCountry.provinces[k].name.Equals(province.name))
+                        provIndex = k;
+                if (provIndex >= 0)
+                {
+                    sourceProvinces.RemoveAt(provIndex);
+                    sourceCountry.provinces = sourceProvinces.ToArray();
+                }
+            }
+
+            // Adds province region to a new country
+            Region regionProvince = province.regions[provinceRegionIndex];
+            Country targetCountry = new Country(newCountryName, sourceCountry.continent);
+            Region region = new Region(targetCountry, 0);
+            region.points = new List<Vector3>(regionProvince.points).ToArray();
+            targetCountry.regions.Add(region);
+            map.CountryAdd(targetCountry);
+            int targetCountryIndex = map.countries.Length - 1;
+            map.RefreshCountryDefinition(targetCountryIndex, null);
+            lastCountryCount = -1;
+
+            // Add province to the new country
+            if (targetCountry.provinces == null)
+                targetCountry.provinces = new Province[0];
+            List<Province> destProvinces = new List<Province>(targetCountry.provinces);
+            destProvinces.Add(province);
+            targetCountry.provinces = destProvinces.ToArray();
+
+            // Apply boolean operations on country polygons
+            Region provinceRegion = province.regions[provinceRegionIndex];
+            Region sourceRegion = sourceCountry.regions[sourceCountry.mainRegionIndex];
+
+            // Extract from source country - only if province is in the frontier or is crossing the country
+            for (int k = 0; k < sourceCountry.regions.Count; k++)
+            {
+                Region otherSourceRegion = sourceCountry.regions[k];
+                otherSourceRegion.sanitized = true;
+            }
+            PolygonClipper pc = new PolygonClipper(sourceRegion, provinceRegion);
+            if (pc.OverlapsSubjectAndClipping())
+            {
+                sourceRegion.sanitized = false;
+                pc.Compute(PolygonOp.DIFFERENCE);
+            }
+            else
+            {
+                // Look for other regions to substract
+                for (int k = 0; k < sourceCountry.regions.Count; k++)
+                {
+                    Region otherSourceRegion = sourceCountry.regions[k];
+                    pc = new PolygonClipper(otherSourceRegion, provinceRegion);
+                    if (pc.OverlapsSubjectAndClipping())
+                    {
+                        otherSourceRegion.sanitized = false;
+                        pc.Compute(PolygonOp.DIFFERENCE);
+                    }
+                }
+            }
+
+            // Remove invalid regions from source country
+            for (int k = 0; k < sourceCountry.regions.Count; k++)
+            {
+                Region otherSourceRegion = sourceCountry.regions[k];
+                if (!otherSourceRegion.sanitized && otherSourceRegion.points.Length < 5)
+                {
+                    sourceCountry.regions.RemoveAt(k);
+                    k--;
+                }
+            }
+
+            // Transfer cities
+            int cityCount = map.cities.Count;
+            for (int k = 0; k < cityCount; k++)
+            {
+                City city = map.cities[k];
+                if (city.countryIndex == countryIndex && city.province.Equals(province.name))
+                {
+                    city.countryIndex = targetCountryIndex;
+                }
+            }
+
+            // Transfer mount points
+            int mountPointCount = map.mountPoints.Count;
+            for (int k = 0; k < mountPointCount; k++)
+            {
+                MountPoint mp = map.mountPoints[k];
+                if (mp.countryIndex == countryIndex && mp.provinceIndex == provinceIndex)
+                {
+                    mp.countryIndex = targetCountryIndex;
+                }
+            }
+
+            // Finish operation
+            map.HideCountryRegionHighlights(true);
+            map.HideProvinceRegionHighlights(true);
+            map.RefreshCountryDefinition(province.countryIndex, null);
+            province.countryIndex = targetCountryIndex;
+            map.RefreshProvinceDefinition(provinceIndex);
+            map.RefreshCountryDefinition(targetCountryIndex, null);
+            countryChanges = true;
+            provinceChanges = true;
+            cityChanges = true;
+            mountPointChanges = true;
+            ProvinceRegionSelect();
+        }
+
+        #endregion
+
+        #region IO stuff
+
+        /// <summary>
+        /// Returns the file name corresponding to the current province data file
+        /// </summary>
+        public string GetProvinceGeoDataFileName()
+        {
+            return "regions.txt";
+        }
+
+        /// <summary>
+        /// Exports the geographic data in packed string format.
+        /// </summary>
+        public string GetProvinceGeoData()
+        {
+
+            StringBuilder sb = new StringBuilder();
+            for (int k = 0; k < map.provinces.Length; k++)
+            {
+                Province province = map.provinces[k];
+                int countryIndex = province.countryIndex;
+                if (countryIndex < 0 || countryIndex >= map.countries.Length)
+                    continue;
+                string countryName = map.countries[countryIndex].name;
+                if (k > 0)
+                    sb.Append("|");
+                sb.Append(province.name + "$");
+                sb.Append(countryName + "$");
+                if (province.regions == null)
+                    map.ReadProvincePackedString(province);
+                for (int r = 0; r < province.regions.Count; r++)
+                {
+                    if (r > 0)
+                        sb.Append("*");
+                    Region region = province.regions[r];
+                    for (int p = 0; p < region.points.Length; p++)
+                    {
+                        if (p > 0)
+                            sb.Append(";");
+                        //						Vector2 point = region.points [p] * WorldMap2D.MAP_PRECISION;
+                        //						sb.Append (point.x.ToString () + ",");
+                        //						sb.Append (point.y.ToString ());
+                        int x = (int)(region.points[p].x * WorldMap2D.MAP_PRECISION);
+                        int y = (int)(region.points[p].y * WorldMap2D.MAP_PRECISION);
+                        sb.Append(x.ToString(CultureInfo.InvariantCulture));
+                        sb.Append(",");
+                        sb.Append(y.ToString(CultureInfo.InvariantCulture));
+                    }
+                }
+            }
+            return sb.ToString();
+        }
+
+        #endregion
+
+    }
 }

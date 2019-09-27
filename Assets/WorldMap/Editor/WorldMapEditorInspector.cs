@@ -57,28 +57,16 @@ namespace WPMF
 				_map.Init();
 			}
 
-			// Load UI icons
-			Texture2D[] icons = new Texture2D[20];
-			icons[0] = Resources.Load<Texture2D>("IconSelect");
-			icons[1] = Resources.Load<Texture2D>("IconPolygon");
-			icons[2] = Resources.Load<Texture2D>("IconUndo");
-			icons[3] = Resources.Load<Texture2D>("IconConfirm");
-			icons[4] = Resources.Load<Texture2D>("IconPoint");
-			icons[5] = Resources.Load<Texture2D>("IconCircle");
-			icons[6] = Resources.Load<Texture2D>("IconMagnet");
-			icons[7] = Resources.Load<Texture2D>("IconSplitVert");
-			icons[8] = Resources.Load<Texture2D>("IconSplitHoriz");
-			icons[9] = Resources.Load<Texture2D>("IconDelete");
-			icons[10] = Resources.Load<Texture2D>("IconEraser");
-			icons[11] = Resources.Load<Texture2D>("IconMorePoints");
-			icons[12] = Resources.Load<Texture2D>("IconCreate");
-			icons[13] = Resources.Load<Texture2D>("IconPenCountry");
-			icons[14] = Resources.Load<Texture2D>("IconTarget");
-			icons[15] = Resources.Load<Texture2D>("IconPenCountryRegion");
-			icons[16] = Resources.Load<Texture2D>("IconPenProvince");
-			icons[17] = Resources.Load<Texture2D>("IconPenProvinceRegion");
-			icons[18] = Resources.Load<Texture2D>("IconMove");
-			icons[19] = Resources.Load<Texture2D>("IconMountPoint");
+            // Load UI icons
+            string[] iconNames = new string[] { "IconSelect", "IconPolygon", "IconUndo", "IconConfirm",
+            "IconPoint", "IconCircle", "IconMagnet", "IconSplitVert", "IconSplitHoriz", "IconDelete",
+            "IconEraser", "IconMorePoints", "IconCreate", "IconPenCountry", "IconTarget", "IconPenCountryRegion",
+            "IconPenProvince", "IconPenProvinceRegion", "IconMove", "IconMountPoint"};
+            Texture2D[] icons = new Texture2D[20];
+            for (int i = 0; i < iconNames.Length; i++)
+            {
+                icons[i] = Resources.Load<Texture2D>(iconNames[i]);
+            }
 
 			// Setup main toolbar
 			mainToolbarIcons = new GUIContent[5];
@@ -538,7 +526,19 @@ namespace WPMF
 						EditorUtility.DisplayDialog("Change Province's Sovereignty", "Not available, need high definition country file. Or just fix this shitty code.", "Ok");
 					}
 					EditorGUILayout.EndHorizontal();
-					EditorGUILayout.BeginHorizontal();
+                    EditorGUILayout.BeginHorizontal();
+                    GUILayout.Label("   Target province", GUILayout.Width(90));
+                    int targetProvSelection = EditorGUILayout.Popup(_editor.GUITargetProvinceIndex, provinceNames);
+                    if (targetProvSelection != _editor.GUITargetProvinceIndex)
+                    {
+                        _editor.TargetProvinceSelectByCombo(targetProvSelection);
+                    }
+                    if (GUILayout.Button("Merge"))
+                    {
+                        _editor.MergeProvinces();
+                    }
+                    EditorGUILayout.EndHorizontal();
+                    EditorGUILayout.BeginHorizontal();
 					GUILayout.Label("   New Country", GUILayout.Width(90));
 					_editor.GUIProvinceNewCountryName = EditorGUILayout.TextField(_editor.GUIProvinceNewCountryName);
 					if (GUILayout.Button("Separate"))

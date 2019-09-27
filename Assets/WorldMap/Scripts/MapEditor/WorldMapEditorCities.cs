@@ -253,7 +253,20 @@ namespace WPMF {
 			}
 		}
 
-		void TransferRegionCities(int countryIndex, Region countryRegion, int targetCountryIndex) {
+        void TransferProvinceCities(Province province, Province targetProvince)
+        {
+            int cityCount = _map.cities.Count;
+            for (int k = 0; k < cityCount; k++)
+            {
+                if (_map.cities[k].province == province.name)
+                {
+                    _map.cities[k].province = targetProvince.name;
+                    cityChanges = true;
+                }
+            }
+        }
+
+        void TransferRegionCities(int countryIndex, Region countryRegion, int targetCountryIndex) {
 			int cityCount = _map.cities.Count;
 			for (int k=0;k<cityCount;k++) {
 				City city = _map.cities[k];
@@ -273,7 +286,7 @@ namespace WPMF {
 		/// Returns the file name corresponding to the current country data file (countries10, countries110)
 		/// </summary>
 		public string GetCityGeoDataFileName() {
-			return "cities10.txt";
+			return "zone_places.txt";
 		}
 		
 		/// <summary>
