@@ -57,7 +57,7 @@ public class EntryPopup : MonoBehaviour {
         Cube.transform.Translate(x, y,-2);
         float a= Convert.ToSingle(x)-105;
         float b = Convert.ToSingle(y)+62;
-        //Vector3 SCPCoord = new Vector3(a, b, 99);
-        //map.FlyToProvince(map.GetProvinceNearToPoint(SCPCoord));
+        Vector3 SCPCoord = new Vector3(a, b, 99);
+        //map.FlyToLocation(a,b,99);
     }
 }
