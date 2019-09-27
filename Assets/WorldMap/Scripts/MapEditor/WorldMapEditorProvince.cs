@@ -48,10 +48,12 @@ namespace WPMF
             map.HideProvinces();
             provinceIndex = -1;
             provinceRegionIndex = -1;
+            targetProvinceIndex = -1;
             GUIProvinceName = "";
             GUIProvinceNewName = "";
             GUIProvinceNewCountryName = "";
             GUIProvinceIndex = -1;
+            GUITargetProvinceIndex = -1;
         }
 
 
@@ -101,24 +103,6 @@ namespace WPMF
             return false;
         }
 
-        bool GetTargetProvinceIndexByGUISelection()
-        {
-            if (GUITargetProvinceIndex < 0 || GUITargetProvinceIndex >= provinceNames.Length)
-                return false;
-            string[] s = provinceNames[GUITargetProvinceIndex].Split(new char[] {
-                                                                '(',
-                                                                ')'
-                                                }, System.StringSplitOptions.RemoveEmptyEntries);
-            if (s.Length >= 2)
-            {
-                if (int.TryParse(s[1], out targetProvinceIndex))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
         public void ProvinceSelectByCombo(int selection)
         {
             GUIProvinceName = "";
@@ -136,7 +120,6 @@ namespace WPMF
         public void TargetProvinceSelectByCombo(int selection)
         {
             GUITargetProvinceIndex = selection;
-            GetTargetProvinceIndexByGUISelection();
         }
 
         public void ReloadProvinceNames()

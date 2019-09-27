@@ -329,10 +329,10 @@ namespace WPMF
 		void CheckEditorStyles()
 		{
 
-			// Setup styles
+            // Setup styles
 			if (labelsStyle == null)
 			{
-				labelsStyle = new GUIStyle();
+                labelsStyle = new GUIStyle();
 				labelsStyle.normal.textColor = Color.green;
 				labelsStyle.alignment = TextAnchor.MiddleCenter;
 			}
@@ -2301,7 +2301,8 @@ namespace WPMF
 
 		void DrawEditorProvinceNames()
 		{
-			if (_editor.highlightedRegions == null)
+            CheckEditorStyles();
+            if (_editor.highlightedRegions == null)
 				return;
 			Transform mapTransform = _map.transform;
 			for (int p = 0; p < _editor.highlightedRegions.Count; p++)
@@ -2310,6 +2311,14 @@ namespace WPMF
 				if (region.regionIndex == region.entity.mainRegionIndex)
 				{
 					Vector3 regionCenter = mapTransform.TransformPoint(region.center);
+                    if (regionCenter == null || region.entity == null || 
+                        region.entity.name == null || labelsStyle == null)
+                    {
+                        Debug.Log("Suka");
+                        Debug.Log(regionCenter);
+                        Debug.Log(region.entity.name);
+                        Debug.Log(labelsStyle);
+                    }
 					Handles.Label(regionCenter, region.entity.name, labelsStyle);
 				}
 			}
