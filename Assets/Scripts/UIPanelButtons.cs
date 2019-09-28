@@ -8,22 +8,21 @@ public class UIPanelButtons : MonoBehaviour
 {
     public Button Tech;
     public Button Settings;
-
     public Canvas Canvas;
 
     public void TechPressed()
     {
-        SceneManager.LoadScene("Technoligies");
-        Canvas.gameObject.SetActive(false);
+        SceneManager.LoadScene("Tech");
+        //Canvas.gameObject.SetActive(false);
         Debug.Log("techloaded'");
     }
 
     public void SetiingsPressed()
     {
-        SceneManager.LoadScene("Technoligies");
+        //SceneManager.LoadScene("Technoligies");
     }
 
-    // Update is called once per frame
+
     void Update()
     {
         Tech.onClick.AddListener(TechPressed);

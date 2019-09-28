@@ -143,6 +143,9 @@ PlayerSettings:
     oculus:
       sharedDepthBuffer: 1
       dashSupport: 1
+      lowOverheadMode: 0
+      protectedContext: 0
+      v2Signing: 0
     enable360StereoCapture: 0
   protectGraphicsMemory: 0
   enableFrameTimingStats: 0
@@ -625,10 +628,10 @@ PlayerSettings:
   facebookXfbml: 0
   facebookFrictionlessRequests: 1
   apiCompatibilityLevel: 6
-  cloudProjectId: 90ac9f40-7bf3-46c7-b639-b81deffb74cc
+  cloudProjectId: 00f483f4-a009-4506-ab01-b7d04600ed9b
   framebufferDepthMemorylessMode: 0
   projectName: SCPF WA
-  organizationId: triumo
+  organizationId: yabatrak
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0

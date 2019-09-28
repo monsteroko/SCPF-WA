@@ -13,7 +13,7 @@ public class MenuControl : MonoBehaviour
     {
         //Canvas.gameObject.SetActive(false);
         lname = SceneManager.GetActiveScene().name;
-        if (lname == "tecnologies")
+        if (lname == "Technologies")
         {
             SceneManager.LoadScene("Menu");
         }
