@@ -527,7 +527,7 @@ namespace WPMF
 					}
 					EditorGUILayout.EndHorizontal();
                     EditorGUILayout.BeginHorizontal();
-                    GUILayout.Label("   Target province", GUILayout.Width(90));
+                    GUILayout.Label("   Target province", GUILayout.Width(100));
                     int targetProvSelection = EditorGUILayout.Popup(_editor.GUITargetProvinceIndex, provinceNames);
                     if (targetProvSelection != _editor.GUITargetProvinceIndex)
                     {
@@ -536,6 +536,14 @@ namespace WPMF
                     if (GUILayout.Button("Merge"))
                     {
                         _editor.MergeProvinces();
+                    }
+                    EditorGUILayout.EndHorizontal();
+                    EditorGUILayout.BeginHorizontal();
+                    GUILayout.Label("   Merge raduius", GUILayout.Width(100));  
+                    _editor.GUIMergeRadius = EditorGUILayout.Slider(_editor.GUIMergeRadius, 0, 1);
+                    if (GUILayout.Button("Merge multiple"))
+                    {
+                        _editor.MergeMultiple();
                     }
                     EditorGUILayout.EndHorizontal();
                     EditorGUILayout.BeginHorizontal();
@@ -2311,14 +2319,6 @@ namespace WPMF
 				if (region.regionIndex == region.entity.mainRegionIndex)
 				{
 					Vector3 regionCenter = mapTransform.TransformPoint(region.center);
-                    if (regionCenter == null || region.entity == null || 
-                        region.entity.name == null || labelsStyle == null)
-                    {
-                        Debug.Log("Suka");
-                        Debug.Log(regionCenter);
-                        Debug.Log(region.entity.name);
-                        Debug.Log(labelsStyle);
-                    }
 					Handles.Label(regionCenter, region.entity.name, labelsStyle);
 				}
 			}

@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using WPMF.PolygonClipping;
+using System.Linq;
 
 namespace WPMF
 {
@@ -13,12 +14,14 @@ namespace WPMF
     {
 
         public int provinceIndex = -1, provinceRegionIndex = -1, targetProvinceIndex = -1;
+        public float mergeRadius = 0;
         public int GUIProvinceIndex;
         public string GUIProvinceName = "";
         public string GUIProvinceNewName = "";
         public string GUIProvinceNewCountryName = "";
         public int GUIProvinceTransferToCountryIndex = -1;
         public int GUITargetProvinceIndex;
+        public float GUIMergeRadius;
         public bool provinceChanges;
         // if there's any pending change to be saved
 
@@ -103,6 +106,24 @@ namespace WPMF
             return false;
         }
 
+        bool GetTargetProvinceIndexByGUISelection()
+        {
+            if (GUITargetProvinceIndex < 0 || GUITargetProvinceIndex >= provinceNames.Length)
+                return false;
+            string[] s = provinceNames[GUITargetProvinceIndex].Split(new char[] {
+                                                                '(',
+                                                                ')'
+                                                }, System.StringSplitOptions.RemoveEmptyEntries);
+            if (s.Length >= 2)
+            {
+                if (int.TryParse(s[1], out targetProvinceIndex))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public void ProvinceSelectByCombo(int selection)
         {
             GUIProvinceName = "";
@@ -120,6 +141,7 @@ namespace WPMF
         public void TargetProvinceSelectByCombo(int selection)
         {
             GUITargetProvinceIndex = selection;
+            GetTargetProvinceIndexByGUISelection();
         }
 
         public void ReloadProvinceNames()
@@ -163,7 +185,6 @@ namespace WPMF
 
         void ProvinceHighlightSelection()
         {
-
             if (highlightedRegions == null)
                 highlightedRegions = new List<Region>();
             else
@@ -238,7 +259,7 @@ namespace WPMF
         /// <summary>
         /// Deletes current region or province if this was the last region
         /// </summary>
-        public void ProvinceDelete()
+        public void ProvinceDelete(bool clipRegions = true)
         {
             if (provinceIndex < 0 || provinceIndex >= map.provinces.Length)
                 return;
@@ -249,37 +270,41 @@ namespace WPMF
             Country sourceCountry = map.countries[countryIndex];
 
             // Extract from source country - only if province is in the frontier or is crossing the country
-            for (int k = 0; k < sourceCountry.regions.Count; k++)
+            if (clipRegions)
             {
-                Region otherSourceRegion = sourceCountry.regions[k];
-                otherSourceRegion.sanitized = true;
-            }
-            for (int k = 0; k < sourceCountry.regions.Count; k++)
-            {
-                Region otherSourceRegion = sourceCountry.regions[k];
-                PolygonClipper pc = new PolygonClipper(otherSourceRegion, provinceRegion);
-                if (pc.OverlapsSubjectAndClipping())
+                for (int k = 0; k < sourceCountry.regions.Count; k++)
                 {
-                    otherSourceRegion.sanitized = false;
-                    pc.Compute(PolygonOp.DIFFERENCE);
+                    Region otherSourceRegion = sourceCountry.regions[k];
+                    otherSourceRegion.sanitized = true;
                 }
-            }
-
-            // Remove invalid regions from source country
-            for (int k = 0; k < sourceCountry.regions.Count; k++)
-            {
-                Region otherSourceRegion = sourceCountry.regions[k];
-                if (!otherSourceRegion.sanitized && otherSourceRegion.points.Length < 5)
+                for (int k = 0; k < sourceCountry.regions.Count; k++)
                 {
-                    sourceCountry.regions.RemoveAt(k);
-                    k--;
+                    Region otherSourceRegion = sourceCountry.regions[k];
+                    PolygonClipper pc = new PolygonClipper(otherSourceRegion, provinceRegion);
+                    if (pc.OverlapsSubjectAndClipping())
+                    {
+                        otherSourceRegion.sanitized = false;
+                        pc.Compute(PolygonOp.DIFFERENCE);
+                    }
+                }
+
+                // Remove invalid regions from source country
+                for (int k = 0; k < sourceCountry.regions.Count; k++)
+                {
+                    Region otherSourceRegion = sourceCountry.regions[k];
+                    if (!otherSourceRegion.sanitized && otherSourceRegion.points.Length < 5)
+                    {
+                        sourceCountry.regions.RemoveAt(k);
+                        k--;
+                    }
                 }
             }
 
             // Remove it from the country array
+            string removeName = province.name;
             List<Province> newProvinces = new List<Province>(map.countries[countryIndex].provinces.Length - 1);
             for (int k = 0; k < map.countries[countryIndex].provinces.Length; k++)
-                if (!map.countries[countryIndex].provinces[k].name.Equals(GUIProvinceName))
+                if (!map.countries[countryIndex].provinces[k].name.Equals(removeName))
                     newProvinces.Add(map.countries[countryIndex].provinces[k]);
             map.countries[countryIndex].provinces = newProvinces.ToArray();
             // Remove from the global array
@@ -546,6 +571,10 @@ namespace WPMF
 		/// </summary>
 		public void MergeProvinces()
         {
+            Debug.Log("sas");
+            Debug.Log(provinceIndex);
+            Debug.Log(targetProvinceIndex);
+            Debug.Log(map.provinces.Length);
             if (provinceIndex < 0 || provinceIndex >= map.provinces.Length || 
                 targetProvinceIndex < 0 || targetProvinceIndex >= map.provinces.Length)
                 return;
@@ -569,6 +598,7 @@ namespace WPMF
                         {
                             pc.Compute(PolygonOp.UNION);
                             didFindOverlap = true;
+                            break;
                         }
                     }
                     if (!didFindOverlap)
@@ -588,11 +618,69 @@ namespace WPMF
             map.HideCountryRegionHighlights(true);
             map.HideProvinceRegionHighlights(true);
             map.RefreshProvinceDefinition(targetProvinceIndex);
-            ProvinceDelete();
+            ProvinceDelete(false);
             provinceIndex = targetProvinceIndex;
             provinceChanges = true;
             cityChanges = true;
             mountPointChanges = true;
+        }
+
+        public void MergeMultiple()
+        {
+            if (provinceIndex < 0 || provinceIndex >= map.provinces.Length)
+                return;
+
+            Province targetProvince = map.provinces[provinceIndex];
+            List<Province> sourceProvinces = new List<Province>();
+            foreach (Province province in map.provinces)
+            {
+                var dist = Vector2.Distance(targetProvince.center, province.center);
+                if (dist > 0 && dist < GUIMergeRadius)
+                {
+                    sourceProvinces.Add(province);
+                }
+            }
+            sourceProvinces.Sort(delegate(Province x, Province y)  {
+                var dx = Vector2.Distance(targetProvince.center, x.center);
+                var dy = Vector2.Distance(targetProvince.center, y.center);
+                return dx.CompareTo(dy);
+            });
+            var sourceProvinceNames = from p in sourceProvinces select p.name;
+            string realTargetName = targetProvince.name;
+            Debug.Log("Real target:");
+            Debug.Log(realTargetName);
+            Debug.Log("Sources:");
+            foreach (Province sProvince in sourceProvinces)
+            {
+                string name = sProvince.name;
+                Debug.Log(name);
+                int sourceNameIndex = map.GetProvinceIndex(countryIndex, name);
+                int targetNameIndex = map.GetProvinceIndex(countryIndex, realTargetName);
+                if (sourceNameIndex >= 0)
+                {
+                    Debug.Log("pep");
+                    targetProvinceIndex = targetNameIndex;
+                    provinceIndex = sourceNameIndex;
+                    provinceRegionIndex = 0;
+                    Debug.Log(provinceIndex);
+                    Debug.Log(targetProvinceIndex);
+                    MergeProvinces();
+                }
+            }
+            foreach (Province sProvince in sourceProvinces)
+            {
+                string name = sProvince.name;
+                int sourceNameIndex = map.GetProvinceIndex(countryIndex, name);
+                if (sourceNameIndex >= 0)
+                {
+                    Debug.Log("del");
+                    provinceIndex = sourceNameIndex;
+                    provinceRegionIndex = 0;
+                    ProvinceDelete();
+                }
+            }
+            provinceIndex = 0;
+            provinceRegionIndex = 0;
         }
 
         /// <summary>

@@ -291,7 +291,7 @@ namespace WPMF {
         /// Returns the file name corresponding to the current mount point data file
         /// </summary>
         public string GetMountPointGeoDataFileName() {
-			return "mountPoints.txt";
+			return "landmarks.txt";
 		}
 		
 		/// <summary>
