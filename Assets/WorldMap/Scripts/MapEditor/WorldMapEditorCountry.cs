@@ -555,15 +555,14 @@ namespace WPMF
 			map.RedrawMapLabels();
 		}
 
+        #endregion
 
-		#endregion
+        #region IO stuff
 
-		#region IO stuff
-
-		/// <summary>
-		/// Returns the file name corresponding to the current country data file (countries10, countries110)
-		/// </summary>
-		public string GetCountryGeoDataFileName()
+        /// <summary>
+        /// Returns the file name corresponding to the current country data file (countries10, countries110)
+        /// </summary>
+        public string GetCountryGeoDataFileName()
 		{
 			return "counterparts.txt";
 		}
