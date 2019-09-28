@@ -3,27 +3,29 @@ using System.Collections.Generic;
 using UnityEngine;
 using WPMF;
 
-class Region
+public class RegionModel
 {
     public readonly string name;
     public bool unlocked = false;
+    public List<Region> regions;
 
-    public Region(Province province)
+    public RegionModel(Province province)
     {
         name = province.name;
+        regions = province.regions;
     }
 }
 
-class Counterpart
+public class CounterpartModel
 {
     public readonly string name;
-    public Dictionary<string, Region> regions = new Dictionary<string, Region>();
-    public Counterpart(Country country)
+    public Dictionary<string, RegionModel> regions = new Dictionary<string, RegionModel>();
+    public CounterpartModel(Country country)
     {
         name = country.name;
     }
 
-    public void addRegion(Region region)
+    public void addRegion(RegionModel region)
     {
         regions[region.name] = region;
     }
@@ -31,8 +33,9 @@ class Counterpart
 
 public class MapManager
 {
-    Dictionary<int, Counterpart> counterparts = new Dictionary<int, Counterpart>();
+    Dictionary<int, CounterpartModel> counterparts = new Dictionary<int, CounterpartModel>();
 	WorldMap2D map = WorldMap2D.instance;
+    public List<RegionModel> unlockedRegions = new List<RegionModel>();
 
 	public MapManager(MapSaveModel mapSave) 
     {
@@ -41,23 +44,24 @@ public class MapManager
 		// Init data from map
 		foreach (Country country in map.countries)
         {
-            counterparts[map.GetCountryIndex(country.name)] = new Counterpart(country);
+            counterparts[map.GetCountryIndex(country.name)] = new CounterpartModel(country);
         }
         foreach (Province province in map.provinces)
         {
-            counterparts[province.countryIndex].addRegion(new Region(province));
+            counterparts[province.countryIndex].addRegion(new RegionModel(province));
 		}
         // Init data from save
         foreach (string regionName in mapSave.unlockedRegions)
         {
             Debug.Log(regionName);
-            foreach (Counterpart counterpart in counterparts.Values)
+            foreach (CounterpartModel counterpart in counterparts.Values)
             {
                 if (counterpart.regions.ContainsKey(regionName))
                 {
                     counterpart.regions[regionName].unlocked = true;
 					map.ToggleProvinceSurface(regionName, false, Color.cyan);
 					map.FlyToProvince(counterpart.name, regionName, 1, 0.2f);
+                    unlockedRegions.Add(counterpart.regions[regionName]);
 				}
             }
         }

@@ -14,8 +14,7 @@ namespace WPMF
 		/// <summary>
 		/// 2D rect in the billboard
 		/// </summary>
-		public Rect rect2D;
-		
+		public Rect rect2D;		
 		public Material customMaterial { get; set; }
 		
 		public Vector2 customTextureScale, customTextureOffset;

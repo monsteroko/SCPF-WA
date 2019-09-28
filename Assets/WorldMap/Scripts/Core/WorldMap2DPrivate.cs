@@ -1366,10 +1366,36 @@ namespace WPMF
 				MoveToDestination();
 		}
 
-		/// <summary>
-		/// Used internally to rotate the globe during FlyTo operations. Use FlyTo method.
-		/// </summary>
-		void MoveToDestination()
+        void SetUnityDestination(Vector2 point, float _duration = -1, float _zoomLevel = -1)
+        {
+            float duration = _duration >= 0 ? _duration : _navigationTime;
+            float zoomLevel = _zoomLevel >= 0 ? _zoomLevel : GetZoomLevel();
+            // setup lerping parameters
+            if (_staticCamera)
+            {
+                flyToStartQuaternion = transform.rotation;
+                flyToStartLocation = transform.position;
+                flyToEndQuaternion = currentCamera.transform.rotation;
+                flyToEndLocation = transform.TransformPoint(point) - transform.forward * GetZoomLevelDistance(zoomLevel);
+            }
+            else
+            {
+                flyToStartQuaternion = _currentCamera.transform.rotation;
+                flyToStartLocation = _currentCamera.transform.position;
+                flyToEndQuaternion = transform.rotation;
+                flyToEndLocation = new Vector3(point.x, point.y, 100) - transform.forward * GetZoomLevelDistance(zoomLevel);
+            }
+            flyToDuration = duration;
+            flyToActive = true;
+            flyToStartTime = DateTime.Now;
+            if (flyToDuration == 0)
+                MoveToDestination();
+        }
+
+        /// <summary>
+        /// Used internally to rotate the globe during FlyTo operations. Use FlyTo method.
+        /// </summary>
+        void MoveToDestination()
 		{
 			float delta;
 			Quaternion rotation;

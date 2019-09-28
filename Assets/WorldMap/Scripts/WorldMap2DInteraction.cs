@@ -459,7 +459,7 @@ namespace WPMF
 		/// </summary>
 		public void FlyToLocation (float x, float y, float duration)
 		{
-			SetDestination (new Vector2 (x, y), duration);
+            SetDestination(new Vector2 (x, y), duration);
 		}
 
 		#endregion
