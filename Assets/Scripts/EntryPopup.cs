@@ -58,6 +58,6 @@ public class EntryPopup : MonoBehaviour {
         float a= Convert.ToSingle(x)-105;
         float b = Convert.ToSingle(y)+62;
         Vector3 SCPCoord = new Vector3(a, b, 99);
-        //map.FlyToLocation(a,b,99);
+        map.FlyToLocation(a,b,99);
     }
 }
