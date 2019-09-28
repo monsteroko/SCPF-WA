@@ -571,10 +571,6 @@ namespace WPMF
 		/// </summary>
 		public void MergeProvinces()
         {
-            Debug.Log("sas");
-            Debug.Log(provinceIndex);
-            Debug.Log(targetProvinceIndex);
-            Debug.Log(map.provinces.Length);
             if (provinceIndex < 0 || provinceIndex >= map.provinces.Length || 
                 targetProvinceIndex < 0 || targetProvinceIndex >= map.provinces.Length)
                 return;
@@ -647,9 +643,6 @@ namespace WPMF
             });
             var sourceProvinceNames = from p in sourceProvinces select p.name;
             string realTargetName = targetProvince.name;
-            Debug.Log("Real target:");
-            Debug.Log(realTargetName);
-            Debug.Log("Sources:");
             foreach (Province sProvince in sourceProvinces)
             {
                 string name = sProvince.name;
@@ -658,25 +651,11 @@ namespace WPMF
                 int targetNameIndex = map.GetProvinceIndex(countryIndex, realTargetName);
                 if (sourceNameIndex >= 0)
                 {
-                    Debug.Log("pep");
                     targetProvinceIndex = targetNameIndex;
                     provinceIndex = sourceNameIndex;
                     provinceRegionIndex = 0;
-                    Debug.Log(provinceIndex);
-                    Debug.Log(targetProvinceIndex);
+
                     MergeProvinces();
-                }
-            }
-            foreach (Province sProvince in sourceProvinces)
-            {
-                string name = sProvince.name;
-                int sourceNameIndex = map.GetProvinceIndex(countryIndex, name);
-                if (sourceNameIndex >= 0)
-                {
-                    Debug.Log("del");
-                    provinceIndex = sourceNameIndex;
-                    provinceRegionIndex = 0;
-                    ProvinceDelete();
                 }
             }
             provinceIndex = 0;
