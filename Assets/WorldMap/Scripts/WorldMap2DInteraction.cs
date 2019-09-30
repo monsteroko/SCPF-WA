@@ -429,19 +429,11 @@ namespace WPMF
 			
 			return (currentCamera.transform.position - dest).magnitude / distance;
 		}
-
-		/// <summary>
-		/// Starts navigation to target location in local 2D coordinates.
-		/// </summary>
-		public void FlyToLocation (Vector2 destination)
-		{
-			FlyToLocation (destination.x, destination.y, _navigationTime);
-		}
 		
 		/// <summary>
 		/// Starts navigation to target location in local 2D coordinates.
 		/// </summary>
-		public void FlyToLocation (Vector2 destination, float duration)
+		public void FlyToLocation (Vector2 destination, float duration = -1)
 		{
 			FlyToLocation (destination.x, destination.y, duration);
 		}
@@ -449,17 +441,9 @@ namespace WPMF
 		/// <summary>
 		/// Starts navigation to target location in local 2D coordinates.
 		/// </summary>
-		public void FlyToLocation (float x, float y)
+		public void FlyToLocation (float x, float y, float duration = -1)
 		{
-			FlyToLocation (x, y, _navigationTime);
-		}
-		
-		/// <summary>
-		/// Starts navigation to target location in local 2D coordinates.
-		/// </summary>
-		public void FlyToLocation (float x, float y, float duration)
-		{
-            SetDestination(new Vector2 (x, y), duration);
+            SetDestination(new Vector2 (x, y), duration < 0 ? _navigationTime : duration);
 		}
 
 		#endregion

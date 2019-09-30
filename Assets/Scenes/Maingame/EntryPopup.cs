@@ -51,19 +51,13 @@ public class EntryPopup : MonoBehaviour {
     }
     public void OnButtonDown()
     {
-        gameManager = GameObject.Find("GameManagerObject").GetComponent<GameManager>();
+        gameManager = GameManager.instance;
         MapManager mapManager = gameManager.mapManager;
+        Vector2 point = mapManager.GeneratePointInUnlockedAreas();
         map = WorldMap2D.instance;
-        Region region = mapManager.unlockedRegions[0].regions[0];
-        Rect rect = region.rect2D;
-        x = rect.xMin + (float)UnityEngine.Random.Range(0, 100) / 100.0f * rect.xMax;
-        y = rect.yMin + (float)UnityEngine.Random.Range(0, 100) / 100.0f * rect.yMax;
-        Debug.Log(x);
-        Debug.Log(y);
-        Vector3 ucoord = map.transform.TransformPoint(new Vector2(x, y));
+        Vector3 ucoord = map.transform.TransformPoint(point);
         Debug.Log(ucoord);
         Cube.transform.position = ucoord;
-        Vector3 SCPCoord = new Vector3(x, y, 99);
-        map.FlyToLocation(x,y,1);
+        map.FlyToLocation(point, 1);
     }
 }
