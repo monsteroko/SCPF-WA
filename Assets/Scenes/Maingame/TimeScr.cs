@@ -47,5 +47,7 @@ public class TimeScr : MonoBehaviour
         string sd = dt.ToLongDateString();
         timetxt.text = s;
         dttxt.text = sd;
+
+        
     }
 }

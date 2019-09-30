@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Menu/Menu.unity
     guid: 0836773016972594e87f3e375ccbb420
   - enabled: 1
-    path: Assets/Scenes/Main game/Game.unity
+    path: Assets/Scenes/Maingame/Game.unity
     guid: a69a1acfc96a32545a9a5458969abea3
   - enabled: 1
     path: Assets/Scenes/Counterparts selection/CounterpartsSelection.unity
