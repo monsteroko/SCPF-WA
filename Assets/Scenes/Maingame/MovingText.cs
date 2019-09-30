@@ -9,40 +9,34 @@ using Random = UnityEngine.Random;
 
 public class MovingText : MonoBehaviour
 {
-    public GameObject Panel;
+    public GameObject panel;
     public Text movingText;
     string[] text;
     int v = 0;
-    // Start is called before the first frame update
+
     void Start()
     {
-        using (StreamReader sr = new StreamReader(@"Assets/Scenes/Maingame/movingText.txt"))
-        {
-            text = sr.ReadToEnd().Split(';');
-        }
         TextGen();
     }
 
     void TextGen()
     {
-
-        movingText.text = text[Random.Range(0, text.Length)];
-        
-        //movingText.transform.Translate(Vector3.left * Time.deltaTime * 10);
-        
+        using (StreamReader sr = new StreamReader(@"Assets/Scenes/Maingame/movingText.txt"))
+        {
+            text = sr.ReadToEnd().Split(';');
+        }
+        movingText.text = text[Random.Range(0, text.Length)];        
     }
     
-
-    // Update is called once per frame
-
     void Update()
     {
-        if (v >= 2000)
+        if (v >= 1900)
         {
-           Panel.transform.Translate(2000, 0, 0);
+            panel.transform.Translate(1900, 0, 0);
             v = 0;
+            TextGen();
         }
-        Panel.transform.Translate(Vector3.left);
+        panel.transform.Translate(Vector3.left);
         v++;
 
     }
