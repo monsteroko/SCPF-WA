@@ -19,15 +19,15 @@ public class Area
 public class Counterpart
 {
     public readonly string name;
-    public Dictionary<string, Area> regions = new Dictionary<string, Area>();
+    public Dictionary<string, Area> areas = new Dictionary<string, Area>();
     public Counterpart(Country country)
     {
         name = country.name;
     }
 
-    public void addRegion(Area region)
+    public void addRegion(Area area)
     {
-        regions[region.name] = region;
+        areas[area.name] = area;
     }
 }
 
@@ -41,27 +41,37 @@ public class MapManager
     {
 		// Setup map
 		map.showProvinces = true;
+        map.enableCountryHighlight = false;
+        map.enableProvinceHighlight = false;
 		// Init data from map
 		foreach (Country country in map.countries)
         {
             counterparts[map.GetCountryIndex(country.name)] = new Counterpart(country);
         }
+        int index = 0;
         foreach (Province province in map.provinces)
         {
             counterparts[province.countryIndex].addRegion(new Area(province));
-		}
+            map.ToggleProvinceSurface(index, true, new Color(0.1f, 0.1f, 0.1f, 0.8f));
+            index++;
+        }
+        foreach (Counterpart counterpart in counterparts.Values) {
+            Debug.Log(counterpart.name);
+            Debug.Log(counterpart.areas.Count);
+        }
+        Debug.Log(map.provinces.Length);
         // Init data from save
-        foreach (string regionName in mapSave.unlockedRegions)
+        foreach (string areaName in mapSave.unlockedAreas)
         {
-            Debug.Log(regionName);
+            Debug.Log(areaName);
             foreach (Counterpart counterpart in counterparts.Values)
             {
-                if (counterpart.regions.ContainsKey(regionName))
+                if (counterpart.areas.ContainsKey(areaName))
                 {
-                    counterpart.regions[regionName].unlocked = true;
-					map.ToggleProvinceSurface(regionName, false, Color.cyan);
-					map.FlyToProvince(counterpart.name, regionName, 1, 0.2f);
-                    unlockedAreas.Add(counterpart.regions[regionName]);
+                    counterpart.areas[areaName].unlocked = true;
+                    map.ToggleProvinceSurface(areaName, false, Color.cyan);
+					map.FlyToProvince(counterpart.name, areaName, 1, 0.1f);
+                    unlockedAreas.Add(counterpart.areas[areaName]);
 				}
             }
         }

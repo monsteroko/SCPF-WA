@@ -1450,7 +1450,8 @@ namespace WPMF
 				}
 				customMat.color = color;
 				customMat.hideFlags = HideFlags.DontSave;
-				return customMat;
+                customMat.shader = Shader.Find("Transparent/Diffuse");
+                return customMat;
 			}
 		}
 

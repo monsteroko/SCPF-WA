@@ -4,31 +4,31 @@ using UnityEngine;
 
 public class MapSaveModel
 {
-    public readonly List<string> unlockedRegions;
+    public readonly List<string> unlockedAreas;
     
-    private MapSaveModel(List<string> unlockedRegions)
+    private MapSaveModel(List<string> unlockedAreas)
     {
-        this.unlockedRegions = unlockedRegions;
+        this.unlockedAreas = unlockedAreas;
     }
 
     public static MapSaveModel NewGameSave(string counterpartname) 
     {
-        List<string> unlockedRegions = new List<string>();
+        List<string> unlockedAreas = new List<string>();
         switch (counterpartname)
         {
             case "eeu":
-                unlockedRegions.Add("Kharkiv");
+                unlockedAreas.Add("Kharkiv");
                 break;
             case "na":
-                unlockedRegions.Add("Iowa");
+                unlockedAreas.Add("Iowa");
                 break;
             case "sa":
-                unlockedRegions.Add("Buenos Aires");
+                unlockedAreas.Add("Buenos Aires");
                 break;
             default:
                 Debug.Log("Wrong starting counterpart");
                 break;
         }
-        return new MapSaveModel(unlockedRegions);
+        return new MapSaveModel(unlockedAreas);
     }
 }

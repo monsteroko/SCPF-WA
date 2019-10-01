@@ -1187,12 +1187,12 @@ namespace WPMF
 				AssetDatabase.CopyAsset(fullFileName, geoDataFolder + "/counterparts.txt");
 			}
 			// Regions
-			fullFileName = backupFolder + "/regions.txt";
+			fullFileName = backupFolder + "/areas.txt";
 			if (File.Exists(fullFileName))
 			{
-				AssetDatabase.DeleteAsset(geoDataFolder + "/regions.txt");
+				AssetDatabase.DeleteAsset(geoDataFolder + "/areas.txt");
 				AssetDatabase.SaveAssets();
-				AssetDatabase.CopyAsset(fullFileName, geoDataFolder + "/regions.txt");
+				AssetDatabase.CopyAsset(fullFileName, geoDataFolder + "/areas.txt");
 			}
 			// Zone places
 			fullFileName = backupFolder + "/zone_places.txt";
@@ -1880,30 +1880,30 @@ namespace WPMF
 				// Do the backup
 				AssetDatabase.CreateFolder(rootFolder, "Backup");
 				string backupFolder = rootFolder + "/Backup";
-				string fullFileName = geoDataFolder + "/countries110.txt";
+				string fullFileName = geoDataFolder + "/counterparts.txt";
 				if (File.Exists(fullFileName))
 				{
-					AssetDatabase.CopyAsset(fullFileName, backupFolder + "/countries110.txt");
+					AssetDatabase.CopyAsset(fullFileName, backupFolder + "/counterparts.txt");
 				}
-				fullFileName = geoDataFolder + "/countries10.txt";
+				fullFileName = geoDataFolder + "/counterparts.txt";
 				if (File.Exists(fullFileName))
 				{
-					AssetDatabase.CopyAsset(fullFileName, backupFolder + "/countries10.txt");
+					AssetDatabase.CopyAsset(fullFileName, backupFolder + "/counterparts.txt");
 				}
-				fullFileName = geoDataFolder + "/provinces10.txt";
+				fullFileName = geoDataFolder + "/areas.txt";
 				if (File.Exists(fullFileName))
 				{
-					AssetDatabase.CopyAsset(fullFileName, backupFolder + "/provinces10.txt");
+					AssetDatabase.CopyAsset(fullFileName, backupFolder + "/areas.txt");
 				}
-				fullFileName = geoDataFolder + "/cities10.txt";
+				fullFileName = geoDataFolder + "/zone_places.txt";
 				if (File.Exists(fullFileName))
 				{
-					AssetDatabase.CopyAsset(fullFileName, backupFolder + "/cities10.txt");
+					AssetDatabase.CopyAsset(fullFileName, backupFolder + "/zone_places.txt");
 				}
-				fullFileName = geoDataFolder + "/mountPoints.txt";
+				fullFileName = geoDataFolder + "/landmarks.txt";
 				if (File.Exists(fullFileName))
 				{
-					AssetDatabase.CopyAsset(fullFileName, backupFolder + "/mountPoints.txt");
+					AssetDatabase.CopyAsset(fullFileName, backupFolder + "/landmarks.txt");
 				}
 			}
 		}

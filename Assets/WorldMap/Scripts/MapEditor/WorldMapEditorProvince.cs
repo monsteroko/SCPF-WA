@@ -658,6 +658,7 @@ namespace WPMF
                     MergeProvinces();
                 }
             }
+            Debug.Log("Provinces left: " + map.provinces.Count().ToString());
             provinceIndex = 0;
             provinceRegionIndex = 0;
         }
@@ -792,7 +793,7 @@ namespace WPMF
         /// </summary>
         public string GetProvinceGeoDataFileName()
         {
-            return "regions.txt";
+            return "areas.txt";
         }
 
         /// <summary>
