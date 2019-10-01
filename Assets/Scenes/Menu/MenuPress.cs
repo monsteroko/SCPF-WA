@@ -20,7 +20,7 @@ public class NewBehaviourScript : MonoBehaviour
     public void ExitPressed()
     {
         Application.Quit();
-        Debug.Log("Exit pressed!");
+        //Debug.Log("Exit pressed!");
     }
     public void IcoPR()
     {

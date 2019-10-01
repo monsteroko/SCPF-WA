@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class kek : MonoBehaviour
 {
@@ -54,7 +55,7 @@ public class kek : MonoBehaviour
             {
                 ispuse = false;
                 timer = 0;
-                Application.LoadLevel("Menu"); // здесь при нажатии на кнопку загружается другая сцена, вы можете изменить название сцены на свое
+                SceneManager.LoadScene("Menu"); // здесь при нажатии на кнопку загружается другая сцена, вы можете изменить название сцены на свое
 
             }
         }

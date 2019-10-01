@@ -17,17 +17,20 @@ public class ZoneManagementButtons : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
         Employees.SetActive(false);
         SCPs.SetActive(false);
         Parameters.SetActive(true);
+
+        SCPsButton.onClick.AddListener(SCPList);
+        EmpButton.onClick.AddListener(Personnel);
+        ParaButton.onClick.AddListener(BaseManagement);
     }
 
     // Update is called once per frame
     void Update()
     {
-        SCPsButton.onClick.AddListener(SCPList);
-        EmpButton.onClick.AddListener(Personnel);
-        ParaButton.onClick.AddListener(BaseManagement);
+        
     }
 
     void Personnel()
