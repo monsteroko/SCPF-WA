@@ -211,7 +211,7 @@ namespace WPMF {
 		/// Returns the file name corresponding to the current city data file
 		/// </summary>
 		public string GetCityFileName() {
-			return "cities10.txt";
+			return "cities.txt";
 		}
 
 
