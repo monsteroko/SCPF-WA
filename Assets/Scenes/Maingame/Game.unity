@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -209,7 +209,7 @@ Transform:
   m_Children:
   - {fileID: 812285826}
   - {fileID: 315191572}
-  - {fileID: 815623332}
+  - {fileID: 689857255}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1079,7 +1079,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tech: {fileID: 852180586}
-  settings: {fileID: 0}
+  menu: {fileID: 0}
 --- !u!1 &315191571
 GameObject:
   m_ObjectHideFlags: 0
@@ -1679,6 +1679,49 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 652679572}
   m_CullTransparentMesh: 0
+--- !u!1 &689857254
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 689857255}
+  - component: {fileID: 689857256}
+  m_Layer: 0
+  m_Name: Mount Points
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &689857255
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 689857254}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 58948696}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &689857256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 689857254}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8e3da7166b16478e9991a944543a6dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &734024938
 GameObject:
   m_ObjectHideFlags: 0
@@ -2142,49 +2185,6 @@ Transform:
   m_Father: {fileID: 58948696}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &815623331
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 815623332}
-  - component: {fileID: 815623333}
-  m_Layer: 0
-  m_Name: Mount Points
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &815623332
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 815623331}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 58948696}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &815623333
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 815623331}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8e3da7166b16478e9991a944543a6dd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &841079791
 GameObject:
   m_ObjectHideFlags: 0
@@ -2293,8 +2293,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: 900, y: 6}
+  m_SizeDelta: {x: 93.1, y: 38.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &852180586
 MonoBehaviour:
@@ -2974,66 +2974,6 @@ MonoBehaviour:
   m_Script: {fileID: 1212926596}
   m_Name: 
   m_EditorClassIdentifier: 
-  operationMode: 0
-  reshapeRegionMode: 0
-  reshapeCityMode: 0
-  reshapeMountPointMode: 0
-  createMode: 0
-  cursor: {x: 0, y: 0, z: 0}
-  circleMoveConstant: 0
-  circleCurrentRegionOnly: 0
-  reshapeCircleWidth: 0.01
-  shouldHideEditorMesh: 0
-  magnetAgressiveMode: 0
-  keepNearbyFrontiers: 0
-  infoMsg: 
-  editingMode: 1
-  undoRegionsDummyFlag: 0
-  undoCitiesDummyFlag: 0
-  undoMountPointsDummyFlag: 0
-  newShape: []
-  lastMinPopulation: 0
-  GUICityIndex: -1
-  GUICityName: 
-  GUICityNewName: 
-  GUICityPopulation: 
-  GUICityClass: 1
-  cityIndex: -1
-  cityChanges: 0
-  GUICountryIndex: -1
-  GUICountryName: 
-  GUICountryNewName: 
-  GUICountryNewContinent: 
-  GUICountryTransferToCountryIndex: -1
-  groupByParentAdmin: 1
-  countryIndex: -1
-  countryRegionIndex: -1
-  countryChanges: 0
-  _GUICountryHidden: 0
-  GUIMountPointIndex: -1
-  GUIMountPointName: 
-  GUIMountPointNewName: 
-  GUIMountPointNewType: 
-  GUIMountPointNewTagKey: 
-  GUIMountPointNewTagValue: 
-  GUIMountPointMassPopulationMin: 1
-  GUIMountPointMassPopulationMax: 3
-  GUIMountPointMassPopulationSeparation: 10
-  GUIMountPointMassPopulationType: 
-  mountPointIndex: -1
-  mountPointChanges: 0
-  provinceIndex: -1
-  provinceRegionIndex: -1
-  targetProvinceIndex: -1
-  mergeRadius: 0
-  GUIProvinceIndex: 0
-  GUIProvinceName: 
-  GUIProvinceNewName: 
-  GUIProvinceNewCountryName: 
-  GUIProvinceTransferToCountryIndex: -1
-  GUITargetProvinceIndex: 0
-  GUIMergeRadius: 0
-  provinceChanges: 0
 --- !u!1 &1350075919
 GameObject:
   m_ObjectHideFlags: 0
@@ -3090,19 +3030,19 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 2f58a140f06d46a8aada51ffd598b682, type: 3}
     m_FontSize: 14
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
-    m_MaxSize: 40
+    m_MinSize: 1
+    m_MaxSize: 160
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Button
+  m_Text: Technologies
 --- !u!222 &1350075922
 CanvasRenderer:
   m_ObjectHideFlags: 0
