@@ -46,8 +46,8 @@ namespace WPMF {
 					if (textureRotation != 0) 
 						coor = RotatePoint (coor, Misc.Vector2zero, textureRotation);
 					coor += textureOffset;
-					Vector2 normCoor = new Vector2 ((coor.x - rect.xMin) / rect.width, (coor.y - rect.yMax) / rect.height);
-					uv [k] = normCoor;
+                    Vector2 normCoor = new Vector2 ((coor.x - rect.xMin) / rect.width, (coor.y - rect.yMin) / rect.height);
+                    uv [k] = normCoor;
 				}
 				mesh.uv = uv;
 			}

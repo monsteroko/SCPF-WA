@@ -1096,13 +1096,13 @@ namespace WPMF
 				surfMaterial = surf.GetComponent<Renderer> ().sharedMaterial;
 				if ((texture == null && !surfMaterial.name.Equals (coloredMat.name)) || (texture != null && !surfMaterial.name.Equals (texturizedMat.name)) 
 					|| (surfMaterial.color != color && !isHighlighted) || (texture != null && region.customMaterial.mainTexture != texture)) {
-					Material goodMaterial = GetColoredTexturedMaterial (color, texture);
-					region.customMaterial = goodMaterial;
+                    Material goodMaterial = GetColoredTexturedMaterial (color, texture);
+                    region.customMaterial = goodMaterial;
 					ApplyMaterialToSurface (surf, goodMaterial);
 				}
 			} else {
-				surfMaterial = GetColoredTexturedMaterial (color, texture);
-				surf = GenerateCountryRegionSurface (countryIndex, regionIndex, surfMaterial, textureScale, textureOffset, textureRotation, _showOutline, applyTextureToAllRegions);
+                surfMaterial = GetColoredTexturedMaterial (color, texture);
+                surf = GenerateCountryRegionSurface (countryIndex, regionIndex, surfMaterial, textureScale, textureOffset, textureRotation, _showOutline, applyTextureToAllRegions);
 				region.customMaterial = surfMaterial;
 				region.customTextureOffset = textureOffset;
 				region.customTextureRotation = textureRotation;

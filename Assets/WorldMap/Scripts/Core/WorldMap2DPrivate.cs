@@ -30,7 +30,7 @@ namespace WPMF
 		#region Internal variables
 
 		// resources
-		Material coloredMat, texturizedMat;
+		Material coloredMat, texturizedMat, lockedMat;
 		Material outlineMat, cursorMatH, cursorMatV, gridMat;
 		Material lineMarkerMat;
 
@@ -830,7 +830,9 @@ namespace WPMF
 			outlineMat.hideFlags = HideFlags.DontSave;
 			coloredMat = Instantiate(Resources.Load<Material>("Materials/ColorizedRegion"));
 			coloredMat.hideFlags = HideFlags.DontSave;
-			texturizedMat = Instantiate(Resources.Load<Material>("Materials/TexturizedRegion"));
+            lockedMat = Instantiate(Resources.Load<Material>("Materials/LockedStripes"));
+            lockedMat.hideFlags = HideFlags.DontSave;
+            texturizedMat = Instantiate(Resources.Load<Material>("Materials/TexturizedRegion"));
 			texturizedMat.hideFlags = HideFlags.DontSave;
 			cursorMatH = Instantiate(Resources.Load<Material>("Materials/CursorH"));
 			cursorMatH.hideFlags = HideFlags.DontSave;
@@ -1429,7 +1431,7 @@ namespace WPMF
 
 		Material GetColoredTexturedMaterial(Color color, Texture2D texture)
 		{
-			if (texture == null && coloredMatCache.ContainsKey(color))
+            if (texture == null && coloredMatCache.ContainsKey(color))
 			{
 				return coloredMatCache[color];
 			}

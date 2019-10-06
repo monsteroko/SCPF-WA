@@ -480,33 +480,76 @@ namespace WPMF
 			_provinceRegionHighlightedIndex = -1;
 		}
 		
-		GameObject GenerateProvinceRegionSurface (int provinceIndex, int regionIndex, Material material)
-		{
-			if (provinces [provinceIndex].regions == null)
-				ReadProvincePackedString (provinces [provinceIndex]);
-			if (provinceIndex < 0 || provinceIndex >= provinces.Length || provinces [provinceIndex].regions == null || regionIndex < 0 || regionIndex >= provinces [provinceIndex].regions.Count)
-				return null;
-			Region region = provinces [provinceIndex].regions [regionIndex];
-			int[] surfIndices = Triangulator.GetPoints (region.points);
-			int cacheIndex = GetCacheIndexForProvinceRegion (provinceIndex, regionIndex); 
-			string cacheIndexSTR = cacheIndex.ToString ();
-			// Deletes potential residual surface
-			Transform t = surfacesLayer.transform.Find (cacheIndexSTR);
-			if (t != null)
-				DestroyImmediate (t.gameObject);
-			GameObject surf = Drawing.CreateSurface (cacheIndexSTR, region.points, surfIndices, material);									
-			surf.transform.SetParent (surfacesLayer.transform, false);
-			surf.transform.localPosition = Misc.Vector3zero;
-			surf.layer = gameObject.layer;
-			if (surfaces.ContainsKey (cacheIndex))
-				surfaces.Remove (cacheIndex);
-			surfaces.Add (cacheIndex, surf);
-			return surf;
-		}
+        GameObject GenerateProvinceRegionSurface(int provinceIndex, int regionIndex, Material material) {
+            if (provinceIndex < 0 || provinceIndex >= provinces.Length)
+                return null;
+            Province province = provinces[provinceIndex];
+            Region region = province.regions[regionIndex];
 
-		#endregion
+            // Triangulate to get the polygon vertex indices
+            int[] surfIndices = Triangulator.GetPoints(region.points);
+
+            // Check surface orientation
+            Vector3 v1 = region.points[surfIndices[0]];
+            Vector3 v2 = region.points[surfIndices[1]];
+            Vector3 v3 = region.points[surfIndices[2]];
+            Vector3 vf = Vector3.Cross(v2 - v1, v3 - v1);
+            if (Vector3.Dot(transform.forward, vf) > 0) {
+                // Flip surface
+                int indicesLength = surfIndices.Length;
+                for (int k = 0; k < indicesLength; k += 3) {
+                    int a = surfIndices[k];
+                    surfIndices[k] = surfIndices[k + 1];
+                    surfIndices[k + 1] = a;
+                }
+            }
+            float chunkSize = 0.01f;
+            float textureSizeKoef = chunkSize / region.rect2D.height;
+            Vector2 textureScale = new Vector2(region.rect2D.height / region.rect2D.width * textureSizeKoef, textureSizeKoef);
+            Debug.Log(region.rect2D.xMin);
+            Vector2 surfaceOffset = new Vector2(region.rect2D.xMin - chunkSize * (int)(region.rect2D.xMin / chunkSize) ,
+                region.rect2D.yMin - chunkSize * (int)(region.rect2D.yMin / chunkSize));
+            Debug.Log(surfaceOffset.x);
+            Vector2 textureOffset = new Vector2(region.rect2D.xMin, region.rect2D.yMin);
+
+            // Prepare surface cache entry and deletes older surface if exists
+            int cacheIndex = GetCacheIndexForProvinceRegion(provinceIndex, regionIndex);
+            string cacheIndexSTR = cacheIndex.ToString();
+            Transform t = surfacesLayer.transform.Find(cacheIndexSTR);
+            if (t != null)
+                DestroyImmediate(t.gameObject); // Deletes potential residual surface
+
+            // Creates surface mesh
+            GameObject surf = Drawing.CreateSurface(cacheIndexSTR, region.points, surfIndices, material, region.rect2D, textureScale, textureOffset, 0);
+            surf.transform.SetParent(surfacesLayer.transform, false);
+            surf.transform.localPosition = Misc.Vector3zero;
+            surf.transform.localRotation = Quaternion.Euler(Misc.Vector3zero);
+            surf.layer = gameObject.layer;
+            if (surfaces.ContainsKey(cacheIndex))
+                surfaces.Remove(cacheIndex);
+            surfaces.Add(cacheIndex, surf);
+
+            /*int crCount = province.regions.Count;
+            for (int r = 0; r < crCount; r++) {
+                Region otherRegion = province.regions[r];
+                if (otherRegion != region) {
+                    // Triangulate to get the polygon vertex indices
+                    int[] otherSurfIndices = Triangulator.GetPoints(otherRegion.points);
+                    GameObject otherSurf;
+                    otherSurf = Drawing.CreateSurface(cacheIndexSTR, otherRegion.points, otherSurfIndices, material);
+                    otherSurf.transform.SetParent(surf.transform, false);
+                    otherSurf.transform.localPosition = Misc.Vector3zero;
+                    otherSurf.transform.localRotation = Quaternion.Euler(Misc.Vector3zero);
+                    otherSurf.layer = gameObject.layer;
+                }
+            }*/
+
+            return surf;
+        }
+
+        #endregion
 
 
-	}
+    }
 
 }
