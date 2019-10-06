@@ -503,7 +503,7 @@ namespace WPMF
                     surfIndices[k + 1] = a;
                 }
             }
-            float chunkSize = 0.1f;
+            float chunkSize = 0.01f;
             float textureSizeKoef = chunkSize / region.rect2D.height;
             Vector2 textureScale = new Vector2(region.rect2D.height / region.rect2D.width * textureSizeKoef, textureSizeKoef);
             Debug.Log(region.rect2D.xMin);
