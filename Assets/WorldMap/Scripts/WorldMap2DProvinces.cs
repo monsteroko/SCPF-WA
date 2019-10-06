@@ -761,7 +761,7 @@ namespace WPMF
                 HideProvinceRegionSurface(provinceIndex, regionIndex);
                 return;
             }
-            Material coloredMat = GetColoredTexturedMaterial(color, null);
+            Material coloredMat = lockedMat;
             int cacheIndex = GetCacheIndexForProvinceRegion(provinceIndex, regionIndex);
             if (surfaces.ContainsKey(cacheIndex) && surfaces[cacheIndex] != null)
             {
@@ -769,7 +769,7 @@ namespace WPMF
                 // don't colorize while it's highlighted - it will revert to colorize when finish the highlight
                 if (_provinceHighlightedIndex != provinceIndex || _provinceRegionHighlightedIndex != regionIndex || !_enableProvinceHighlight)
                 {
-                    surfaces[cacheIndex].GetComponent<Renderer>().sharedMaterial.color = color;
+                    surfaces[cacheIndex].GetComponent<Renderer>().sharedMaterial = coloredMat;
                 }
             }
             else
