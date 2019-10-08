@@ -56,7 +56,6 @@ public class EntryPopup : MonoBehaviour {
         Vector2 point = mapManager.GeneratePointInUnlockedAreas();
         map = WorldMap2D.instance;
         Vector3 ucoord = map.transform.TransformPoint(point);
-        Debug.Log(ucoord);
         Cube.transform.position = ucoord;
         map.FlyToLocation(point, 1);
     }

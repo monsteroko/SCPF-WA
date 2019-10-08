@@ -22,16 +22,17 @@ namespace WPMF
 
 		void Start ()
 		{
-			ScaleCities ();
+			ScaleCities (0.1f);
 		}
 	
 		// Update is called once per frame
 		void Update ()
 		{
-			if (lastPos != transform.position || lastCamPos != map.currentCamera.transform.position || lastIconSize != map.cityIconSize || 
+            //Dont need rescaling now
+			/*if (lastPos != transform.position || lastCamPos != map.currentCamera.transform.position || lastIconSize != map.cityIconSize || 
 			    map.currentCamera.orthographic && map.currentCamera.orthographicSize != lastOrtographicSize) {
-				ScaleCities ();
-			}
+				ScaleCities (0.1f);
+			}*/
 		}
 
 		public void ScaleCities ()
@@ -60,7 +61,8 @@ namespace WPMF
 			foreach (Transform t in transform.Find("Region Capitals"))
 				t.localScale = newScale * 1.75f;
 			foreach (Transform t in transform.Find("Country Capitals"))
-				t.localScale = newScale * 2.0f;		}
+				t.localScale = newScale * 2.0f;
+        }
 
 		public void ScaleCities(float customSize) {
 			if (customSize==lastCustomSize) return;

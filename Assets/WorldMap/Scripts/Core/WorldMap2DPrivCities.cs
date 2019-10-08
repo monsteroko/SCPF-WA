@@ -87,7 +87,7 @@ namespace WPMF {
 
 			// Draw city marks
 			numCitiesDrawn = 0;
-			int minPopulation = _minPopulation * 1000;
+			int minPopulation = _minPopulation;
 
 			if (cities==null) return;
 			for (int k=0; k<cities.Count; k++) {
@@ -95,7 +95,7 @@ namespace WPMF {
 				city.isVisible = false;
 				switch(_cityClassFilter) {
 				default:
-					city.isVisible = (((int)city.cityClass & _cityClassAlwaysShow) != 0) || (minPopulation==0 || city.population >= minPopulation);
+					city.isVisible = (((int)city.cityClass & _cityClassAlwaysShow) != 0) && (minPopulation==0 || city.population >= minPopulation);
 					break;
 				case CITY_CLASS_FILTER.RegionCapitals:
 					city.isVisible = (city.cityClass == CITY_CLASS.REGION_CAPITAL ) && (minPopulation==0 || city.population >= minPopulation);

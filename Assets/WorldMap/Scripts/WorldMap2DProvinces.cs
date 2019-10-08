@@ -652,6 +652,11 @@ namespace WPMF
             return false;
         }
 
+        public bool ToggleProvinceSurface(string name, bool visible)
+        {
+            return ToggleProvinceSurface(name, visible, Color.clear);
+        }
+
         /// <summary>
         /// Colorize all regions of specified province/state by index in the global provinces collection.
         /// </summary>

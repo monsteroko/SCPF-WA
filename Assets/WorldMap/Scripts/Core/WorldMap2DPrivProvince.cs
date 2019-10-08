@@ -506,10 +506,8 @@ namespace WPMF
             float chunkSize = 0.01f;
             float textureSizeKoef = chunkSize / region.rect2D.height;
             Vector2 textureScale = new Vector2(region.rect2D.height / region.rect2D.width * textureSizeKoef, textureSizeKoef);
-            Debug.Log(region.rect2D.xMin);
             Vector2 surfaceOffset = new Vector2(region.rect2D.xMin - chunkSize * (int)(region.rect2D.xMin / chunkSize) ,
                 region.rect2D.yMin - chunkSize * (int)(region.rect2D.yMin / chunkSize));
-            Debug.Log(surfaceOffset.x);
             Vector2 textureOffset = new Vector2(region.rect2D.xMin, region.rect2D.yMin);
 
             // Prepare surface cache entry and deletes older surface if exists
