@@ -353,6 +353,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1646f2230b4e2b14b8a097fdaa3f7284, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  panel: {fileID: 0}
 --- !u!61 &125735821
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -366,7 +367,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -241.24585, y: 0}
+  m_Offset: {x: -368.81226, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -377,7 +378,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 10017.508, y: 1230}
+  m_Size: {x: 9762.375, y: 1230}
   m_EdgeRadius: 0
 --- !u!1 &156438597
 GameObject:
@@ -970,7 +971,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -3958, y: -15}
+  m_AnchoredPosition: {x: -3878, y: -139}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &938403964
@@ -1547,8 +1548,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -4729}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: 0, y: -4820.8}
+  m_SizeDelta: {x: 160, y: 33.3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1373699838
 GameObject:
@@ -1637,6 +1638,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1646f2230b4e2b14b8a097fdaa3f7284, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  panel: {fileID: 0}
 --- !u!61 &1373699843
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1650,7 +1652,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 243.12988, y: 0}
+  m_Offset: {x: 390.35107, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -1661,7 +1663,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 10013.74, y: 1230}
+  m_Size: {x: 9719.298, y: 1230}
   m_EdgeRadius: 0
 --- !u!1 &1450446938
 GameObject:
@@ -1772,8 +1774,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 5269}
-  m_SizeDelta: {x: 0, y: 9462}
+  m_AnchoredPosition: {x: -0.7999878, y: 5269}
+  m_SizeDelta: {x: 40.4, y: 9462}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1451744743
 MonoBehaviour:
@@ -1822,6 +1824,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1646f2230b4e2b14b8a097fdaa3f7284, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  panel: {fileID: 1027827012}
 --- !u!61 &1451744746
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1835,7 +1838,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 2.6071777}
+  m_Offset: {x: 0, y: 14.579346}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -1846,7 +1849,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 950, y: 9999.785}
+  m_Size: {x: 950, y: 9975.842}
   m_EdgeRadius: 0
 --- !u!1 &1487880753
 GameObject:
@@ -1885,7 +1888,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -371.4, y: -173.7}
+  m_AnchoredPosition: {x: -413.9, y: -256.1}
   m_SizeDelta: {x: 137.829, y: 31.406}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1487880755
@@ -2214,7 +2217,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 3879, y: -15}
+  m_AnchoredPosition: {x: 3841, y: -173}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1964589906
