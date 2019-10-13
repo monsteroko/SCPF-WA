@@ -152,7 +152,6 @@ MonoBehaviour:
   _frontiersColorOuter: {r: 0, g: 1, b: 0, a: 0.5}
   _showOutline: 1
   _outlineColor: {r: 0, g: 0, b: 0, a: 1}
-  _frontiersDetail: 0
   _showCountryNames: 1
   _countryLabelsAbsoluteMinimumSize: 0.5
   _countryLabelsSize: 0.25
@@ -205,7 +204,7 @@ GameObject:
   m_Component:
   - component: {fileID: 267115505416638634}
   - component: {fileID: 6136794272140448685}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Mount Points
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -5,6 +5,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour {
     EntryManager entryManager;
     public MapManager mapManager;
+    public ZonesManager zonesManager;
     // Start is called before the first frame update
 
     static GameManager _instance;

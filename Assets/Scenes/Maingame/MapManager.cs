@@ -31,15 +31,15 @@ public class Area
                 {
                     case AreaState.Locked:
                         map.cities[cityIndex].population = 2;
-                        map.cities[cityIndex].cityClass = CITY_CLASS.COUNTRY_CAPITAL;
+                        map.cities[cityIndex].cityClass = CITY_CLASS.REGION_CAPITAL;
                         break;
                     case AreaState.Unlocked:
                         map.cities[cityIndex].population = 2;
-                        map.cities[cityIndex].cityClass = CITY_CLASS.REGION_CAPITAL;
+                        map.cities[cityIndex].cityClass = CITY_CLASS.COUNTRY_CAPITAL;
                         break;
                     case AreaState.Controlled:
                         map.cities[cityIndex].population = -1;
-                        map.cities[cityIndex].cityClass = CITY_CLASS.REGION_CAPITAL;
+                        map.cities[cityIndex].cityClass = CITY_CLASS.COUNTRY_CAPITAL;
                         break;
                 }
             }
@@ -102,6 +102,7 @@ public class MapManager
         {
             City city = map.cities[i];
             counterparts[city.countryIndex].areas[city.province].cityIndex = i;
+            counterparts[city.countryIndex].areas[city.province].state = AreaState.Locked;
         }
         // Init data from save
         foreach (string areaName in mapSave.unlockedAreas)
@@ -143,9 +144,12 @@ public class MapManager
         if (!confirmed) return;
         Area area = counterparts[selectedCounterpartIndex].areas[selectedAreaName];
         area.state = AreaState.Controlled;
+        GameManager.instance.zonesManager.CreateZoneAtPlace(map.cities[area.cityIndex]);
         foreach (Province province in map.ProvinceNeighbours(area.index))
         {
-            counterparts[province.countryIndex].areas[province.name].state = AreaState.Unlocked;
+            if (counterparts[province.countryIndex].areas[province.name].state == AreaState.Locked) {
+                counterparts[province.countryIndex].areas[province.name].state = AreaState.Unlocked;
+            }
         }
     }
 
