@@ -11,7 +11,7 @@ public class TimeScr : MonoBehaviour
     public Text dttxt;
     private DateTime dt;
     public Canvas cv;
-    public float timer;
+    public static float timer;
     public GameObject entryPopupObject;
     public void Play()
     {
