@@ -4,11 +4,12 @@ using UnityEngine;
 using System;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class TimeScr : MonoBehaviour
 {
-    public Text timetxt;
-    public Text dttxt;
+    public TextMeshProUGUI timetxt;
+    public TextMeshProUGUI dttxt;
     private DateTime dt;
     public Canvas cv;
     public static float timer;
