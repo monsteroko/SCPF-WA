@@ -371,7 +371,6 @@ namespace WPMF
 
 			for (int k=0; k<provincesBorders.Length; k++) {
 				GameObject flayer = new GameObject ("flayer");
-				flayer.hideFlags = HideFlags.DontSave | HideFlags.HideInHierarchy;
 				flayer.transform.SetParent (provincesObj.transform, false);
 				flayer.transform.localPosition = Misc.Vector3zero;
 				flayer.transform.localRotation = Quaternion.Euler (Misc.Vector3zero);
