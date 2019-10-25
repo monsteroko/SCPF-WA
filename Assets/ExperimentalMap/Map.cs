@@ -58,6 +58,7 @@ namespace ExperimentalMap {
         public static readonly float MapPrecision = 5000000f;
         public GameObject areaBackgroundObject;
         public Material areaBackgroundMaterial;
+        public Camera camera;
         List<Area> areas;
 
         void Start() {
@@ -65,8 +66,43 @@ namespace ExperimentalMap {
             CreateAreas();
         }
 
+        float zoomAcceleration = 0;
         void Update() {
+            if (!Application.isPlaying)
+                return;
+            bool isMouseOver = true;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit)) {
+                //TODO: Set isMouseOver
+            }
 
+            if (isMouseOver) {
+                float currentAcceleration = Input.GetAxis("Mouse ScrollWheel");
+                zoomAcceleration += currentAcceleration;
+                // Touch Screen
+                if (Input.touchSupported && Input.touchCount == 2) { 
+                    Touch touchZero = Input.GetTouch(0);
+                    Touch touchOne = Input.GetTouch(1);
+                    Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
+                    Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
+                    float prevTouchDeltaMag = (touchZeroPrevPos - touchOnePrevPos).magnitude;
+                    float touchDeltaMag = (touchZero.position - touchOne.position).magnitude;
+                    float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
+                    zoomAcceleration += deltaMagnitudeDiff;
+                }
+            }
+
+            if (zoomAcceleration != 0) {
+                const float maxZoomSpeed = 0.1f;
+                const float zoomSpeedMultiplier = 8f;
+                float zoomSpeed = Mathf.Clamp(zoomAcceleration, -maxZoomSpeed, maxZoomSpeed);
+                camera.transform.Translate(camera.transform.forward * zoomSpeed * zoomSpeedMultiplier);
+                zoomAcceleration *= 0.9f;
+                if (Mathf.Abs(zoomAcceleration) < maxZoomSpeed/10000.0f) {
+                    zoomAcceleration = 0;
+                }
+            }
         }
 
         List<Area> ReadAreasData() {

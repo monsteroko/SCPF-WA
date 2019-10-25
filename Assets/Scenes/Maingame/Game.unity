@@ -4930,14 +4930,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Name: 
-  m_EditorClassIdentifier: 
   operationMode: 0
   reshapeRegionMode: 0
   reshapeCityMode: 0
@@ -5766,6 +5758,7 @@ MonoBehaviour:
   areaBackgroundObject: {fileID: 146209975}
   areaBackgroundMaterial: {fileID: 2100000, guid: 48328b2fa6e61fa4dae57981ac94eacb,
     type: 2}
+  camera: {fileID: 93886955}
 --- !u!4 &1709668290
 Transform:
   m_ObjectHideFlags: 0
