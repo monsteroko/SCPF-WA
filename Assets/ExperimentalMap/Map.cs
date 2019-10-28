@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using ExperimentalMap;
+using UnityEditor;
 
 namespace ExperimentalMap {
 
@@ -17,6 +18,15 @@ namespace ExperimentalMap {
         public Vector2[] border;
         public Vector2 center;
         public Rect borderRect; 
+        public Vector3[] border3d {
+            get {
+                Vector3[] border3 = new Vector3[border.Length];
+                for (int i1 = 0; i1 < border.Length; i1++) {
+                    border3[i1] = border[i1];
+                }
+                return border3;
+            }
+        }
 
         public void SetBordersData(string data) {
             string[] regions = data.Split(new char[] { '*' }, StringSplitOptions.RemoveEmptyEntries);
@@ -57,6 +67,7 @@ namespace ExperimentalMap {
 
         public static readonly float MapPrecision = 5000000f;
         public GameObject areaBackgroundObject;
+        public Material areaBorderMaterial;
         public Material areaBackgroundMaterial;
         public Camera camera;
         List<Area> areas;
@@ -127,62 +138,100 @@ namespace ExperimentalMap {
 
 
         void CreateAreas() {
-            Debug.Log("sus");
-            List<Vector3> frontiersPoints = new List<Vector3>();
-            for (int i1 = 0; i1 < areas.Count; i1++) {
-                Area area = areas[i1];
-                //region.neighbours.Clear();
-                int pointsCount = area.border.Length;
-                for (int i2 = 0; i2 < pointsCount - 1; i2++) {
-                    Vector3 p0 = area.border[i2];
-                    Vector3 p1 = area.border[i2 + 1];
-                    double v = (p0.x + p1.x) + MapPrecision * (p0.y + p1.y);
-                    frontiersPoints.Add(p0);
-                    frontiersPoints.Add(p1);
-                }
-                frontiersPoints.Add(area.border[pointsCount - 1]);
-                frontiersPoints.Add(area.border[0]);
+            foreach (Area area in areas) {
+                CreateAreaSurface(area, areaBackgroundMaterial);
+                CreateAreaBorder(area, areaBorderMaterial);
             }
-            Debug.Log(areas.Count);
-            int meshGroups = (frontiersPoints.Count / 65000) + 1;
-            int meshIndex = -1;
-            int[][] provincesIndices = new int[meshGroups][];
-            Vector3[][] provincesBorders = new Vector3[meshGroups][];
-            for (int k = 0; k < frontiersPoints.Count; k += 65000) {
-                int max = Mathf.Min(frontiersPoints.Count - k, 65000);
-                provincesBorders[++meshIndex] = new Vector3[max];
-                provincesIndices[meshIndex] = new int[max];
-                for (int j = k; j < k + max; j++) {
-                    provincesBorders[meshIndex][j - k] = frontiersPoints[j];
-                    provincesIndices[meshIndex][j - k] = j - k;
-                }
-            }
-
-            for (int k = 0; k < provincesBorders.Length; k++) {
-                GameObject flayer = new GameObject("flayer");
-                flayer.hideFlags = HideFlags.DontSave | HideFlags.HideInHierarchy;
-                flayer.transform.SetParent(areaBackgroundObject.transform, false);
-                flayer.transform.localPosition = Vector3.zero;
-                flayer.transform.localRotation = Quaternion.Euler(Vector3.zero);
-                flayer.layer = areaBackgroundObject.layer;
-                Debug.Log("pep");
-                Mesh mesh = new Mesh();
-                mesh.vertices = provincesBorders[k];
-                mesh.SetIndices(provincesIndices[k], MeshTopology.Lines, 0);
-                mesh.RecalculateBounds();
-                mesh.hideFlags = HideFlags.DontSave;
-
-                MeshFilter mf = flayer.AddComponent<MeshFilter>();
-                mf.sharedMesh = mesh;
-
-                MeshRenderer mr = flayer.AddComponent<MeshRenderer>();
-                mr.receiveShadows = false;
-                mr.reflectionProbeUsage = UnityEngine.Rendering.ReflectionProbeUsage.Off;
-                mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-                //				mr.useLightProbes = false;
-                mr.sharedMaterial = areaBackgroundMaterial;
-            }
+            
         }
+
+        GameObject CreateAreaBorder(Area area, Material material) {
+            List<Vector3> frontiersPoints = new List<Vector3>();
+            int pointsCount = area.border.Length;
+            for (int i1 = 0; i1 < pointsCount - 1; i1++) {
+                Vector3 p0 = area.border[i1];
+                Vector3 p1 = area.border[i1 + 1];
+                double v = (p0.x + p1.x) + MapPrecision * (p0.y + p1.y);
+                frontiersPoints.Add(p0);
+                frontiersPoints.Add(p1);
+            }
+            frontiersPoints.Add(area.border[pointsCount - 1]);
+            frontiersPoints.Add(area.border[0]);
+
+            int meshIndex = -1;
+            int[] provincesIndices = new int[frontiersPoints.Count];
+            Vector3[] provincesBorders = new Vector3[frontiersPoints.Count];
+            for (int j = 0; j < frontiersPoints.Count; j++) {
+                provincesBorders[j] = frontiersPoints[j];
+                provincesIndices[j] = j;
+            }
+
+            GameObject borderSurface = new GameObject("borderSurface");
+            borderSurface.hideFlags = HideFlags.DontSave | HideFlags.HideInHierarchy;
+            borderSurface.transform.SetParent(areaBackgroundObject.transform, false);
+            borderSurface.transform.localPosition = Vector3.zero;
+            borderSurface.transform.localRotation = Quaternion.Euler(Vector3.zero);
+            borderSurface.layer = areaBackgroundObject.layer;
+            Mesh mesh = new Mesh();
+            mesh.vertices = provincesBorders;
+            mesh.SetIndices(provincesIndices, MeshTopology.Lines, 0);
+            mesh.RecalculateBounds();
+            mesh.hideFlags = HideFlags.DontSave;
+
+            MeshFilter mf = borderSurface.AddComponent<MeshFilter>();
+            mf.sharedMesh = mesh;
+
+            MeshRenderer mr = borderSurface.AddComponent<MeshRenderer>();
+            mr.receiveShadows = false;
+            mr.reflectionProbeUsage = UnityEngine.Rendering.ReflectionProbeUsage.Off;
+            mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            mr.sharedMaterial = material;
+            return borderSurface;
+        }
+
+        GameObject CreateAreaSurface(Area area, Material material) {
+            int[] surfaceIndices = new Triangulator(area.border).TriangulateOriented();
+            // Make texture coordinates not depending of area position
+            float chunkSize = 0.01f;
+            float textureSizeKoef = chunkSize / area.borderRect.height;
+            Vector2 textureScale = new Vector2(area.borderRect.height / area.borderRect.width * textureSizeKoef, textureSizeKoef);
+            Vector2 surfaceOffset = new Vector2(area.borderRect.xMin - chunkSize * (int)(area.borderRect.xMin / chunkSize),
+                area.borderRect.yMin - chunkSize * (int)(area.borderRect.yMin / chunkSize));
+            Vector2 textureOffset = new Vector2(area.borderRect.xMin, area.borderRect.yMin);
+            //Create Surface
+            GameObject surface = new GameObject(name, typeof(MeshRenderer), typeof(MeshFilter));
+            surface.hideFlags = HideFlags.DontSave | HideFlags.HideInHierarchy;
+            Mesh mesh = new Mesh();
+            mesh.hideFlags = HideFlags.DontSave;
+            mesh.vertices = area.border3d;
+            mesh.triangles = surfaceIndices;
+            // uv mapping
+            if (material.mainTexture != null) {
+                Vector2[] uv = new Vector2[area.border.Length];
+                for (int k = 0; k < uv.Length; k++) {
+                    Vector2 coor = area.border[k];
+                    coor.x /= textureScale.x;
+                    coor.y /= textureScale.y;
+                    coor += textureOffset;
+                    Vector2 normCoor = new Vector2((coor.x - area.borderRect.xMin) / area.borderRect.width, (coor.y - area.borderRect.yMin) / area.borderRect.height);
+                    uv[k] = normCoor;
+                }
+                mesh.uv = uv;
+            }
+            mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
+            MeshUtility.Optimize(mesh);
+
+            MeshFilter meshFilter = surface.GetComponent<MeshFilter>();
+            meshFilter.mesh = mesh;
+            surface.GetComponent<Renderer>().sharedMaterial = material;
+            surface.transform.SetParent(areaBackgroundObject.transform, false);
+            surface.transform.localPosition = Vector3.zero;
+            surface.transform.localRotation = Quaternion.Euler(Vector3.zero);
+            surface.layer = gameObject.layer;
+            return surface;
+        }
+
     }
 
 }
