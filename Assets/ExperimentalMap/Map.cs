@@ -67,6 +67,7 @@ namespace ExperimentalMap {
 
         public static readonly float MapPrecision = 5000000f;
         public GameObject areaBackgroundObject;
+        public GameObject mapObject;
         public Material areaBorderMaterial;
         public Material areaBackgroundMaterial;
         public Camera camera;
@@ -78,16 +79,19 @@ namespace ExperimentalMap {
         }
 
         float zoomAcceleration = 0;
+        float dragAcceleration = 0;
+        Vector3 dragDirection;
+        Vector3? mouseDragFirst, mouseDragLast, mouseDragCurrent;
         void Update() {
             if (!Application.isPlaying)
                 return;
-            bool isMouseOver = true;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit)) {
-                //TODO: Set isMouseOver
+            bool isMouseOver = false;
+            Vector3? mouseRaycastPoint = GetMouseRaycast();
+            if (mouseRaycastPoint != null) {
+                isMouseOver = true;
             }
 
+            // Zoom
             if (isMouseOver) {
                 float currentAcceleration = Input.GetAxis("Mouse ScrollWheel");
                 zoomAcceleration += currentAcceleration;
@@ -114,6 +118,79 @@ namespace ExperimentalMap {
                     zoomAcceleration = 0;
                 }
             }
+            // Drag
+            bool pressed = false;
+            Vector3 currentDragVector = Vector3.zero;
+            float currentDragAcceleration = 0;
+            if (Input.GetKey(KeyCode.W)) {
+                currentDragVector += Vector3.up;
+                pressed = true;
+            }
+            if (Input.GetKey(KeyCode.S)) {
+                currentDragVector += Vector3.down;
+                pressed = true;
+            }
+            if (Input.GetKey(KeyCode.A)) {
+                currentDragVector += Vector3.left;
+                pressed = true;
+            }
+            if (Input.GetKey(KeyCode.D)) {
+                currentDragVector += Vector3.right;
+                pressed = true;
+            }
+            if (pressed) {
+                dragDirection = currentDragVector.normalized;
+                const float keysDragSpeed = 0.05f;
+                currentDragAcceleration += keysDragSpeed * Mathf.Sqrt(mapObject.transform.position.z - camera.transform.position.z);
+            }
+            if (isMouseOver && Input.GetMouseButton(0)) {
+                if (mouseDragFirst == null) {
+                    mouseDragFirst = mouseDragCurrent;
+                }
+                mouseDragLast = mouseDragCurrent;
+                mouseDragCurrent = transform.TransformPoint((Vector3)mouseRaycastPoint);
+                if (mouseDragLast != null && mouseDragCurrent != null) {
+                    currentDragVector = (Vector3)mouseDragCurrent - (Vector3)mouseDragLast;
+                    dragDirection = -currentDragVector.normalized;
+                    currentDragAcceleration += currentDragVector.magnitude;
+                } 
+            } else {
+                if (mouseDragFirst != null && mouseDragLast != null) {
+                    dragDirection = ((Vector3)mouseDragFirst - (Vector3)mouseDragLast).normalized;
+                }
+                mouseDragCurrent = null;
+                mouseDragLast = null;
+                mouseDragFirst = null;
+            }
+            dragAcceleration += currentDragAcceleration;
+            if (dragAcceleration != 0) {
+                if (currentDragAcceleration == 0) {
+                    currentDragAcceleration = dragAcceleration;
+                } else {
+                    dragAcceleration = currentDragAcceleration;
+                }
+                camera.transform.Translate(dragDirection * currentDragAcceleration);
+                dragAcceleration *= 0.9f;
+                if (Mathf.Abs(dragAcceleration) < 1 / 1000.0f) {
+                    dragAcceleration = 0;
+                }
+            }
+        }
+
+        Vector3? GetMouseRaycast() {
+            Vector3 mousePos = Input.mousePosition;
+            mousePos.x = Math.Max(Math.Min(mousePos.x, Screen.width), 0);
+            mousePos.y = Math.Max(Math.Min(mousePos.y, Screen.height), 0);
+            Ray ray = camera.ScreenPointToRay(mousePos);
+            RaycastHit[] hits = Physics.RaycastAll(ray);
+            if (hits.Length > 0) {
+                for (int k = 0; k < hits.Length; k++) {
+                    if (hits[k].collider.gameObject == mapObject) {
+                        return mapObject.transform.InverseTransformPoint(hits[k].point);
+                    }
+                }
+            }
+            return null;
         }
 
         List<Area> ReadAreasData() {
