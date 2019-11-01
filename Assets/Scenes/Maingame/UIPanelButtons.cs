@@ -14,7 +14,7 @@ public class UIPanelButtons : MonoBehaviour
         SceneManager.LoadScene("Tech", LoadSceneMode.Additive);
     }
 
-    public void SetiingsPressed()
+    public void PausePressed()
     {
 
     }

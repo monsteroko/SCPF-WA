@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -669,6 +669,7 @@ Transform:
   m_Children:
   - {fileID: 812285826}
   - {fileID: 315191572}
+  - {fileID: 971490742}
   - {fileID: 1740260315}
   m_Father: {fileID: 0}
   m_RootOrder: 3
@@ -3859,6 +3860,49 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 894486580}
   m_CullTransparentMesh: 0
+--- !u!1 &971490741
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 971490742}
+  - component: {fileID: 971490743}
+  m_Layer: 0
+  m_Name: Mount Points
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &971490742
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 971490741}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 58948696}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &971490743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 971490741}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8e3da7166b16478e9991a944543a6dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &974650339
 GameObject:
   m_ObjectHideFlags: 0
@@ -5504,6 +5548,8 @@ MonoBehaviour:
   m_Script: {fileID: 1212926596}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Name: 
+  m_EditorClassIdentifier: 
   operationMode: 0
   reshapeRegionMode: 0
   reshapeCityMode: 0
@@ -5564,6 +5610,76 @@ MonoBehaviour:
   GUITargetProvinceIndex: 0
   GUIMergeRadius: 0
   provinceChanges: 0
+  m_Script: {fileID: 1212926596}
+  m_ObjectHideFlags: 0
+  m_GameObject: {fileID: 59150348}
+  m_PrefabAsset: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_Name: 
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_EditorClassIdentifier: 
+  reshapeRegionMode: 0
+  cursor: {x: 0, y: 0, z: 0}
+  reshapeCityMode: 0
+  createMode: 0
+  reshapeMountPointMode: 0
+  newShape: []
+  GUICountryName: 
+  GUICountryNewName: 
+  keepNearbyFrontiers: 0
+  shouldHideEditorMesh: 0
+  undoMountPointsDummyFlag: 0
+  lastMinPopulation: 0
+  GUICityName: 
+  GUICityNewName: 
+  GUICityPopulation: 
+  cityChanges: 0
+  magnetAgressiveMode: 0
+  circleMoveConstant: 0
+  circleCurrentRegionOnly: 0
+  infoMsg: 
+  GUICountryNewContinent: 
+  GUICountryTransferToCountryIndex: -1
+  GUICityIndex: 0
+  groupByParentAdmin: 1
+  undoCitiesDummyFlag: 0
+  countryIndex: -1
+  GUICountryIndex: 0
+  countryRegionIndex: -1
+  countryChanges: 0
+  _GUICountryHidden: 0
+  GUIMountPointIndex: 0
+  cityIndex: -1
+  GUIMountPointName: 
+  GUICityClass: 1
+  GUIMountPointNewName: 
+  operationMode: 0
+  reshapeCircleWidth: 0.01
+  editingMode: 0
+  undoRegionsDummyFlag: 0
+  GUIMountPointMassPopulationType: 
+  provinceIndex: -1
+  GUIProvinceNewCountryName: 
+  GUIProvinceName: 
+  GUIMountPointNewType: 
+  GUIProvinceIndex: 0
+  GUIProvinceTransferToCountryIndex: -1
+  GUIMergeRadius: 0
+  provinceChanges: 0
+  provinceRegionIndex: -1
+  mergeRadius: 0
+  GUIProvinceNewName: 
+  GUIMountPointMassPopulationSeparation: 10
+  targetProvinceIndex: -1
+  GUIMountPointMassPopulationMin: 1
+  GUITargetProvinceIndex: 0
+  mountPointChanges: 0
+  GUIMountPointNewTagKey: 
+  GUIMountPointNewTagValue: 
+  mountPointIndex: -1
+  GUIMountPointMassPopulationMax: 3
 --- !u!1 &1381893791
 GameObject:
   m_ObjectHideFlags: 0

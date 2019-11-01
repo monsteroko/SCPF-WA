@@ -6,6 +6,7 @@ public class GameManager : MonoBehaviour {
     EntryManager entryManager;
     public MapManager mapManager;
     public ZonesManager zonesManager;
+    public TechManager techManager;
     // Start is called before the first frame update
 
     static GameManager _instance;
@@ -21,6 +22,7 @@ public class GameManager : MonoBehaviour {
     void Start() {
         entryManager = new EntryManager();
         mapManager = new MapManager(StartGameSettings.mapSave);
+        techManager = new TechManager();
         StartCoroutine(ShowEntryPopup());
     }
 

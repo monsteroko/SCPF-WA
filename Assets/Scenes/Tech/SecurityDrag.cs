@@ -6,10 +6,22 @@ using System.Collections;
 public class SecurityDrag : MonoBehaviour
 {
     public GameObject panel;
-    
-    void OnMouseDrag()
+
+    private Vector3 move, startPos;
+
+    private void Update()
     {
-        Vector3 newPosition = Camera.main.ScreenToWorldPoint(new Vector3(/*Input.mousePosition.x*/0, Input.mousePosition.y, 0));
-        panel.transform.position += newPosition;
+        panel.transform.position += move;
+    }
+
+    private void OnMouseDown()
+    {
+        startPos = Input.mousePosition;
+        move.Set(0, 0, 0);
+    }
+
+    private void OnMouseDrag()
+    {
+        move = Input.mousePosition - startPos;
     }    
 }

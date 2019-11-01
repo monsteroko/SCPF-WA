@@ -14,6 +14,8 @@ public class TimeScr : MonoBehaviour
     public Canvas cv;
     public static float timer;
     public GameObject entryPopupObject;
+    public Button tech;
+
     public void Play()
     {
         timer = 4f;
@@ -34,6 +36,7 @@ public class TimeScr : MonoBehaviour
     
     void Start()
     {
+        tech.onClick.AddListener(Stop);
         cv.gameObject.SetActive(true);
         dt = new DateTime(1890,7,12,12,0,0);
     }
