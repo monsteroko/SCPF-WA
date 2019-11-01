@@ -4,6 +4,8 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
+using System.IO;
 
 public class CounterpartsSelectionScript : MonoBehaviour {
 
@@ -14,7 +16,11 @@ public class CounterpartsSelectionScript : MonoBehaviour {
     public Image saImage;
     public Image eeuImage;
     public Button proceedButton;
-    
+    public GameObject CanvasLoad;
+    public GameObject CanvasPick;
+    public TextMeshProUGUI tipstxt;
+    private string[] text;
+
 
     private Dictionary<string, Image> counterpartImages = new Dictionary<string, Image>();
 
@@ -52,6 +58,13 @@ public class CounterpartsSelectionScript : MonoBehaviour {
 
     private void Proceed() {
         StartGameSettings.mapSave = MapSaveModel.NewGameSave(selectedCounterpart);
+        CanvasPick.SetActive(false);
+        CanvasLoad.SetActive(true);
+        using (StreamReader sr = new StreamReader(@"Assets/Scenes/Counterparts selection/Tipstxt.txt"))
+        {
+            text = sr.ReadToEnd().Split(';');
+        }
+        tipstxt.text = text[Random.Range(0, text.Length)];
         SceneManager.LoadScene("Game");
     }
 
