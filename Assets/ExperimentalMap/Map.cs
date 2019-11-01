@@ -82,6 +82,7 @@ namespace ExperimentalMap {
         float dragAcceleration = 0;
         Vector3 dragDirection;
         Vector3? mouseDragFirst, mouseDragLast, mouseDragCurrent;
+        Vector3 cameraPositionFirst;
         void Update() {
             if (!Application.isPlaying)
                 return;
@@ -146,18 +147,28 @@ namespace ExperimentalMap {
             if (isMouseOver && Input.GetMouseButton(0)) {
                 if (mouseDragFirst == null) {
                     mouseDragFirst = mouseDragCurrent;
+                    cameraPositionFirst = camera.transform.position;
                 }
                 mouseDragLast = mouseDragCurrent;
-                mouseDragCurrent = transform.TransformPoint((Vector3)mouseRaycastPoint);
+                mouseDragCurrent = GetMousePosition();
                 if (mouseDragLast != null && mouseDragCurrent != null) {
-                    currentDragVector = (Vector3)mouseDragCurrent - (Vector3)mouseDragLast;
-                    dragDirection = -currentDragVector.normalized;
-                    currentDragAcceleration += currentDragVector.magnitude;
+                    Vector3? mapDragFirst = GetRaycast((Vector3)mouseDragFirst);
+                    Vector3? mapDragCurrent = GetRaycast((Vector3)mouseDragCurrent);
+                    Vector3 scrPointFirst = camera.ScreenToWorldPoint(new Vector3(((Vector3)mouseDragFirst).x, ((Vector3)mouseDragFirst).y, camera.nearClipPlane));
+                    Vector3 scrPointCurrent = camera.ScreenToWorldPoint(new Vector3(((Vector3)mouseDragCurrent).x, ((Vector3)mouseDragCurrent).y, camera.nearClipPlane));
+                    if (mapDragFirst != null && mapDragCurrent != null) {
+                        float koef = (cameraPositionFirst - (Vector3)mapDragFirst).magnitude / (scrPointFirst - (Vector3)mapDragFirst).magnitude;
+                        Debug.Log(koef);
+                        Vector3 newCamera = (Vector3)mapDragFirst + (scrPointCurrent - (Vector3)mapDragFirst) * koef;
+                        currentDragVector = newCamera - camera.transform.position;
+                        dragDirection = currentDragVector.normalized;
+                        currentDragAcceleration += currentDragVector.magnitude;
+                    }
                 } 
             } else {
-                if (mouseDragFirst != null && mouseDragLast != null) {
-                    dragDirection = ((Vector3)mouseDragFirst - (Vector3)mouseDragLast).normalized;
-                }
+                //if (mouseDragFirst != null && mouseDragLast != null) {
+                //    dragDirection = ((Vector3)mouseDragFirst - (Vector3)mouseDragLast).normalized;
+                //}
                 mouseDragCurrent = null;
                 mouseDragLast = null;
                 mouseDragFirst = null;
@@ -177,16 +188,24 @@ namespace ExperimentalMap {
             }
         }
 
-        Vector3? GetMouseRaycast() {
+        Vector3 GetMousePosition() {
             Vector3 mousePos = Input.mousePosition;
             mousePos.x = Math.Max(Math.Min(mousePos.x, Screen.width), 0);
             mousePos.y = Math.Max(Math.Min(mousePos.y, Screen.height), 0);
-            Ray ray = camera.ScreenPointToRay(mousePos);
+            return mousePos;
+        }
+
+        Vector3? GetMouseRaycast() {
+            return GetRaycast(GetMousePosition());
+        }
+
+        Vector3? GetRaycast(Vector3 point) {
+            Ray ray = camera.ScreenPointToRay(point);
             RaycastHit[] hits = Physics.RaycastAll(ray);
             if (hits.Length > 0) {
                 for (int k = 0; k < hits.Length; k++) {
                     if (hits[k].collider.gameObject == mapObject) {
-                        return mapObject.transform.InverseTransformPoint(hits[k].point);
+                        return hits[k].point;
                     }
                 }
             }
