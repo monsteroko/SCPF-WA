@@ -5,12 +5,13 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using System;
 using WPMF;
+using TMPro;
 
 public class EntryPopup : MonoBehaviour {
 
-    public Text nameText;
-    public Text classText;
-    public Text descriptionText;
+    public TextMeshProUGUI nameText;
+    public TextMeshProUGUI classText;
+    public TextMeshProUGUI descriptionText;
     public Button okButton;
     public Button cancButton;
     public GameObject Cube;
