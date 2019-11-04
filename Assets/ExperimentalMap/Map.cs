@@ -7,7 +7,12 @@ using UnityEditor;
 
 namespace ExperimentalMap {
 
-    class Area {
+    public interface MapSurface {
+        Vector2[] border { get; }
+        Rect borderRect { get; }
+    }
+
+    public class Area: MapSurface {
         public readonly string name;
         public readonly string counterpart;
         public Area(string name, string counterpart) {
@@ -15,18 +20,9 @@ namespace ExperimentalMap {
             this.counterpart = counterpart;
         }
 
-        public Vector2[] border;
+        public Vector2[] border { get; private set; }
         public Vector2 center;
-        public Rect borderRect; 
-        public Vector3[] border3d {
-            get {
-                Vector3[] border3 = new Vector3[border.Length];
-                for (int i1 = 0; i1 < border.Length; i1++) {
-                    border3[i1] = border[i1];
-                }
-                return border3;
-            }
-        }
+        public Rect borderRect { get; private set; }
 
         public void SetBordersData(string data) {
             string[] regions = data.Split(new char[] { '*' }, StringSplitOptions.RemoveEmptyEntries);
@@ -226,25 +222,31 @@ namespace ExperimentalMap {
 
 
         void CreateAreas() {
+            int i1 = 0;
             foreach (Area area in areas) {
-                CreateAreaSurface(area, areaBackgroundMaterial);
-                CreateAreaBorder(area, areaBorderMaterial);
+                i1++;
+                List<Terrain> terrains = new TerrainLayouter().CreateAreaLayout(area);
+                foreach (Terrain terrain in terrains) {
+                    CreateAreaSurface(terrain, areaBackgroundMaterial);
+                    CreateAreaBorder(terrain, areaBorderMaterial);
+                }
+                //CreateAreaSurface(area, areaBackgroundMaterial);
+                //CreateAreaBorder(area, areaBorderMaterial);
             }
-            
         }
 
-        GameObject CreateAreaBorder(Area area, Material material) {
+        GameObject CreateAreaBorder(MapSurface surface, Material material) {
             List<Vector3> frontiersPoints = new List<Vector3>();
-            int pointsCount = area.border.Length;
+            int pointsCount = surface.border.Length;
             for (int i1 = 0; i1 < pointsCount - 1; i1++) {
-                Vector3 p0 = area.border[i1];
-                Vector3 p1 = area.border[i1 + 1];
+                Vector3 p0 = surface.border[i1];
+                Vector3 p1 = surface.border[i1 + 1];
                 double v = (p0.x + p1.x) + MapPrecision * (p0.y + p1.y);
                 frontiersPoints.Add(p0);
                 frontiersPoints.Add(p1);
             }
-            frontiersPoints.Add(area.border[pointsCount - 1]);
-            frontiersPoints.Add(area.border[0]);
+            frontiersPoints.Add(surface.border[pointsCount - 1]);
+            frontiersPoints.Add(surface.border[0]);
 
             int meshIndex = -1;
             int[] provincesIndices = new int[frontiersPoints.Count];
@@ -277,31 +279,35 @@ namespace ExperimentalMap {
             return borderSurface;
         }
 
-        GameObject CreateAreaSurface(Area area, Material material) {
-            int[] surfaceIndices = new Triangulator(area.border).TriangulateOriented();
+        GameObject CreateAreaSurface(MapSurface surface, Material material) {
+            int[] surfaceIndices = new Triangulator(surface.border).TriangulateOriented();
+            Vector3[] border3 = new Vector3[surface.border.Length];
+            for (int i1 = 0; i1 < surface.border.Length; i1++) {
+                border3[i1] = surface.border[i1];
+            }
             // Make texture coordinates not depending of area position
             float chunkSize = 0.01f;
-            float textureSizeKoef = chunkSize / area.borderRect.height;
-            Vector2 textureScale = new Vector2(area.borderRect.height / area.borderRect.width * textureSizeKoef, textureSizeKoef);
-            Vector2 surfaceOffset = new Vector2(area.borderRect.xMin - chunkSize * (int)(area.borderRect.xMin / chunkSize),
-                area.borderRect.yMin - chunkSize * (int)(area.borderRect.yMin / chunkSize));
-            Vector2 textureOffset = new Vector2(area.borderRect.xMin, area.borderRect.yMin);
+            float textureSizeKoef = chunkSize / surface.borderRect.height;
+            Vector2 textureScale = new Vector2(surface.borderRect.height / surface.borderRect.width * textureSizeKoef, textureSizeKoef);
+            Vector2 surfaceOffset = new Vector2(surface.borderRect.xMin - chunkSize * (int)(surface.borderRect.xMin / chunkSize),
+                surface.borderRect.yMin - chunkSize * (int)(surface.borderRect.yMin / chunkSize));
+            Vector2 textureOffset = new Vector2(surface.borderRect.xMin, surface.borderRect.yMin);
             //Create Surface
-            GameObject surface = new GameObject(name, typeof(MeshRenderer), typeof(MeshFilter));
-            surface.hideFlags = HideFlags.DontSave | HideFlags.HideInHierarchy;
+            GameObject surfaceObject = new GameObject(name, typeof(MeshRenderer), typeof(MeshFilter));
+            surfaceObject.hideFlags = HideFlags.DontSave | HideFlags.HideInHierarchy;
             Mesh mesh = new Mesh();
             mesh.hideFlags = HideFlags.DontSave;
-            mesh.vertices = area.border3d;
+            mesh.vertices = border3;
             mesh.triangles = surfaceIndices;
             // uv mapping
             if (material.mainTexture != null) {
-                Vector2[] uv = new Vector2[area.border.Length];
+                Vector2[] uv = new Vector2[surface.border.Length];
                 for (int k = 0; k < uv.Length; k++) {
-                    Vector2 coor = area.border[k];
+                    Vector2 coor = surface.border[k];
                     coor.x /= textureScale.x;
                     coor.y /= textureScale.y;
                     coor += textureOffset;
-                    Vector2 normCoor = new Vector2((coor.x - area.borderRect.xMin) / area.borderRect.width, (coor.y - area.borderRect.yMin) / area.borderRect.height);
+                    Vector2 normCoor = new Vector2((coor.x - surface.borderRect.xMin) / surface.borderRect.width, (coor.y - surface.borderRect.yMin) / surface.borderRect.height);
                     uv[k] = normCoor;
                 }
                 mesh.uv = uv;
@@ -310,14 +316,14 @@ namespace ExperimentalMap {
             mesh.RecalculateBounds();
             MeshUtility.Optimize(mesh);
 
-            MeshFilter meshFilter = surface.GetComponent<MeshFilter>();
+            MeshFilter meshFilter = surfaceObject.GetComponent<MeshFilter>();
             meshFilter.mesh = mesh;
-            surface.GetComponent<Renderer>().sharedMaterial = material;
-            surface.transform.SetParent(areaBackgroundObject.transform, false);
-            surface.transform.localPosition = Vector3.zero;
-            surface.transform.localRotation = Quaternion.Euler(Vector3.zero);
-            surface.layer = gameObject.layer;
-            return surface;
+            surfaceObject.GetComponent<Renderer>().sharedMaterial = material;
+            surfaceObject.transform.SetParent(areaBackgroundObject.transform, false);
+            surfaceObject.transform.localPosition = Vector3.zero;
+            surfaceObject.transform.localRotation = Quaternion.Euler(Vector3.zero);
+            surfaceObject.layer = gameObject.layer;
+            return surfaceObject;
         }
 
     }
