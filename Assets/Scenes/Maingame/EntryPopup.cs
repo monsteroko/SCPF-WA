@@ -7,6 +7,7 @@ using System;
 using WPMF;
 using TMPro;
 using System.IO;
+using System.Text;
 
 public class EntryPopup : MonoBehaviour {
 
@@ -21,7 +22,7 @@ public class EntryPopup : MonoBehaviour {
     int ran = 0;
     private static EntryPopup entryPopup;
 
-    public string[][] fdtext;//текст при нахождении объекта
+    public string[,] fdtext= new string[10,10];//текст при нахождении объекта
     private float x, y;
     private void Start()
     {
@@ -35,15 +36,16 @@ public class EntryPopup : MonoBehaviour {
 
     public void OpenWithEntry(EntryModel entry)
     {
-        using (StreamReader sr = new StreamReader(@"Assets/Scenes/Maingame/DescrText.txt"))
+        using (StreamReader sr = new StreamReader(@"Assets/Scenes/Maingame/DescrText.txt", Encoding.Default))
         {
             for (int i = 0; i < 9; i++)
-                fdtext[i] = sr.ReadLine().Split(';');
+                for(int j = 0; j < 9; j++)
+                    fdtext[i,j] = sr.ReadLine();
         }
         ran = UnityEngine.Random.Range(0, 9);
         entry.randscpcat = ran;
         nameText.text = "Салтовские учоные сообщили о говне, произошел троленг!";
-        descriptionText.text = "Описание: " + fdtext[entry.scpcategory][entry.randscpcat];
+        descriptionText.text = "Описание: " + fdtext[entry.scpcategory,entry.randscpcat];
         okButton.onClick.AddListener(ClosePopup);
         okButton.onClick.RemoveAllListeners();
         okButton.onClick.AddListener(ClosePopup);
