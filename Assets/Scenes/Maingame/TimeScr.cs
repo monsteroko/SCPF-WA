@@ -36,7 +36,6 @@ public class TimeScr : MonoBehaviour
     
     void Start()
     {
-        tech.onClick.AddListener(Stop);
         cv.gameObject.SetActive(true);
         dt = new DateTime(1890,7,12,12,0,0);
     }

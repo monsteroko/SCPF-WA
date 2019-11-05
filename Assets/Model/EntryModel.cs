@@ -12,6 +12,7 @@ public class EntryModel {
     public string description;//описание исследованного объекта
     public string procedures;//условия содержания
     public int scpcategory;//категория сцп для отображения текста и картинки при нахождении
+    public int randscpcat;//переменная для запоминания текста описания при нахождении
     public double grabcoef;//необходимое кол-во людей для захвата на базу
     public int probesc;//вероятность побега
     public double addsci;//добавление науки после исследования
