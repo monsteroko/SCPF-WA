@@ -21,7 +21,8 @@ public class EntryPopup : MonoBehaviour {
     public GameObject entryPopupObject;
     int ran = 0;
     private static EntryPopup entryPopup;
-
+    public Sprite[] foundimg = new Sprite[10];
+    public Image onwind;
     public string[,] fdtext= new string[10,10];//текст при нахождении объекта
     private float x, y;
     private void Start()
@@ -46,6 +47,7 @@ public class EntryPopup : MonoBehaviour {
         entry.randscpcat = ran;
         nameText.text = "Салтовские учоные сообщили о говне, произошел троленг!";
         descriptionText.text = "Описание: " + fdtext[entry.scpcategory,entry.randscpcat];
+        onwind.sprite = foundimg[entry.scpcategory];
         okButton.onClick.AddListener(ClosePopup);
         okButton.onClick.RemoveAllListeners();
         okButton.onClick.AddListener(ClosePopup);
