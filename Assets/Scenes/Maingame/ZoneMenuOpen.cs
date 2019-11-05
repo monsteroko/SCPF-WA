@@ -7,7 +7,10 @@ public class ZoneMenuOpen : MonoBehaviour
 {
     public GameObject ZoneManagement;
     private int Current = 0, Limit = 0, v = 100, width = 280;
-
+    void Start()
+    {
+        ZoneManagement = GameObject.Find("ZoneManagenent");
+    }
     // Update is called once per frame
     void Update()
     {

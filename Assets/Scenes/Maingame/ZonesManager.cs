@@ -20,6 +20,7 @@ public class ZonesManager : MonoBehaviour
         Zone zone = new Zone();
         GameObject zoneObject = Instantiate(basicZoneObject);
         WorldMap2D map = WorldMap2D.instance;
+        zoneObject.AddComponent<ZoneMenuOpen>();
         Debug.Log(city.unity2DLocation);
         zoneObject.transform.position = map.transform.TransformPoint(city.unity2DLocation);
         zoneObject.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
