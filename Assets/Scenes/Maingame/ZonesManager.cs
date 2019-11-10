@@ -23,8 +23,10 @@ public class ZonesManager : MonoBehaviour
         zoneObject.AddComponent<ZoneMenuOpen>();
         Debug.Log(city.unity2DLocation);
         zoneObject.transform.position = map.transform.TransformPoint(city.unity2DLocation);
-        zoneObject.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
-        zoneObject.transform.rotation = Quaternion.Euler(90.0f, 0, 0);
+        var randomScale = Random.Range(0.04f, 0.06f);
+        zoneObject.transform.localScale = new Vector3(randomScale, 0.05f, randomScale);
+        var rotationAngle = Random.Range(0f, 360f);
+        zoneObject.transform.rotation = Quaternion.Euler(-90f, 0.0f, 0.0f) * Quaternion.Euler(0.0f, rotationAngle, 0.0f);
         BoxCollider boxCollider = zoneObject.AddComponent<BoxCollider>();
         boxCollider.size= new Vector3(8.0f, 2.0f, 9.0f);
         return zone;
