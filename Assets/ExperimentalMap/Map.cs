@@ -28,7 +28,6 @@ namespace ExperimentalMap {
 
         public void SetBordersData(string data) {
             string[] regions = data.Split(new char[] { '*' }, StringSplitOptions.RemoveEmptyEntries);
-            float maxVol = float.MinValue;
             Vector2 minPoint = Vector2.one * 10;
             Vector2 maxPoint = -minPoint;
             char[] separatorRegions = new char[] { ';' };
@@ -91,6 +90,7 @@ namespace ExperimentalMap {
             CreateBackground();
             areas = ReadAreasData();
             CreateAreas();
+            FitCameraPosition();
         }
 
         float zoomAcceleration = 0;
@@ -98,6 +98,10 @@ namespace ExperimentalMap {
         Vector3 dragDirection;
         Vector3? mouseDragLast, mouseDragCurrent;
         Vector3 cameraPositionLast;
+        const float maxCameraDistance = 90.0f;
+        const float minCameraDistance = 5.0f;
+        const float minCameraAngle = 0.0f;
+        const float maxCameraAngle = -20.0f;
         void Update() {
             if (!Application.isPlaying)
                 return;
@@ -128,7 +132,7 @@ namespace ExperimentalMap {
                 const float maxZoomSpeed = 0.1f;
                 const float zoomSpeedMultiplier = 8f;
                 float zoomSpeed = Mathf.Clamp(zoomAcceleration, -maxZoomSpeed, maxZoomSpeed);
-                camera.transform.Translate(camera.transform.forward * zoomSpeed * zoomSpeedMultiplier);
+                camera.transform.Translate(mapObject.transform.forward * zoomSpeed * zoomSpeedMultiplier);
                 zoomAcceleration *= 0.9f;
                 if (Mathf.Abs(zoomAcceleration) < maxZoomSpeed/10000.0f) {
                     zoomAcceleration = 0;
@@ -170,7 +174,9 @@ namespace ExperimentalMap {
                     Vector3 scrPointCurrent = camera.ScreenToWorldPoint(new Vector3(((Vector3)mouseDragCurrent).x, ((Vector3)mouseDragCurrent).y, camera.nearClipPlane));
                     if (mouseDragLast != null && mapDragCurrent != null) {
                         float koef = (camera.transform.position - (Vector3)mapDragLast).magnitude / (scrPointLast - (Vector3)mapDragLast).magnitude;
-                        Vector3 newCamera = (Vector3)mapDragLast + (scrPointCurrent - (Vector3)mapDragCurrent) * koef;
+                        Vector3 cameraRay = (scrPointCurrent - (Vector3)mapDragCurrent) * koef;
+                        float distanceKoef = ((camera.transform.position.z - ((Vector3)mapDragLast).z) / cameraRay.z);
+                        Vector3 newCamera = (Vector3)mapDragLast + cameraRay * distanceKoef;
                         currentDragVector = newCamera - camera.transform.position;
                         dragDirection = currentDragVector.normalized;
                         currentDragAcceleration += currentDragVector.magnitude;
@@ -187,12 +193,22 @@ namespace ExperimentalMap {
                 } else {
                     dragAcceleration = currentDragAcceleration;
                 }
-                camera.transform.Translate(dragDirection * currentDragAcceleration);
+                camera.transform.position = camera.transform.position + dragDirection * currentDragAcceleration;
                 dragAcceleration *= 0.9f;
                 if (Mathf.Abs(dragAcceleration) < 1 / 1000.0f) {
                     dragAcceleration = 0;
                 }
             }
+            FitCameraPosition();
+        }
+
+        void FitCameraPosition() {
+            float pureDistance = Mathf.Clamp(mapObject.transform.position.z - camera.transform.position.z, minCameraDistance, maxCameraDistance);
+            float zPosition = mapObject.transform.position.z - pureDistance;
+            camera.transform.position = new Vector3(camera.transform.position.x, camera.transform.position.y, zPosition);
+            float angle = minCameraAngle + maxCameraAngle * (1 - Mathf.Pow((pureDistance - minCameraDistance) / (maxCameraDistance - minCameraDistance), 0.7f));
+            camera.transform.rotation = Quaternion.Euler(angle, 0, 0);
+            //TODO: Restrict x and y camera movement
         }
 
         Vector3 GetMousePosition() {
@@ -264,7 +280,6 @@ namespace ExperimentalMap {
             frontiersPoints.Add(surface.border[pointsCount - 1]);
             frontiersPoints.Add(surface.border[0]);
 
-            int meshIndex = -1;
             int[] provincesIndices = new int[frontiersPoints.Count];
             Vector3[] provincesBorders = new Vector3[frontiersPoints.Count];
             for (int j = 0; j < frontiersPoints.Count; j++) {
