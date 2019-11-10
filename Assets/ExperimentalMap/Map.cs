@@ -8,7 +8,7 @@ using UnityEditor;
 namespace ExperimentalMap {
 
     public interface MapSurface {
-        Vector2[] border { get; }
+        List<Vector2> border { get; }
         Rect borderRect { get; }
     }
 
@@ -18,11 +18,13 @@ namespace ExperimentalMap {
         public Area(string name, string counterpart) {
             this.name = name;
             this.counterpart = counterpart;
+            this.terrains = new List<Terrain>();
         }
 
-        public Vector2[] border { get; private set; }
+        public List<Vector2> border { get; private set; }
         public Vector2 center;
         public Rect borderRect { get; private set; }
+        public List<Terrain> terrains { get; private set; }
 
         public void SetBordersData(string data) {
             string[] regions = data.Split(new char[] { '*' }, StringSplitOptions.RemoveEmptyEntries);
@@ -41,10 +43,10 @@ namespace ExperimentalMap {
             }
             Vector3 min = Vector3.one * 10;
             Vector3 max = -min;
-            border = new Vector2[coordsCount];
+            border = new List<Vector2>();
             for (int i1 = 0; i1 < coordsCount; i1++) {
                 Vector2 point = ExperimentalMap.MapUtility.PointFromStringData(coordinates[i1]);
-                border[i1] = point;
+                border.Add(point);
                 if (point.x < min.x)
                     min.x = point.x;
                 if (point.x > max.x)
@@ -57,6 +59,10 @@ namespace ExperimentalMap {
             center = (min + max) * 0.5f;
             borderRect = new Rect(min.x, min.y, Math.Abs(max.x - min.x), Mathf.Abs(max.y - min.y));
         }
+
+        public void SetTerrains(List<Terrain> terrains) {
+            this.terrains = terrains;
+        }
     }
 
     public class Map : MonoBehaviour {
@@ -66,10 +72,17 @@ namespace ExperimentalMap {
         public GameObject mapObject;
         public Material areaBorderMaterial;
         public Material areaBackgroundMaterial;
+        public Material biom1Material;
+        public Material biom2Material;
+        public Material biom3Material;
         public Camera camera;
         List<Area> areas;
+        List<Material> biomMaterials = new List<Material>();
 
         void Start() {
+            biomMaterials.Add(biom1Material);
+            biomMaterials.Add(biom2Material);
+            biomMaterials.Add(biom3Material);
             areas = ReadAreasData();
             CreateAreas();
         }
@@ -225,19 +238,16 @@ namespace ExperimentalMap {
             int i1 = 0;
             foreach (Area area in areas) {
                 i1++;
-                List<Terrain> terrains = new TerrainLayouter().CreateAreaLayout(area);
-                foreach (Terrain terrain in terrains) {
-                    CreateAreaSurface(terrain, areaBackgroundMaterial);
-                    CreateAreaBorder(terrain, areaBorderMaterial);
-                }
+                area.SetTerrains(new TerrainLayouter().CreateAreaLayout(area));
+                CreateAreaTerrainsSurfaces(area);
                 //CreateAreaSurface(area, areaBackgroundMaterial);
-                //CreateAreaBorder(area, areaBorderMaterial);
+                CreateAreaBorder(area, areaBorderMaterial);
             }
         }
 
         GameObject CreateAreaBorder(MapSurface surface, Material material) {
             List<Vector3> frontiersPoints = new List<Vector3>();
-            int pointsCount = surface.border.Length;
+            int pointsCount = surface.border.Count;
             for (int i1 = 0; i1 < pointsCount - 1; i1++) {
                 Vector3 p0 = surface.border[i1];
                 Vector3 p1 = surface.border[i1 + 1];
@@ -281,8 +291,8 @@ namespace ExperimentalMap {
 
         GameObject CreateAreaSurface(MapSurface surface, Material material) {
             int[] surfaceIndices = new Triangulator(surface.border).TriangulateOriented();
-            Vector3[] border3 = new Vector3[surface.border.Length];
-            for (int i1 = 0; i1 < surface.border.Length; i1++) {
+            Vector3[] border3 = new Vector3[surface.border.Count];
+            for (int i1 = 0; i1 < surface.border.Count; i1++) {
                 border3[i1] = surface.border[i1];
             }
             // Make texture coordinates not depending of area position
@@ -301,7 +311,7 @@ namespace ExperimentalMap {
             mesh.triangles = surfaceIndices;
             // uv mapping
             if (material.mainTexture != null) {
-                Vector2[] uv = new Vector2[surface.border.Length];
+                Vector2[] uv = new Vector2[surface.border.Count];
                 for (int k = 0; k < uv.Length; k++) {
                     Vector2 coor = surface.border[k];
                     coor.x /= textureScale.x;
@@ -324,6 +334,14 @@ namespace ExperimentalMap {
             surfaceObject.transform.localRotation = Quaternion.Euler(Vector3.zero);
             surfaceObject.layer = gameObject.layer;
             return surfaceObject;
+        }
+
+        List<GameObject> CreateAreaTerrainsSurfaces(Area area) {
+            List<GameObject> surfaces = new List<GameObject>();
+            foreach (Terrain terrain in area.terrains) {
+                surfaces.Add(CreateAreaSurface(terrain, biomMaterials[terrain.type]));
+            }
+            return surfaces;
         }
 
     }

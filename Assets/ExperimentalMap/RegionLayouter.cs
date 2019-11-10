@@ -1,19 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ClipperLib;
 
 namespace ExperimentalMap {
 
     public class Terrain: MapSurface {
-        public Vector2[] border { get; private set; }
+        public List<Vector2> border { get; private set; }
         public Rect borderRect { get; private set; }
         public int type;
 
-        public Terrain(Vector2[] border) {
+        public Terrain(List<Vector2> border) {
             this.border = border;
             Vector2 min = Vector2.one * 10;
             Vector2 max = -min;
-            for (int i1 = 0; i1 < border.Length; i1++) {
+            for (int i1 = 0; i1 < border.Count; i1++) {
                 Vector2 point = border[i1];
                 if (point.x < min.x)
                     min.x = point.x;
@@ -33,11 +34,19 @@ namespace ExperimentalMap {
         const float PointSize = 0.001f;
         const int TerrainSizeMark = 5;
 
+        struct PriorityPath {
+            public int priority;
+            public List<IntPoint> path;
+
+            public PriorityPath(int priority, List<IntPoint> path) {
+                this.priority = priority;
+                this.path = path;
+            }
+        }
+
         public List<Terrain> CreateAreaLayout(Area area) {
             int heightPoints = (int)(area.borderRect.height / PointSize);
             int widthPoints = (int)(area.borderRect.height / PointSize);
-            Debug.Log(heightPoints);
-            Debug.Log(widthPoints);
             bool[,] field = new bool[heightPoints,widthPoints];
             for (int i1 = 0; i1 < heightPoints; i1++) {
                 for (int i2 = 0; i2 < widthPoints; i2++) {
@@ -45,6 +54,7 @@ namespace ExperimentalMap {
                 }
             }
             List<Terrain> terrains = new List<Terrain>();
+            List<PriorityPath> paths = new List<PriorityPath>();
             for (int i1 = 0; i1 < heightPoints; i1++) {
                 for (int i2 = 0; i2 < widthPoints; i2++) {
                     if (field[i1, i2]) {
@@ -59,20 +69,58 @@ namespace ExperimentalMap {
                             field[ix, iy] = true;
                         }
                     }
-                    
-                    Vector2[] border = new Vector2[4];
-                    border[0] = new Vector2(area.borderRect.xMin + PointSize * (i1 + px), area.borderRect.yMin + PointSize * (i2 + py));
-                    border[1] = new Vector2(area.borderRect.xMin + PointSize * (i1 + px + sx), area.borderRect.yMin + PointSize * (i2 + py));
-                    border[2] = new Vector2(area.borderRect.xMin + PointSize * (i1 + px + sx), area.borderRect.yMin + PointSize * (i2 + py + sy));
-                    border[3] = new Vector2(area.borderRect.xMin + PointSize * (i1 + px), area.borderRect.yMin + PointSize * (i2 + py + sy));
-                    Terrain terrain = new Terrain(border);
-                    terrain.type = Random.Range(1, 3);
-                    terrains.Add(terrain);
+
+                    List<IntPoint> path = new List<IntPoint>();
+                    path.Add(new IntPoint(i1 + px, i2 + py));
+                    path.Add(new IntPoint(i1 + px + sx, i2 + py));
+                    path.Add(new IntPoint(i1 + px + sx, i2 + py + sy));
+                    path.Add(new IntPoint(i1 + px, i2 + py + sy));
+                    PriorityPath priorityPath = new PriorityPath(Random.Range(1, 100), path);
+                    paths.Add(priorityPath);
                 }
             }
-            Debug.Log(terrains.Count);
+            paths.Sort((p1, p2) => p1.priority.CompareTo(p2.priority));
+            List<List<IntPoint>> topPaths = new List<List<IntPoint>>();
+            List<List<IntPoint>> resultPaths = new List<List<IntPoint>>();
+            for (int i1=paths.Count-1; i1>=0; i1--) {
+                List<List<IntPoint>> subject = new List<List<IntPoint>>();
+                List<List<IntPoint>> results = new List<List<IntPoint>>();
+                subject.Add(paths[i1].path);
+                Clipper c = new Clipper();
+                c.AddPaths(subject, PolyType.ptSubject, true);
+                c.AddPaths(topPaths, PolyType.ptClip, true);
+                c.Execute(ClipType.ctDifference, results, PolyFillType.pftNonZero, PolyFillType.pftNonZero);
+                foreach (List<IntPoint> result in results) {
+                    resultPaths.Add(result);
+                }
+                topPaths.Add(paths[i1].path);
+            }
+            foreach (List<IntPoint> path in resultPaths) {
+                List<Vector2> border = new List<Vector2>();
+                for (int i1=0; i1<path.Count; i1++) {
+                    border.Add(new Vector2(area.borderRect.xMin + PointSize * path[i1].X, area.borderRect.yMin + PointSize * path[i1].Y));
+                }
+                Terrain terrain = new Terrain(border);
+                terrain.type = Random.Range(0, 3);
+                terrains.Add(terrain);
+
+            }
             return terrains;
         }
+
+        /*public List<Vector2> CalculateSummaryBorder(List<Terrain> terrains) {
+            List<List<IntPoint>> subject = new List<List<IntPoint>>();
+            List<List<IntPoint>> results = new List<List<IntPoint>>();
+            subject.Add(paths[i1].path);
+            Clipper c = new Clipper();
+            c.AddPaths(subject, PolyType.ptSubject, true);
+            c.AddPaths(topPaths, PolyType.ptClip, true);
+            c.Execute(ClipType.ctDifference, results, PolyFillType.pftNonZero, PolyFillType.pftNonZero);
+            foreach (List<IntPoint> result in results) {
+                resultPaths.Add(result);
+            }
+            topPaths.Add(paths[i1].path);
+        }*/
     }
 
 }

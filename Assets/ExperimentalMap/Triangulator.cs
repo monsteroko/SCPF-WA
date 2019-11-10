@@ -12,6 +12,10 @@ namespace ExperimentalMap {
             m_points = new List<Vector2>(points);
         }
 
+        public Triangulator(List<Vector2> points) {
+            m_points = points;
+        }
+
         public int[] Triangulate() {
             List<int> indices = new List<int>();
 
