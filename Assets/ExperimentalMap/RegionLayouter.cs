@@ -108,19 +108,24 @@ namespace ExperimentalMap {
             return terrains;
         }
 
-        /*public List<Vector2> CalculateSummaryBorder(List<Terrain> terrains) {
+        public List<Vector2> CalculateSummaryBorder(List<Terrain> terrains) {
+            ClipperUtility utility = new ClipperUtility();
             List<List<IntPoint>> subject = new List<List<IntPoint>>();
             List<List<IntPoint>> results = new List<List<IntPoint>>();
-            subject.Add(paths[i1].path);
+            foreach (Terrain terrain in terrains) {
+                subject.Add(utility.VectorPathToClipperPath(terrain.border));
+            }
             Clipper c = new Clipper();
             c.AddPaths(subject, PolyType.ptSubject, true);
-            c.AddPaths(topPaths, PolyType.ptClip, true);
-            c.Execute(ClipType.ctDifference, results, PolyFillType.pftNonZero, PolyFillType.pftNonZero);
-            foreach (List<IntPoint> result in results) {
-                resultPaths.Add(result);
+            c.AddPaths(new List<List<IntPoint>>(), PolyType.ptClip, true);
+            c.Execute(ClipType.ctUnion, results, PolyFillType.pftNonZero, PolyFillType.pftNonZero);
+            if (results.Count > 0) {
+                return utility.ClipperPathToVectorPath(results[0]);
+            } else {
+                Debug.Log("Invalid terrain set");
+                return new List<Vector2>();
             }
-            topPaths.Add(paths[i1].path);
-        }*/
+        }
     }
 
 }

@@ -62,6 +62,9 @@ namespace ExperimentalMap {
 
         public void SetTerrains(List<Terrain> terrains) {
             this.terrains = terrains;
+            if (terrains.Count > 0) {
+                this.border = new TerrainLayouter().CalculateSummaryBorder(terrains);
+            }
         }
     }
 
@@ -69,12 +72,14 @@ namespace ExperimentalMap {
 
         public static readonly float MapPrecision = 5000000f;
         public GameObject areaBackgroundObject;
+        public GameObject mapBackgroundObject;
         public GameObject mapObject;
         public Material areaBorderMaterial;
         public Material areaBackgroundMaterial;
         public Material biom1Material;
         public Material biom2Material;
         public Material biom3Material;
+        public Material seaMaterial;
         public Camera camera;
         List<Area> areas;
         List<Material> biomMaterials = new List<Material>();
@@ -83,6 +88,7 @@ namespace ExperimentalMap {
             biomMaterials.Add(biom1Material);
             biomMaterials.Add(biom2Material);
             biomMaterials.Add(biom3Material);
+            CreateBackground();
             areas = ReadAreasData();
             CreateAreas();
         }
@@ -289,7 +295,7 @@ namespace ExperimentalMap {
             return borderSurface;
         }
 
-        GameObject CreateAreaSurface(MapSurface surface, Material material) {
+        GameObject CreateAreaSurface(MapSurface surface, Material material, GameObject parentObject) {
             int[] surfaceIndices = new Triangulator(surface.border).TriangulateOriented();
             Vector3[] border3 = new Vector3[surface.border.Count];
             for (int i1 = 0; i1 < surface.border.Count; i1++) {
@@ -329,7 +335,7 @@ namespace ExperimentalMap {
             MeshFilter meshFilter = surfaceObject.GetComponent<MeshFilter>();
             meshFilter.mesh = mesh;
             surfaceObject.GetComponent<Renderer>().sharedMaterial = material;
-            surfaceObject.transform.SetParent(areaBackgroundObject.transform, false);
+            surfaceObject.transform.SetParent(parentObject.transform, false);
             surfaceObject.transform.localPosition = Vector3.zero;
             surfaceObject.transform.localRotation = Quaternion.Euler(Vector3.zero);
             surfaceObject.layer = gameObject.layer;
@@ -339,9 +345,19 @@ namespace ExperimentalMap {
         List<GameObject> CreateAreaTerrainsSurfaces(Area area) {
             List<GameObject> surfaces = new List<GameObject>();
             foreach (Terrain terrain in area.terrains) {
-                surfaces.Add(CreateAreaSurface(terrain, biomMaterials[terrain.type]));
+                surfaces.Add(CreateAreaSurface(terrain, biomMaterials[terrain.type], areaBackgroundObject));
             }
             return surfaces;
+        }
+
+        GameObject CreateBackground() {
+            List<Vector2> border = new List<Vector2>();
+            border.Add(new Vector2(-1, -1));
+            border.Add(new Vector2(1, -1));
+            border.Add(new Vector2(1, 1));
+            border.Add(new Vector2(-1, 1));
+            Terrain sea = new Terrain(border);
+            return CreateAreaSurface(sea, seaMaterial, mapBackgroundObject);
         }
 
     }
