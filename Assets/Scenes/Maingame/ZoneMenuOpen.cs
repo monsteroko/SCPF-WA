@@ -6,7 +6,7 @@ using UnityEngine;
 public class ZoneMenuOpen : MonoBehaviour
 {
     public GameObject ZoneManagement;
-    private int Current = 0, Limit = 0, v = 100, width = 280;
+    private int Current = 0, Limit = 0, v = 100, width = 500;
     void Start()
     {
         ZoneManagement = GameObject.Find("ZoneManagenent");
