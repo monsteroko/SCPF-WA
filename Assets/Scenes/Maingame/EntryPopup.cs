@@ -15,7 +15,7 @@ public class EntryPopup : MonoBehaviour {
     public TextMeshProUGUI descriptionText;
     public Button okButton;
     public Button cancButton;
-    public GameObject Cube;
+    public GameObject SCP;
     public GameManager gameManager;
     public WorldMap2D map;
     public GameObject entryPopupObject;
@@ -67,7 +67,7 @@ public class EntryPopup : MonoBehaviour {
         Vector2 point = mapManager.GeneratePointInUnlockedAreas();
         map = WorldMap2D.instance;
         Vector3 ucoord = map.transform.TransformPoint(point);
-        Cube.transform.position = ucoord;
+        SCP.transform.position = ucoord;
         map.FlyToLocation(point, 1);
     }
 }

@@ -5,13 +5,14 @@ using WPMF;
 
 public class SCPFoundScript : MonoBehaviour
 {
-    public GameObject SCPobj;
+    public GameObject SCPMogCanv;
     public WorldMap2D map;
 
     void OnMouseDown()
     {
-        map = WorldMap2D.instance;
-        SCPobj.SetActive(false);
-        map.CenterMap();
+        if(SCPMogCanv.active==false)
+            SCPMogCanv.SetActive(true);
+        else
+            SCPMogCanv.SetActive(false);
     }
 }

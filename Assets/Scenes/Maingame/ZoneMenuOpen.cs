@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
@@ -6,10 +7,13 @@ using UnityEngine;
 public class ZoneMenuOpen : MonoBehaviour
 {
     public GameObject ZoneManagement;
-    private int Current = 0, Limit = 0, v = 100, width = 500;
+    private float Current = 0, Limit = 0, v = 100, width;
+    private RectTransform rt;
     void Start()
     {
         ZoneManagement = GameObject.Find("ZoneManagenent");
+        rt = (RectTransform)ZoneManagement.transform;
+        width = rt.rect.right;
     }
     // Update is called once per frame
     void Update()
