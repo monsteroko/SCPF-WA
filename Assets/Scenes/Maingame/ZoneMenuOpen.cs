@@ -8,7 +8,7 @@ using UnityEngine.EventSystems;
 public class ZoneMenuOpen : MonoBehaviour
 {
     public GameObject ZoneManagement;
-    private int Current = 0, Limit = 0, v = 100, width = 235;
+    private int Current = 0, Limit = 0, v = 50, width = (int)(Screen.width / 3.3f);
     private bool trigger = false;
 
     void Start()
