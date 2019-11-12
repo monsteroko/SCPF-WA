@@ -20,14 +20,30 @@ public class ZoneMenuOpen : MonoBehaviour
     {
         if (Current < Limit && Limit == width)
         {
-            ZoneManagement.transform.Translate(v * Vector3.left);
-            Current += v;
+            if (Limit - Current >= v)
+            {
+                ZoneManagement.transform.Translate(v * Vector3.left);
+                Current += v;
+            }
+            else
+            {
+                ZoneManagement.transform.Translate((Limit - Current) * Vector3.left);
+                Current = Limit;
+            }
         }
 
         if (Current > Limit && Limit == 0)
         {
-            ZoneManagement.transform.Translate(v * Vector3.right);
-            Current -= v;
+            if (Current >= v)
+            {
+                ZoneManagement.transform.Translate(v * Vector3.right);
+                Current -= v;
+            }
+            else
+            {
+                ZoneManagement.transform.Translate(Current * Vector3.right);
+                Current = 0;
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.Mouse0))
