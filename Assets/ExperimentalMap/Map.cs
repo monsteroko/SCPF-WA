@@ -62,14 +62,24 @@ namespace ExperimentalMap {
         public void SetTerrains(List<Terrain> terrains) {
             this.terrains = terrains;
             if (terrains.Count > 0) {
-                this.border = new TerrainLayouter().CalculateSummaryBorder(terrains);
+                this.border = new TerrainLayouter().CalculateSummaryBorder(border, terrains);
             }
+        }
+
+        public void AddTerrain(Terrain terrain) {
+            terrains.Add(terrain);
+            border = (new ClipperUtility()).UnionBorders(border, terrain.border);
+        }
+
+        public void ClipTerrain(Terrain terrain) {
+            border = (new ClipperUtility()).ClipBorder(border, terrain.border);
         }
     }
 
     public class Map : MonoBehaviour {
 
         public static readonly float MapPrecision = 5000000f;
+        public GameObject terrainsObject;
         public GameObject areaBackgroundObject;
         public GameObject mapBackgroundObject;
         public GameObject mapObject;
@@ -257,12 +267,23 @@ namespace ExperimentalMap {
 
 
         void CreateAreas() {
-            int i1 = 0;
+            List<Area> europeAreas = new List<Area>();
+            List<Area> otherAreas = new List<Area>();
             foreach (Area area in areas) {
-                i1++;
-                area.SetTerrains(new TerrainLayouter().CreateAreaLayout(area));
+                if (area.counterpart == "SLAV EMPIRE") {
+                    europeAreas.Add(area);
+                } else {
+                    otherAreas.Add(area);
+                }
+            }
+            new TerrainLayouter().CreateLayoutForAreas(ref europeAreas);
+            foreach (Area area in europeAreas) {
+                CreateAreaSurface(area, biom1Material, areaBackgroundObject);
                 CreateAreaTerrainsSurfaces(area);
-                //CreateAreaSurface(area, areaBackgroundMaterial);
+                CreateAreaBorder(area, areaBorderMaterial); 
+            }
+            foreach (Area area in otherAreas) {
+                CreateAreaSurface(area, areaBackgroundMaterial, areaBackgroundObject);
                 CreateAreaBorder(area, areaBorderMaterial);
             }
         }
@@ -360,7 +381,7 @@ namespace ExperimentalMap {
         List<GameObject> CreateAreaTerrainsSurfaces(Area area) {
             List<GameObject> surfaces = new List<GameObject>();
             foreach (Terrain terrain in area.terrains) {
-                surfaces.Add(CreateAreaSurface(terrain, biomMaterials[terrain.type], areaBackgroundObject));
+                surfaces.Add(CreateAreaSurface(terrain, biomMaterials[terrain.type], terrainsObject));
             }
             return surfaces;
         }

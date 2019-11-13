@@ -18,6 +18,9 @@ namespace ExperimentalMap {
     public partial class Triangulator {
         public int[] TriangulateOriented() {
             int[] indeces = Triangulate();
+            if (m_points.Count < 3) {
+                return indeces;
+            }
             Vector3 v0 = m_points[indeces[0]];
             Vector3 v1 = m_points[indeces[1]];
             Vector3 v2 = m_points[indeces[2]];
