@@ -43,6 +43,13 @@ namespace ExperimentalMap {
             return inside;
         }
 
+        public bool AreSurfacesNear(MapSurface surf1, MapSurface surf2) {
+            return surf1.borderRect.Contains(new Vector2(surf2.borderRect.xMin, surf2.borderRect.yMin)) ||
+                surf1.borderRect.Contains(new Vector2(surf2.borderRect.xMin, surf2.borderRect.yMax)) ||
+                surf1.borderRect.Contains(new Vector2(surf2.borderRect.xMax, surf2.borderRect.yMin)) ||
+                surf1.borderRect.Contains(new Vector2(surf2.borderRect.xMax, surf2.borderRect.yMax));
+        }
+
         public List<Vector2> UnionBorders(List<Vector2> border1, List<Vector2> border2) {
             List<List<IntPoint>> s1 = new List<List<IntPoint>>();
             List<List<IntPoint>> s2 = new List<List<IntPoint>>();

@@ -7,9 +7,17 @@ using UnityEditor;
 
 namespace ExperimentalMap {
 
-    public interface MapSurface {
-        List<Vector2> border { get; }
-        Rect borderRect { get; }
+    public class MapSurface {
+        public List<Vector2> border { get; protected set; }
+        public Rect borderRect { get; protected set; }
+
+        public bool IsValid() {
+            return border.Count >= 3;
+        }
+
+        public void ClipSurface(MapSurface surface) {
+            border = (new ClipperUtility()).ClipBorder(border, surface.border);
+        }
     }
 
     public class Area: MapSurface {
@@ -21,9 +29,7 @@ namespace ExperimentalMap {
             this.terrains = new List<Terrain>();
         }
 
-        public List<Vector2> border { get; private set; }
         public Vector2 center;
-        public Rect borderRect { get; private set; }
         public List<Terrain> terrains { get; private set; }
 
         public void SetBordersData(string data) {
@@ -67,12 +73,18 @@ namespace ExperimentalMap {
         }
 
         public void AddTerrain(Terrain terrain) {
-            terrains.Add(terrain);
             border = (new ClipperUtility()).UnionBorders(border, terrain.border);
+            foreach (Terrain oldTerrain in terrains) {
+                oldTerrain.ClipSurface(terrain);
+            }
+            terrains.Add(terrain);
         }
 
         public void ClipTerrain(Terrain terrain) {
-            border = (new ClipperUtility()).ClipBorder(border, terrain.border);
+            ClipSurface(terrain);
+            foreach (Terrain oldTerrain in terrains) {
+                oldTerrain.ClipSurface(terrain);
+            }
         }
     }
 
@@ -289,6 +301,9 @@ namespace ExperimentalMap {
         }
 
         GameObject CreateAreaBorder(MapSurface surface, Material material) {
+            if (!surface.IsValid()) {
+                return new GameObject();
+            }
             List<Vector3> frontiersPoints = new List<Vector3>();
             int pointsCount = surface.border.Count;
             for (int i1 = 0; i1 < pointsCount - 1; i1++) {
@@ -332,6 +347,9 @@ namespace ExperimentalMap {
         }
 
         GameObject CreateAreaSurface(MapSurface surface, Material material, GameObject parentObject) {
+            if (!surface.IsValid()) {
+                return new GameObject();
+            }
             int[] surfaceIndices = new Triangulator(surface.border).TriangulateOriented();
             Vector3[] border3 = new Vector3[surface.border.Count];
             for (int i1 = 0; i1 < surface.border.Count; i1++) {

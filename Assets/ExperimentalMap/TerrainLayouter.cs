@@ -6,8 +6,6 @@ using ClipperLib;
 namespace ExperimentalMap {
 
     public class Terrain: MapSurface {
-        public List<Vector2> border { get; private set; }
-        public Rect borderRect { get; private set; }
         public Vector2 center { get; private set; }
         public int type;
 
@@ -33,7 +31,7 @@ namespace ExperimentalMap {
 
     public class TerrainLayouter {
 
-        const float PointSize = 0.0004f;
+        const float PointSize = 0.0003f;
         const float chunkSize = 0.008f;
         const int TerrainSizeMark = 5;
 
@@ -78,7 +76,7 @@ namespace ExperimentalMap {
                 if (!isInside) continue;
                 bool isTooClose = false;
                 foreach (Vector2 center in chunkCenters) {
-                    if ((newCenter - center).magnitude < 3*chunkSize) {
+                    if ((newCenter - center).magnitude < chunkSize) {
                         isTooClose = true;
                     }
                 }
@@ -102,13 +100,16 @@ namespace ExperimentalMap {
                 }
             }
             for (int i1 = 0; i1 < terrains.Count; i1++) {
-                for (int i2 = 0; i2 < areas.Count; i2++) {
-                    if (i2 == indeces[i1]) {
-                        areas[i2].AddTerrain(terrains[i1]);
-                    } else {
-                        areas[i2].ClipTerrain(terrains[i1]);
+                if (indeces[i1]>=0) {
+                    for (int i2 = 0; i2 < areas.Count; i2++) {
+                        if (i2 == indeces[i1]) {
+                            areas[i2].AddTerrain(terrains[i1]);
+                        } else if (utility.AreSurfacesNear(areas[i2], terrains[i1])) {
+                            areas[i2].ClipTerrain(terrains[i1]);
+                        }
                     }
                 }
+                
             }
 
         }
