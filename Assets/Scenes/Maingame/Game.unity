@@ -3516,6 +3516,7 @@ GameObject:
   - component: {fileID: 761111150}
   - component: {fileID: 761111149}
   - component: {fileID: 761111151}
+  - component: {fileID: 761111152}
   m_Layer: 0
   m_Name: GameManagerObject
   m_TagString: Untagged
@@ -3535,6 +3536,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 001ec1907a4ebb94da5bd4fd89614140, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mapManager: {fileID: 0}
   zonesManager: {fileID: 761111151}
 --- !u!4 &761111150
 Transform:
@@ -3563,6 +3565,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   basicZoneObject: {fileID: 100000, guid: 8013ea136901b1e4d9ab6773c0fc99ff, type: 3}
+--- !u!114 &761111152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 761111148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01df732c4ab84124a86e654176a2cda4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  map: {fileID: 1709668289}
 --- !u!1 &769770652
 GameObject:
   m_ObjectHideFlags: 0
@@ -5027,18 +5042,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 1212926596}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Name: 
-  m_EditorClassIdentifier: 
   m_Name: 
   m_EditorClassIdentifier: 
   operationMode: 0

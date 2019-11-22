@@ -7,6 +7,12 @@ using UnityEditor;
 
 namespace ExperimentalMap {
 
+    public enum AreaState {
+        Locked = 0,
+        Unlocked = 1,
+        Controlled = 2,
+    }
+
     public class MapSurface {
         public List<Vector2> border { get; protected set; }
         public Rect borderRect { get; protected set; }
@@ -31,6 +37,38 @@ namespace ExperimentalMap {
 
         public Vector2 center;
         public List<Terrain> terrains { get; private set; }
+        private AreaState _state = AreaState.Locked;
+
+        public AreaState state {
+            get {
+                return _state;
+            }
+            set {
+                if (value == _state) return;
+                //TODO: Change zone place state
+               /* map.ToggleProvinceSurface(name, value == AreaState.Locked);
+                if (cityIndex >= 0 && cityIndex <= map.cities.Count) {
+                    switch (value) {
+                        case AreaState.Locked:
+                            map.cities[cityIndex].population = 2;
+                            map.cities[cityIndex].cityClass = CITY_CLASS.REGION_CAPITAL;
+                            break;
+                        case AreaState.Unlocked:
+                            map.cities[cityIndex].population = 2;
+                            map.cities[cityIndex].cityClass = CITY_CLASS.COUNTRY_CAPITAL;
+                            break;
+                        case AreaState.Controlled:
+                            map.cities[cityIndex].population = -1;
+                            map.cities[cityIndex].cityClass = CITY_CLASS.COUNTRY_CAPITAL;
+                            break;
+                    }
+                }
+                map.DrawCities();*/
+                _state = value;
+            }
+        }
+
+        // Geometry
 
         public void SetBordersData(string data) {
             string[] regions = data.Split(new char[] { '*' }, StringSplitOptions.RemoveEmptyEntries);
@@ -102,16 +140,19 @@ namespace ExperimentalMap {
         public Material biom3Material;
         public Material seaMaterial;
         public Camera camera;
-        List<Area> areas;
+        public List<Area> areas { get; private set; }
         List<Material> biomMaterials = new List<Material>();
 
-        void Start() {
+        void OnEnable() {
             biomMaterials.Add(biom1Material);
             biomMaterials.Add(biom2Material);
             biomMaterials.Add(biom3Material);
             CreateBackground();
             areas = ReadAreasData();
             CreateAreas();
+        }
+
+        void Start() {
             FitCameraPosition();
         }
 
@@ -120,10 +161,12 @@ namespace ExperimentalMap {
         Vector3 dragDirection;
         Vector3? mouseDragLast, mouseDragCurrent;
         Vector3 cameraPositionLast;
+        Vector3? focusCameraPosition;
         const float maxCameraDistance = 90.0f;
         const float minCameraDistance = 5.0f;
         const float minCameraAngle = 0.0f;
         const float maxCameraAngle = -20.0f;
+        const float stopDistance = 1 / 100.0f;
         void Update() {
             if (!Application.isPlaying)
                 return;
@@ -132,9 +175,21 @@ namespace ExperimentalMap {
             if (mouseRaycastPoint != null) {
                 isMouseOver = true;
             }
-
+            Vector3 currentDragVector = Vector3.zero;
+            float currentDragAcceleration = 0;
+            // Focusing
+            bool isFocusing = focusCameraPosition != null;
+            if (isFocusing) {
+                const float focusSpeed = 0.08f;
+                currentDragVector = (Vector3)focusCameraPosition - camera.transform.position;
+                dragDirection = currentDragVector.normalized;
+                currentDragAcceleration += dragDirection.magnitude > 10 * stopDistance ? focusSpeed * Mathf.Sqrt(mapObject.transform.position.z - camera.transform.position.z) : 0;
+                if (Mathf.Abs(currentDragVector.magnitude) < stopDistance) {
+                    focusCameraPosition = null;
+                }
+            }
             // Zoom
-            if (isMouseOver) {
+            if (isMouseOver && !isFocusing) {
                 float currentAcceleration = Input.GetAxis("Mouse ScrollWheel");
                 zoomAcceleration += currentAcceleration;
                 // Touch Screen
@@ -161,53 +216,54 @@ namespace ExperimentalMap {
                 }
             }
             // Drag
-            bool pressed = false;
-            Vector3 currentDragVector = Vector3.zero;
-            float currentDragAcceleration = 0;
-            if (Input.GetKey(KeyCode.W)) {
-                currentDragVector += Vector3.up;
-                pressed = true;
-            }
-            if (Input.GetKey(KeyCode.S)) {
-                currentDragVector += Vector3.down;
-                pressed = true;
-            }
-            if (Input.GetKey(KeyCode.A)) {
-                currentDragVector += Vector3.left;
-                pressed = true;
-            }
-            if (Input.GetKey(KeyCode.D)) {
-                currentDragVector += Vector3.right;
-                pressed = true;
-            }
-            if (pressed) {
-                dragDirection = currentDragVector.normalized;
-                const float keysDragSpeed = 0.05f;
-                currentDragAcceleration += keysDragSpeed * Mathf.Sqrt(mapObject.transform.position.z - camera.transform.position.z);
-            }
-            if (isMouseOver && Input.GetMouseButton(0)) {
-                cameraPositionLast = camera.transform.position;
-                mouseDragLast = mouseDragCurrent;
-                mouseDragCurrent = GetMousePosition();
-                if (mouseDragLast != null && mouseDragCurrent != null) {
-                    Vector3? mapDragLast = GetRaycast((Vector3)mouseDragLast);
-                    Vector3? mapDragCurrent = GetRaycast((Vector3)mouseDragCurrent);
-                    Vector3 scrPointLast = camera.ScreenToWorldPoint(new Vector3(((Vector3)mouseDragLast).x, ((Vector3)mouseDragLast).y, camera.nearClipPlane));
-                    Vector3 scrPointCurrent = camera.ScreenToWorldPoint(new Vector3(((Vector3)mouseDragCurrent).x, ((Vector3)mouseDragCurrent).y, camera.nearClipPlane));
-                    if (mouseDragLast != null && mapDragCurrent != null) {
-                        float koef = (camera.transform.position - (Vector3)mapDragLast).magnitude / (scrPointLast - (Vector3)mapDragLast).magnitude;
-                        Vector3 cameraRay = (scrPointCurrent - (Vector3)mapDragCurrent) * koef;
-                        float distanceKoef = ((camera.transform.position.z - ((Vector3)mapDragLast).z) / cameraRay.z);
-                        Vector3 newCamera = (Vector3)mapDragLast + cameraRay * distanceKoef;
-                        currentDragVector = newCamera - camera.transform.position;
-                        dragDirection = currentDragVector.normalized;
-                        currentDragAcceleration += currentDragVector.magnitude;
+            if (!isFocusing) {
+                bool pressed = false;
+                if (Input.GetKey(KeyCode.W)) {
+                    currentDragVector += Vector3.up;
+                    pressed = true;
+                }
+                if (Input.GetKey(KeyCode.S)) {
+                    currentDragVector += Vector3.down;
+                    pressed = true;
+                }
+                if (Input.GetKey(KeyCode.A)) {
+                    currentDragVector += Vector3.left;
+                    pressed = true;
+                }
+                if (Input.GetKey(KeyCode.D)) {
+                    currentDragVector += Vector3.right;
+                    pressed = true;
+                }
+                if (pressed) {
+                    dragDirection = currentDragVector.normalized;
+                    const float keysDragSpeed = 0.05f;
+                    currentDragAcceleration += keysDragSpeed * Mathf.Sqrt(mapObject.transform.position.z - camera.transform.position.z);
+                }
+                if (isMouseOver && Input.GetMouseButton(0)) {
+                    cameraPositionLast = camera.transform.position;
+                    mouseDragLast = mouseDragCurrent;
+                    mouseDragCurrent = GetMousePosition();
+                    if (mouseDragLast != null && mouseDragCurrent != null) {
+                        Vector3? mapDragLast = GetRaycast((Vector3)mouseDragLast);
+                        Vector3? mapDragCurrent = GetRaycast((Vector3)mouseDragCurrent);
+                        Vector3 scrPointLast = camera.ScreenToWorldPoint(new Vector3(((Vector3)mouseDragLast).x, ((Vector3)mouseDragLast).y, camera.nearClipPlane));
+                        Vector3 scrPointCurrent = camera.ScreenToWorldPoint(new Vector3(((Vector3)mouseDragCurrent).x, ((Vector3)mouseDragCurrent).y, camera.nearClipPlane));
+                        if (mouseDragLast != null && mapDragCurrent != null) {
+                            float koef = (camera.transform.position - (Vector3)mapDragLast).magnitude / (scrPointLast - (Vector3)mapDragLast).magnitude;
+                            Vector3 cameraRay = (scrPointCurrent - (Vector3)mapDragCurrent) * koef;
+                            float distanceKoef = ((camera.transform.position.z - ((Vector3)mapDragLast).z) / cameraRay.z);
+                            Vector3 newCamera = (Vector3)mapDragLast + cameraRay * distanceKoef;
+                            currentDragVector = newCamera - camera.transform.position;
+                            dragDirection = currentDragVector.normalized;
+                            currentDragAcceleration += currentDragVector.magnitude;
+                        }
                     }
-                } 
-            } else {
-                mouseDragCurrent = null;
-                mouseDragLast = null;
+                } else {
+                    mouseDragCurrent = null;
+                    mouseDragLast = null;
+                }
             }
+            //Move
             dragAcceleration += currentDragAcceleration;
             if (dragAcceleration != 0) {
                 if (currentDragAcceleration == 0) {
@@ -217,7 +273,7 @@ namespace ExperimentalMap {
                 }
                 camera.transform.position = camera.transform.position + dragDirection * currentDragAcceleration;
                 dragAcceleration *= 0.9f;
-                if (Mathf.Abs(dragAcceleration) < 1 / 1000.0f) {
+                if (Mathf.Abs(dragAcceleration) < stopDistance) {
                     dragAcceleration = 0;
                 }
             }
@@ -231,6 +287,14 @@ namespace ExperimentalMap {
             float angle = minCameraAngle + maxCameraAngle * (1 - Mathf.Pow((pureDistance - minCameraDistance) / (maxCameraDistance - minCameraDistance), 0.7f));
             camera.transform.rotation = Quaternion.Euler(angle, 0, 0);
             //TODO: Restrict x and y camera movement
+        }
+
+        public void FocusCameraOn(Area area) {
+            if (focusCameraPosition != null) {
+                Debug.Log("Already focusing, some logic may be wrong");
+            }
+            Vector3 uCoords = transform.TransformPoint(area.borderRect.center);
+            focusCameraPosition = new Vector3(uCoords.x, uCoords.y, mapObject.transform.position.z - minCameraDistance - (maxCameraDistance - minCameraDistance) * 0.2f);
         }
 
         Vector3 GetMousePosition() {
@@ -256,6 +320,8 @@ namespace ExperimentalMap {
             }
             return null;
         }
+
+        // Geometry 
 
         List<Area> ReadAreasData() {
             TextAsset ta = Resources.Load<TextAsset>("Geodata/areas");

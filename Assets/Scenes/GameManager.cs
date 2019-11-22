@@ -20,7 +20,12 @@ public class GameManager : MonoBehaviour {
 
     void Start() {
         entryManager = new EntryManager();
-        mapManager = new MapManager(StartGameSettings.mapSave);
+#if UNITY_EDITOR
+        if (StartGameSettings.mapSave == null) {
+            mapManager.InitWithSave(MapSaveModel.NewGameSave("eeu"));
+        } else
+#endif
+        mapManager.InitWithSave(StartGameSettings.mapSave);
         StartCoroutine(ShowEntryPopup());
     }
 
