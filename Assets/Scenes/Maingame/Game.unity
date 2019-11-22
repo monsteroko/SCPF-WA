@@ -3536,7 +3536,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 001ec1907a4ebb94da5bd4fd89614140, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapManager: {fileID: 0}
+  mapManager: {fileID: 761111152}
   zonesManager: {fileID: 761111151}
 --- !u!4 &761111150
 Transform:
