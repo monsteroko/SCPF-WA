@@ -4,127 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using ExperimentalMap;
 using UnityEditor;
+using System.Globalization;
 
 namespace ExperimentalMap {
-
-    public enum AreaState {
-        Locked = 0,
-        Unlocked = 1,
-        Controlled = 2,
-    }
-
-    public class MapSurface {
-        public List<Vector2> border { get; protected set; }
-        public Rect borderRect { get; protected set; }
-
-        public bool IsValid() {
-            return border.Count >= 3;
-        }
-
-        public void ClipSurface(MapSurface surface) {
-            border = (new ClipperUtility()).ClipBorder(border, surface.border);
-        }
-    }
-
-    public class Area: MapSurface {
-        public readonly string name;
-        public readonly string counterpart;
-        public Area(string name, string counterpart) {
-            this.name = name;
-            this.counterpart = counterpart;
-            this.terrains = new List<Terrain>();
-        }
-
-        public Vector2 center;
-        public List<Terrain> terrains { get; private set; }
-        private AreaState _state = AreaState.Locked;
-
-        public AreaState state {
-            get {
-                return _state;
-            }
-            set {
-                if (value == _state) return;
-                //TODO: Change zone place state
-               /* map.ToggleProvinceSurface(name, value == AreaState.Locked);
-                if (cityIndex >= 0 && cityIndex <= map.cities.Count) {
-                    switch (value) {
-                        case AreaState.Locked:
-                            map.cities[cityIndex].population = 2;
-                            map.cities[cityIndex].cityClass = CITY_CLASS.REGION_CAPITAL;
-                            break;
-                        case AreaState.Unlocked:
-                            map.cities[cityIndex].population = 2;
-                            map.cities[cityIndex].cityClass = CITY_CLASS.COUNTRY_CAPITAL;
-                            break;
-                        case AreaState.Controlled:
-                            map.cities[cityIndex].population = -1;
-                            map.cities[cityIndex].cityClass = CITY_CLASS.COUNTRY_CAPITAL;
-                            break;
-                    }
-                }
-                map.DrawCities();*/
-                _state = value;
-            }
-        }
-
-        // Geometry
-
-        public void SetBordersData(string data) {
-            string[] regions = data.Split(new char[] { '*' }, StringSplitOptions.RemoveEmptyEntries);
-            Vector2 minPoint = Vector2.one * 10;
-            Vector2 maxPoint = -minPoint;
-            char[] separatorRegions = new char[] { ';' };
-            if (regions.Length == 0) {
-            }
-            string region = regions[0];
-            string[] coordinates = region.Split(separatorRegions, StringSplitOptions.RemoveEmptyEntries);
-            int coordsCount = coordinates.Length;
-            if (coordsCount < 3) {
-                Debug.Log("Incorrect area border data");
-                return;
-            }
-            Vector3 min = Vector3.one * 10;
-            Vector3 max = -min;
-            border = new List<Vector2>();
-            for (int i1 = 0; i1 < coordsCount; i1++) {
-                Vector2 point = ExperimentalMap.MapUtility.PointFromStringData(coordinates[i1]);
-                border.Add(point);
-                if (point.x < min.x)
-                    min.x = point.x;
-                if (point.x > max.x)
-                    max.x = point.x;
-                if (point.y < min.y)
-                    min.y = point.y;
-                if (point.y > max.y)
-                    max.y = point.y;
-            }
-            center = (min + max) * 0.5f;
-            borderRect = new Rect(min.x, min.y, Math.Abs(max.x - min.x), Mathf.Abs(max.y - min.y));
-        }
-
-        public void SetTerrains(List<Terrain> terrains) {
-            this.terrains = terrains;
-            if (terrains.Count > 0) {
-                this.border = new TerrainLayouter().CalculateSummaryBorder(border, terrains);
-            }
-        }
-
-        public void AddTerrain(Terrain terrain) {
-            border = (new ClipperUtility()).UnionBorders(border, terrain.border);
-            foreach (Terrain oldTerrain in terrains) {
-                oldTerrain.ClipSurface(terrain);
-            }
-            terrains.Add(terrain);
-        }
-
-        public void ClipTerrain(Terrain terrain) {
-            ClipSurface(terrain);
-            foreach (Terrain oldTerrain in terrains) {
-                oldTerrain.ClipSurface(terrain);
-            }
-        }
-    }
 
     public class Map : MonoBehaviour {
 
@@ -132,15 +14,21 @@ namespace ExperimentalMap {
         public GameObject terrainsObject;
         public GameObject areaBackgroundObject;
         public GameObject mapBackgroundObject;
+        public GameObject mapOverlayObject;
+        public GameObject mapZonesObject;
         public GameObject mapObject;
         public Material areaBorderMaterial;
         public Material areaBackgroundMaterial;
+        public Material areaLockedMaterial;
         public Material biom1Material;
         public Material biom2Material;
         public Material biom3Material;
         public Material seaMaterial;
+        public GameObject zonePlaceModel;
         public Camera camera;
         public List<Area> areas { get; private set; }
+        private Dictionary<String, int> areaIndexMap; 
+        public List<Zone> zones { get; private set; }
         List<Material> biomMaterials = new List<Material>();
 
         void OnEnable() {
@@ -149,7 +37,13 @@ namespace ExperimentalMap {
             biomMaterials.Add(biom3Material);
             CreateBackground();
             areas = ReadAreasData();
+            areaIndexMap = new Dictionary<String, int>();
+            for (int i1=0; i1<areas.Count; i1++) {
+                areaIndexMap[areas[i1].name] = i1;
+            }
+            zones = ReadZonesData();
             CreateAreas();
+            CreateZones();
         }
 
         void Start() {
@@ -163,7 +57,7 @@ namespace ExperimentalMap {
         Vector3 cameraPositionLast;
         Vector3? focusCameraPosition;
         const float maxCameraDistance = 90.0f;
-        const float minCameraDistance = 5.0f;
+        const float minCameraDistance = 2.0f;
         const float minCameraAngle = 0.0f;
         const float maxCameraAngle = -20.0f;
         const float stopDistance = 1 / 100.0f;
@@ -183,10 +77,7 @@ namespace ExperimentalMap {
                 const float focusSpeed = 0.08f;
                 currentDragVector = (Vector3)focusCameraPosition - camera.transform.position;
                 dragDirection = currentDragVector.normalized;
-                currentDragAcceleration += dragDirection.magnitude > 10 * stopDistance ? focusSpeed * Mathf.Sqrt(mapObject.transform.position.z - camera.transform.position.z) : 0;
-                if (Mathf.Abs(currentDragVector.magnitude) < stopDistance) {
-                    focusCameraPosition = null;
-                }
+                currentDragAcceleration += Mathf.Min(focusSpeed * Mathf.Sqrt(mapObject.transform.position.z - camera.transform.position.z), currentDragVector.magnitude);
             }
             // Zoom
             if (isMouseOver && !isFocusing) {
@@ -211,7 +102,7 @@ namespace ExperimentalMap {
                 float zoomSpeed = Mathf.Clamp(zoomAcceleration, -maxZoomSpeed, maxZoomSpeed);
                 camera.transform.Translate(mapObject.transform.forward * zoomSpeed * zoomSpeedMultiplier);
                 zoomAcceleration *= 0.9f;
-                if (Mathf.Abs(zoomAcceleration) < maxZoomSpeed/10000.0f) {
+                if (dragAcceleration < maxZoomSpeed/10000.0f) {
                     zoomAcceleration = 0;
                 }
             }
@@ -275,6 +166,7 @@ namespace ExperimentalMap {
                 dragAcceleration *= 0.9f;
                 if (Mathf.Abs(dragAcceleration) < stopDistance) {
                     dragAcceleration = 0;
+                    focusCameraPosition = null;
                 }
             }
             FitCameraPosition();
@@ -294,7 +186,7 @@ namespace ExperimentalMap {
                 Debug.Log("Already focusing, some logic may be wrong");
             }
             Vector3 uCoords = transform.TransformPoint(area.borderRect.center);
-            focusCameraPosition = new Vector3(uCoords.x, uCoords.y, mapObject.transform.position.z - minCameraDistance - (maxCameraDistance - minCameraDistance) * 0.2f);
+            focusCameraPosition = new Vector3(uCoords.x, uCoords.y, mapObject.transform.position.z - minCameraDistance - (maxCameraDistance - minCameraDistance) * 0.0f);
         }
 
         Vector3 GetMousePosition() {
@@ -324,9 +216,9 @@ namespace ExperimentalMap {
         // Geometry 
 
         List<Area> ReadAreasData() {
-            TextAsset ta = Resources.Load<TextAsset>("Geodata/areas");
-            string s = ta.text;
-            string[] areasData = s.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+            TextAsset textAsset = Resources.Load<TextAsset>("Geodata/areas");
+            string stringData = textAsset.text;
+            string[] areasData = stringData.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
             char[] separatorProvinces = new char[] { '$' };
             int areasCount = areasData.Length;
             List<Area> areas = new List<Area>();
@@ -343,6 +235,23 @@ namespace ExperimentalMap {
             return areas;
         }
 
+        List<Zone> ReadZonesData() {
+            TextAsset textAsset = Resources.Load<TextAsset>("Geodata/zone_places");
+            string stringData = textAsset.text;
+            string[] zonesData = stringData.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+            int zonesCount = zonesData.Length;
+            List<Zone> zones = new List<Zone>(zonesCount);
+            for (int i1 = 0; i1 < zonesCount; i1++) {
+                string[] zoneInfo = zonesData[i1].Split(new char[] { '$' });
+                string name = zoneInfo[0];
+                string areaName = zoneInfo[1];
+                float x = (float)double.Parse(zoneInfo[4], CultureInfo.InvariantCulture);
+                float y = (float)double.Parse(zoneInfo[5], CultureInfo.InvariantCulture);
+                Zone zone = new Zone(name, areas[areaIndexMap[areaName]], new Vector2(x, y));
+                zones.Add(zone);
+            }
+            return zones;
+        }
 
         void CreateAreas() {
             List<Area> europeAreas = new List<Area>();
@@ -358,11 +267,18 @@ namespace ExperimentalMap {
             foreach (Area area in europeAreas) {
                 CreateAreaSurface(area, biom1Material, areaBackgroundObject);
                 CreateAreaTerrainsSurfaces(area);
-                CreateAreaBorder(area, areaBorderMaterial); 
+                CreateAreaBorder(area, areaBorderMaterial);
+                area.lockedOverlay = CreateAreaSurface(area, areaLockedMaterial, mapOverlayObject);
             }
             foreach (Area area in otherAreas) {
                 CreateAreaSurface(area, areaBackgroundMaterial, areaBackgroundObject);
                 CreateAreaBorder(area, areaBorderMaterial);
+            }
+        }
+
+        void CreateZones() {
+            foreach (Zone zone in zones) {
+                zone.SetModelObject(CreateZoneObject(zone));
             }
         }
 
@@ -468,6 +384,13 @@ namespace ExperimentalMap {
                 surfaces.Add(CreateAreaSurface(terrain, biomMaterials[terrain.type], terrainsObject));
             }
             return surfaces;
+        }
+
+        GameObject CreateZoneObject(Zone zone) {
+            GameObject obj = Instantiate(zonePlaceModel);
+            obj.transform.position = zone.position;
+            obj.transform.SetParent(mapZonesObject.transform, false);
+            return obj;
         }
 
         GameObject CreateBackground() {

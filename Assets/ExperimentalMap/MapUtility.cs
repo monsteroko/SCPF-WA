@@ -13,6 +13,12 @@ namespace ExperimentalMap {
             float y = float.Parse(sy) / Map.MapPrecision;
             return new Vector2(x, y);
         }
+
+        static public Vector2 PointFromFloatData(Vector2 v) {
+            float x = v.x / Map.MapPrecision;
+            float y = v.y / Map.MapPrecision;
+            return new Vector2(x, y);
+        }
     }
 
     public partial class Triangulator {

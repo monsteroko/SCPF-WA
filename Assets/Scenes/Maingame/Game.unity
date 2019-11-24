@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657868, g: 0.49641263, b: 0.57481706, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2570,6 +2570,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 445701956}
   m_CullTransparentMesh: 0
+--- !u!1 &447731116
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 447731117}
+  m_Layer: 0
+  m_Name: Zones
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &447731117
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 447731116}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1709668290}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &500994194
 GameObject:
   m_ObjectHideFlags: 0
@@ -5830,14 +5860,18 @@ MonoBehaviour:
   terrainsObject: {fileID: 423353415}
   areaBackgroundObject: {fileID: 146209975}
   mapBackgroundObject: {fileID: 836624477}
+  mapOverlayObject: {fileID: 1717468207}
+  mapZonesObject: {fileID: 447731116}
   mapObject: {fileID: 1709668288}
   areaBorderMaterial: {fileID: 2100000, guid: 410b0856d0af10647922525a55f6d136, type: 2}
   areaBackgroundMaterial: {fileID: 2100000, guid: 48328b2fa6e61fa4dae57981ac94eacb,
     type: 2}
+  areaLockedMaterial: {fileID: 2100000, guid: 48328b2fa6e61fa4dae57981ac94eacb, type: 2}
   biom1Material: {fileID: 2100000, guid: c8ef7ba37fc44054082d3f752bbf153b, type: 2}
   biom2Material: {fileID: 2100000, guid: a96e1e64320102947a64e52b462725d2, type: 2}
   biom3Material: {fileID: 2100000, guid: bf2fe98bb95ec2941a3bbd3eb5b6231e, type: 2}
   seaMaterial: {fileID: 2100000, guid: cbc2b187e2e621b4988c3611bc241ac4, type: 2}
+  zonePlaceModel: {fileID: 100000, guid: 0e855fc5508b8b643bc6e1f4e5402809, type: 3}
   camera: {fileID: 93886955}
 --- !u!4 &1709668290
 Transform:
@@ -5853,6 +5887,8 @@ Transform:
   - {fileID: 146209976}
   - {fileID: 836624478}
   - {fileID: 423353416}
+  - {fileID: 1717468208}
+  - {fileID: 447731117}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5948,6 +5984,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1717420204}
   m_CullTransparentMesh: 0
+--- !u!1 &1717468207
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1717468208}
+  m_Layer: 0
+  m_Name: Overlays
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1717468208
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1717468207}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -0.02}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1709668290}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1774367363
 GameObject:
   m_ObjectHideFlags: 0
