@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657868, g: 0.49641263, b: 0.57481706, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3594,7 +3594,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1e270ed4316bae4f95cc99c089ea187, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  basicZoneObject: {fileID: 100000, guid: 8013ea136901b1e4d9ab6773c0fc99ff, type: 3}
+  zonePlaceModel: {fileID: 100000, guid: 0e855fc5508b8b643bc6e1f4e5402809, type: 3}
+  basicZoneModel: {fileID: 100000, guid: 8013ea136901b1e4d9ab6773c0fc99ff, type: 3}
 --- !u!114 &761111152
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5076,18 +5077,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Name: 
-  m_EditorClassIdentifier: 
   operationMode: 0
   reshapeRegionMode: 0
   reshapeCityMode: 0
@@ -5885,7 +5874,6 @@ MonoBehaviour:
   biom2Material: {fileID: 2100000, guid: a96e1e64320102947a64e52b462725d2, type: 2}
   biom3Material: {fileID: 2100000, guid: bf2fe98bb95ec2941a3bbd3eb5b6231e, type: 2}
   seaMaterial: {fileID: 2100000, guid: cbc2b187e2e621b4988c3611bc241ac4, type: 2}
-  zonePlaceModel: {fileID: 100000, guid: 0e855fc5508b8b643bc6e1f4e5402809, type: 3}
   camera: {fileID: 93886955}
 --- !u!4 &1709668290
 Transform:

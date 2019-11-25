@@ -13,15 +13,12 @@ namespace ExperimentalMap {
         public Zone(string name, Area area, Vector2 position) {
             this.name = name;
             this.area = area;
-            //this.position = MapUtility.PointFromFloatData(position);
             this.position = position;
         }
 
-        public void SetModelObject(GameObject zoneObj, bool isPure = true) {
+        public void SetModelObject(GameObject zoneObj) {
             modelObject = zoneObj;
-            if (isPure) {
-                modelObject.transform.rotation = Quaternion.Euler(90.0f, 0, 0);
-            }
+            modelObject.transform.localPosition = new Vector3(position.x, position.y, 0);
         }
 
     }

@@ -24,6 +24,7 @@ public class MapManager: MonoBehaviour
                 }
             }
         }
+        GameManager.instance.zonesManager.RefreshAllZones();
     }
 
     public Vector2 GeneratePointInUnlockedAreas() {

@@ -1,29 +1,33 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using WPMF;
+using ExperimentalMap;
 
-public class Zone {
+public class ZonesManager : MonoBehaviour {
 
-}
-
-public class ZonesManager : MonoBehaviour
-{
-    public GameObject basicZoneObject;
+    private Map map;
+    public GameObject zonePlaceModel;
+    public GameObject basicZoneModel;
     // Start is called before the first frame update
-    void Start()
-    {
-        
+    void OnEnable() {
+        map = GameManager.instance.mapManager.map;
     }
 
-    public Zone CreateZoneAtPlace(City city) {
-        Zone zone = new Zone();
-        GameObject zoneObject = Instantiate(basicZoneObject);
-        WorldMap2D map = WorldMap2D.instance;
-        Debug.Log(city.unity2DLocation);
-        zoneObject.transform.position = map.transform.TransformPoint(city.unity2DLocation);
-        zoneObject.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
-        zoneObject.transform.rotation = Quaternion.Euler(90.0f, 0, 0);
-        return zone;
+    public void RefreshAllZones() {
+        foreach (Zone zone in map.zones) {
+            zone.SetModelObject(ZoneModelObjectForState(zone.area.state));
+        }
+    }
+
+    public void BuildZone(Zone zone) {
+        zone.SetModelObject(ZoneModelObjectForState(AreaState.Controlled));
+    }
+
+    public GameObject ZoneModelObjectForState(AreaState state) {
+        GameObject obj = Instantiate(state == AreaState.Controlled ? basicZoneModel : zonePlaceModel);
+        obj.SetActive(state != AreaState.Locked);
+        obj.transform.rotation = Quaternion.Euler(90.0f, 0, 0);
+        obj.transform.SetParent(map.mapZonesObject.transform, false);
+        return obj;
     }
 }

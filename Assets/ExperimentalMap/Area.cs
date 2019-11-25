@@ -45,25 +45,6 @@ namespace ExperimentalMap {
             set {
                 if (value == _state) return;
                 lockedOverlay.SetActive(state != AreaState.Locked);
-                //TODO: Change zone place state
-                /* map.ToggleProvinceSurface(name, value == AreaState.Locked);
-                 if (cityIndex >= 0 && cityIndex <= map.cities.Count) {
-                     switch (value) {
-                         case AreaState.Locked:
-                             map.cities[cityIndex].population = 2;
-                             map.cities[cityIndex].cityClass = CITY_CLASS.REGION_CAPITAL;
-                             break;
-                         case AreaState.Unlocked:
-                             map.cities[cityIndex].population = 2;
-                             map.cities[cityIndex].cityClass = CITY_CLASS.COUNTRY_CAPITAL;
-                             break;
-                         case AreaState.Controlled:
-                             map.cities[cityIndex].population = -1;
-                             map.cities[cityIndex].cityClass = CITY_CLASS.COUNTRY_CAPITAL;
-                             break;
-                     }
-                 }
-                 map.DrawCities();*/
                 _state = value;
             }
         }

@@ -24,7 +24,6 @@ namespace ExperimentalMap {
         public Material biom2Material;
         public Material biom3Material;
         public Material seaMaterial;
-        public GameObject zonePlaceModel;
         public Camera camera;
         public List<Area> areas { get; private set; }
         private Dictionary<String, int> areaIndexMap; 
@@ -43,7 +42,6 @@ namespace ExperimentalMap {
             }
             zones = ReadZonesData();
             CreateAreas();
-            CreateZones();
         }
 
         void Start() {
@@ -98,9 +96,9 @@ namespace ExperimentalMap {
 
             if (zoomAcceleration != 0) {
                 const float maxZoomSpeed = 0.1f;
-                const float zoomSpeedMultiplier = 8f;
+                const float zoomSpeedMultiplier = 2.5f;
                 float zoomSpeed = Mathf.Clamp(zoomAcceleration, -maxZoomSpeed, maxZoomSpeed);
-                camera.transform.Translate(mapObject.transform.forward * zoomSpeed * zoomSpeedMultiplier);
+                camera.transform.Translate(mapObject.transform.forward * zoomSpeed * zoomSpeedMultiplier * Mathf.Sqrt(mapObject.transform.position.z - camera.transform.position.z));
                 zoomAcceleration *= 0.9f;
                 if (dragAcceleration < maxZoomSpeed/10000.0f) {
                     zoomAcceleration = 0;
@@ -176,9 +174,13 @@ namespace ExperimentalMap {
             float pureDistance = Mathf.Clamp(mapObject.transform.position.z - camera.transform.position.z, minCameraDistance, maxCameraDistance);
             float zPosition = mapObject.transform.position.z - pureDistance;
             camera.transform.position = new Vector3(camera.transform.position.x, camera.transform.position.y, zPosition);
-            float angle = minCameraAngle + maxCameraAngle * (1 - Mathf.Pow((pureDistance - minCameraDistance) / (maxCameraDistance - minCameraDistance), 0.7f));
-            camera.transform.rotation = Quaternion.Euler(angle, 0, 0);
+            camera.transform.rotation = CameraAngleForDistance(pureDistance);
             //TODO: Restrict x and y camera movement
+        }
+
+        Quaternion CameraAngleForDistance(float dist) {
+            float angle = minCameraAngle + maxCameraAngle * (1 - Mathf.Pow((dist - minCameraDistance) / (maxCameraDistance - minCameraDistance), 0.7f));
+            return Quaternion.Euler(angle, 0, 0);
         }
 
         public void FocusCameraOn(Area area) {
@@ -186,7 +188,10 @@ namespace ExperimentalMap {
                 Debug.Log("Already focusing, some logic may be wrong");
             }
             Vector3 uCoords = transform.TransformPoint(area.borderRect.center);
-            focusCameraPosition = new Vector3(uCoords.x, uCoords.y, mapObject.transform.position.z - minCameraDistance - (maxCameraDistance - minCameraDistance) * 0.0f);
+            float pureDist = minCameraDistance + (maxCameraDistance - minCameraDistance) * 0.02f;
+            Quaternion finalRotation = CameraAngleForDistance(pureDist);
+            Vector3 finalForward = finalRotation * (-mapObject.transform.forward);
+            focusCameraPosition = new Vector3(uCoords.x, uCoords.y, mapObject.transform.position.z) - finalForward * (pureDist / finalForward.z);
         }
 
         Vector3 GetMousePosition() {
@@ -273,12 +278,6 @@ namespace ExperimentalMap {
             foreach (Area area in otherAreas) {
                 CreateAreaSurface(area, areaBackgroundMaterial, areaBackgroundObject);
                 CreateAreaBorder(area, areaBorderMaterial);
-            }
-        }
-
-        void CreateZones() {
-            foreach (Zone zone in zones) {
-                zone.SetModelObject(CreateZoneObject(zone));
             }
         }
 
@@ -384,13 +383,6 @@ namespace ExperimentalMap {
                 surfaces.Add(CreateAreaSurface(terrain, biomMaterials[terrain.type], terrainsObject));
             }
             return surfaces;
-        }
-
-        GameObject CreateZoneObject(Zone zone) {
-            GameObject obj = Instantiate(zonePlaceModel);
-            obj.transform.position = zone.position;
-            obj.transform.SetParent(mapZonesObject.transform, false);
-            return obj;
         }
 
         GameObject CreateBackground() {
