@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using System;
-using WPMF;
 using TMPro;
 using System.IO;
 using System.Text;
@@ -16,8 +15,6 @@ public class EntryPopup : MonoBehaviour {
     public Button okButton;
     public Button cancButton;
     public GameObject SCP;
-    public GameManager gameManager;
-    public WorldMap2D map;
     public GameObject entryPopupObject;
     int ran = 0;
     private static EntryPopup entryPopup;
@@ -47,7 +44,7 @@ public class EntryPopup : MonoBehaviour {
         entry.randscpcat = ran;
         nameText.text = "Салтовские учоные сообщили о говне, произошел троленг!";
         descriptionText.text = "Описание: " + fdtext[entry.scpcategory,entry.randscpcat];
-        onwind.sprite = foundimg[entry.scpcategory];
+        //onwind.sprite = foundimg[entry.scpcategory];
         okButton.onClick.AddListener(ClosePopup);
         okButton.onClick.RemoveAllListeners();
         okButton.onClick.AddListener(ClosePopup);
@@ -62,12 +59,10 @@ public class EntryPopup : MonoBehaviour {
     }
     public void OnButtonDown()
     {
-        gameManager = GameManager.instance;
-        MapManager mapManager = gameManager.mapManager;
+        MapManager mapManager = GameManager.instance.mapManager;
         Vector2 point = mapManager.GeneratePointInUnlockedAreas();
-        map = WorldMap2D.instance;
-        Vector3 ucoord = map.transform.TransformPoint(point);
+        Vector3 ucoord = mapManager.transform.TransformPoint(point);
         SCP.transform.position = ucoord;
-        map.FlyToLocation(point, 1);
+        mapManager.map.FocusCameraOn(point, 0.05f);
     }
 }

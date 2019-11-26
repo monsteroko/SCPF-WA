@@ -38,9 +38,8 @@ public class ZonesManager : MonoBehaviour {
         obj.transform.localScale = new Vector3(randomScale, randomScale, randomScale);
         obj.transform.rotation = Quaternion.Euler(90.0f, 0, 0) * Quaternion.Euler(0.0f, rotationAngle, 0.0f);
         obj.transform.SetParent(map.mapZonesObject.transform, false);
-        BoxCollider boxCollider = obj.AddComponent<BoxCollider>();
-        boxCollider.size = new Vector3(8.0f, 2.0f, 9.0f);
-        obj.AddComponent<ZoneSelect>();
+        ZoneSelect zoneSelectScript = obj.AddComponent<ZoneSelect>();
+        zoneSelectScript.zoneIndex = 0; //TODO: set real
         return obj;
     }
 

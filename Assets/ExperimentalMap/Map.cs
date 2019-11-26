@@ -184,11 +184,15 @@ namespace ExperimentalMap {
         }
 
         public void FocusCameraOn(Area area) {
+            FocusCameraOn(area.borderRect.center, 0.02f);
+        }
+
+        public void FocusCameraOn(Vector2 point, float zoomLevel = 0) {
             if (focusCameraPosition != null) {
                 Debug.Log("Already focusing, some logic may be wrong");
             }
-            Vector3 uCoords = transform.TransformPoint(area.borderRect.center);
-            float pureDist = minCameraDistance + (maxCameraDistance - minCameraDistance) * 0.02f;
+            Vector3 uCoords = transform.TransformPoint(point);
+            float pureDist = minCameraDistance + (maxCameraDistance - minCameraDistance) * zoomLevel;
             Quaternion finalRotation = CameraAngleForDistance(pureDist);
             Vector3 finalForward = finalRotation * (-mapObject.transform.forward);
             focusCameraPosition = new Vector3(uCoords.x, uCoords.y, mapObject.transform.position.z) - finalForward * (pureDist / finalForward.z);
