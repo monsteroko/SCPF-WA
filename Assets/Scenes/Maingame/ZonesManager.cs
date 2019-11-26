@@ -8,6 +8,7 @@ public class ZonesManager : MonoBehaviour {
     private Map map;
     public GameObject zonePlaceModel;
     public GameObject basicZoneModel;
+    public int selectedZoneIndex { get; private set; }
     // Start is called before the first frame update
     void OnEnable() {
         map = GameManager.instance.mapManager.map;
@@ -20,7 +21,13 @@ public class ZonesManager : MonoBehaviour {
     }
 
     public void BuildZone(Zone zone) {
+        if (zone.isBuilt) {
+            Debug.Log("Tried to build already built zone. Eto ne dolzhno tak rabotat'.");
+            return;
+        }
         zone.SetModelObject(ZoneModelObjectForState(AreaState.Controlled));
+        zone.isBuilt = true;
+        GameManager.instance.mapManager.UpdateMapForBuiltZone(zone);
     }
 
     public GameObject ZoneModelObjectForState(AreaState state) {
@@ -33,15 +40,20 @@ public class ZonesManager : MonoBehaviour {
         obj.transform.SetParent(map.mapZonesObject.transform, false);
         BoxCollider boxCollider = obj.AddComponent<BoxCollider>();
         boxCollider.size = new Vector3(8.0f, 2.0f, 9.0f);
-        switch(state) {
-            case AreaState.Unlocked:
-                obj.AddComponent<ZoneMenuOpen>();
-                break;
-            case AreaState.Controlled:
-                break;
-            default:
-                break;
-        }
+        obj.AddComponent<ZoneSelect>();
         return obj;
+    }
+
+    public void SelectZoneWithIndex(int index) {
+        selectedZoneIndex = index;
+        if (map.zones[index].isBuilt) {
+            ZoneMenu.Instance().Open();
+        } else {
+            CreateZoneDialog.Instance().Open();
+        }
+    }
+
+    public void BuildSelectedZone() {
+        BuildZone(map.zones[selectedZoneIndex]);
     }
 }

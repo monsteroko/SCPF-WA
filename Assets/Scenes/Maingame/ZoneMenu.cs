@@ -5,15 +5,21 @@ using System.Threading;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ZoneMenuOpen : MonoBehaviour
+public class ZoneMenu : MonoBehaviour
 {
-    public GameObject ZoneManagement;
+    public GameObject ZoneManagementObject;
+    private static ZoneMenu zoneMenu;
     private int Current = 0, Limit = 0, v = 50, width = (int)(Screen.width / 3.3f);
     private bool trigger = false;
 
     void Start()
     {
-        ZoneManagement = GameObject.Find("ZoneManagenent");
+        ZoneManagementObject = GameObject.Find("ZoneManagenent");
+        zoneMenu = FindObjectOfType(typeof(ZoneMenu)) as ZoneMenu;
+    }
+
+    public static ZoneMenu Instance() {
+        return zoneMenu;
     }
 
     void Update()
@@ -22,12 +28,12 @@ public class ZoneMenuOpen : MonoBehaviour
         {
             if (Limit - Current >= v)
             {
-                ZoneManagement.transform.Translate(v * Vector3.left);
+                ZoneManagementObject.transform.Translate(v * Vector3.left);
                 Current += v;
             }
             else
             {
-                ZoneManagement.transform.Translate((Limit - Current) * Vector3.left);
+                ZoneManagementObject.transform.Translate((Limit - Current) * Vector3.left);
                 Current = Limit;
             }
         }
@@ -36,12 +42,12 @@ public class ZoneMenuOpen : MonoBehaviour
         {
             if (Current >= v)
             {
-                ZoneManagement.transform.Translate(v * Vector3.right);
+                ZoneManagementObject.transform.Translate(v * Vector3.right);
                 Current -= v;
             }
             else
             {
-                ZoneManagement.transform.Translate(Current * Vector3.right);
+                ZoneManagementObject.transform.Translate(Current * Vector3.right);
                 Current = 0;
             }
         }
@@ -63,7 +69,7 @@ public class ZoneMenuOpen : MonoBehaviour
         }
     }
 
-    void OnMouseDown()
+    public void Open()
     {
         trigger = true;
     }

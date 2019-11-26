@@ -43,28 +43,13 @@ public class MapManager: MonoBehaviour
 
     //Mutating
 
-    int selectedCounterpartIndex = -1;
-    string selectedAreaName = null;
-
-    /*private void CreateZoneCompletion(bool confirmed)
-    {
-        if (!confirmed) return;
-        Area area = counterparts[selectedCounterpartIndex].areas[selectedAreaName];
-        area.state = AreaState.Controlled;
-        GameManager.instance.zonesManager.CreateZoneAtPlace(map.cities[area.cityIndex]);
-        foreach (Province province in map.ProvinceNeighbours(area.index))
-        {
-            if (counterparts[province.countryIndex].areas[province.name].state == AreaState.Locked) {
-                counterparts[province.countryIndex].areas[province.name].state = AreaState.Unlocked;
-            }
-        }
-    }*/
-
-    //Events
-    
-    /*void OnCityClick(int cityIndex) {
-        selectedCounterpartIndex = map.cities[cityIndex].countryIndex;
-        selectedAreaName = map.cities[cityIndex].province;
-        CreateZoneDialog.Instance().Open(CreateZoneCompletion);
-    }*/
+    public void UpdateMapForBuiltZone(Zone zone) {
+        zone.area.state = AreaState.Controlled;
+        //TODO: Unlock neightbour zones
+        //foreach (Province province in map.ProvinceNeighbours(area.index)) {
+        //    if (counterparts[province.countryIndex].areas[province.name].state == AreaState.Locked) {
+        //        counterparts[province.countryIndex].areas[province.name].state = AreaState.Unlocked;
+        //    }
+        //}
+    }
 }
