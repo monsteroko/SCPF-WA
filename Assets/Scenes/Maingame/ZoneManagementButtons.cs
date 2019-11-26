@@ -21,7 +21,6 @@ public class ZoneManagementButtons : MonoBehaviour
         Employees.SetActive(false);
         SCPs.SetActive(false);
         Parameters.SetActive(true);
-
         SCPsButton.onClick.AddListener(SCPList);
         EmpButton.onClick.AddListener(Personnel);
         ParaButton.onClick.AddListener(BaseManagement);

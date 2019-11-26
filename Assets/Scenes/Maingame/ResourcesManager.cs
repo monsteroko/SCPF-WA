@@ -17,6 +17,8 @@ public class ResourcesManager : MonoBehaviour
     public double Science = 0;
     public double Influence = 0;
     public double Secrecy = 100;
+
+    public int ClassDInc = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -30,19 +32,19 @@ public class ResourcesManager : MonoBehaviour
         {
             counter++;
             if((counter% 512) == 0)
-                ClassD++;
+                ClassD += ClassDInc;
         }
         if (Time.timeScale == 16f)
         {
             counter++;
             if ((counter % 256) == 0)
-                ClassD++;
+                ClassD += ClassDInc;
         }
         if (Time.timeScale == 32f)
         {
             counter++;
             if ((counter % 64) == 0)
-                ClassD++;
+                ClassD += ClassDInc;
         }
         ClDTXT.text = "ClassD: " + ClassD.ToString();
         ScTXT.text = "Science: " + Science.ToString();

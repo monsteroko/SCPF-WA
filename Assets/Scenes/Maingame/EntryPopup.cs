@@ -5,23 +5,26 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using System;
 using WPMF;
+using TMPro;
+using System.IO;
+using System.Text;
 
 public class EntryPopup : MonoBehaviour {
 
-    public Text nameText;
-    public Text classText;
-    public Text descriptionText;
+    public TextMeshProUGUI nameText;
+    public TextMeshProUGUI descriptionText;
     public Button okButton;
     public Button cancButton;
-    public GameObject Cube;
-    float x, y;
+    public GameObject SCP;
     public GameManager gameManager;
     public WorldMap2D map;
-
     public GameObject entryPopupObject;
-
+    int ran = 0;
     private static EntryPopup entryPopup;
-
+    public Sprite[] foundimg = new Sprite[10];
+    public Image onwind;
+    public string[,] fdtext= new string[10,10];//текст при нахождении объекта
+    private float x, y;
     private void Start()
     {
         entryPopup = FindObjectOfType(typeof(EntryPopup)) as EntryPopup;
@@ -34,9 +37,17 @@ public class EntryPopup : MonoBehaviour {
 
     public void OpenWithEntry(EntryModel entry)
     {
-        nameText.text = "SCP-" + entry.code + ": " + entry.name;
-        classText.text = "Класс: " + entry.type;
-        descriptionText.text = "Описание: " + entry.description;
+        using (StreamReader sr = new StreamReader(@"Assets/Scenes/Maingame/DescrText.txt", Encoding.Default))
+        {
+            for (int i = 0; i < 9; i++)
+                for(int j = 0; j < 9; j++)
+                    fdtext[i,j] = sr.ReadLine();
+        }
+        ran = UnityEngine.Random.Range(0, 9);
+        entry.randscpcat = ran;
+        nameText.text = "Салтовские учоные сообщили о говне, произошел троленг!";
+        descriptionText.text = "Описание: " + fdtext[entry.scpcategory,entry.randscpcat];
+        onwind.sprite = foundimg[entry.scpcategory];
         okButton.onClick.AddListener(ClosePopup);
         okButton.onClick.RemoveAllListeners();
         okButton.onClick.AddListener(ClosePopup);
@@ -56,7 +67,7 @@ public class EntryPopup : MonoBehaviour {
         Vector2 point = mapManager.GeneratePointInUnlockedAreas();
         map = WorldMap2D.instance;
         Vector3 ucoord = map.transform.TransformPoint(point);
-        Cube.transform.position = ucoord;
+        SCP.transform.position = ucoord;
         map.FlyToLocation(point, 1);
     }
 }

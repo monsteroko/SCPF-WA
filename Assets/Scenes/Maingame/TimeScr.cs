@@ -14,6 +14,8 @@ public class TimeScr : MonoBehaviour
     public Canvas cv;
     public static float timer;
     public GameObject entryPopupObject;
+    public Button tech;
+
     public void Play()
     {
         timer = 4f;
