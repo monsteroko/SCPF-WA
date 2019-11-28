@@ -60,7 +60,7 @@ public class CounterpartsSelectionScript : MonoBehaviour {
         StartGameSettings.mapSave = MapSaveModel.NewGameSave(selectedCounterpart);
         CanvasPick.SetActive(false);
         CanvasLoad.SetActive(true);
-        using (StreamReader sr = new StreamReader(@"Assets/Scenes/Counterparts selection/Tipstxt.txt"))
+        using (StreamReader sr = new StreamReader(@"Assets/Data/Other/tips.txt"))
         {
             text = sr.ReadToEnd().Split(';');
         }
