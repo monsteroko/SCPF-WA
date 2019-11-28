@@ -44,8 +44,8 @@ namespace ExperimentalMap {
             }
             set {
                 if (value == _state) return;
-                lockedOverlay.SetActive(state == AreaState.Locked);
                 _state = value;
+                lockedOverlay.SetActive(state == AreaState.Locked);
             }
         }
 

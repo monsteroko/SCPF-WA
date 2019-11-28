@@ -25,9 +25,8 @@ namespace ExperimentalMap {
         public Material biom3Material;
         public Material seaMaterial;
         public Camera camera;
-        public List<Area> areas { get; private set; }
-        private Dictionary<String, int> areaIndexMap; 
-        public List<Zone> zones { get; private set; }
+        public Dictionary<string, Area> areas { get; private set; }
+        public Dictionary<string, Zone> zones { get; private set; }
         List<Material> biomMaterials = new List<Material>();
 
         void OnEnable() {
@@ -36,10 +35,6 @@ namespace ExperimentalMap {
             biomMaterials.Add(biom3Material);
             CreateBackground();
             areas = ReadAreasData();
-            areaIndexMap = new Dictionary<String, int>();
-            for (int i1=0; i1<areas.Count; i1++) {
-                areaIndexMap[areas[i1].name] = i1;
-            }
             zones = ReadZonesData();
             CreateAreas();
         }
@@ -222,15 +217,26 @@ namespace ExperimentalMap {
             return null;
         }
 
+        public List<Area> GetNeighborAreas(Area targetArea) {
+            List<Area> neighbors = new List<Area>();
+            ClipperUtility utility = new ClipperUtility();
+            foreach (Area area in areas.Values) {
+                if (utility.AreSurfacesNear(area, targetArea)) {
+                    neighbors.Add(area);
+                }
+            }
+            return neighbors;
+        }
+
         // Geometry 
 
-        List<Area> ReadAreasData() {
+        Dictionary<string, Area> ReadAreasData() {
             TextAsset textAsset = Resources.Load<TextAsset>("Geodata/areas");
             string stringData = textAsset.text;
             string[] areasData = stringData.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
             char[] separatorProvinces = new char[] { '$' };
             int areasCount = areasData.Length;
-            List<Area> areas = new List<Area>();
+            Dictionary<string, Area> areas = new Dictionary<string, Area>();
             for (int i1 = 0; i1 < areasCount; i1++) {
                 string[] areaInfo = areasData[i1].Split(separatorProvinces, StringSplitOptions.RemoveEmptyEntries);
                 if (areaInfo.Length <= 2)
@@ -239,25 +245,25 @@ namespace ExperimentalMap {
                 string counterpartName = areaInfo[1];
                 Area area = new Area(name, counterpartName);
                 area.SetBordersData(areaInfo[2]);
-                areas.Add(area);
+                areas[area.name] = area;
             }
             return areas;
         }
 
-        List<Zone> ReadZonesData() {
+        Dictionary<string, Zone> ReadZonesData() {
             TextAsset textAsset = Resources.Load<TextAsset>("Geodata/zone_places");
             string stringData = textAsset.text;
             string[] zonesData = stringData.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
             int zonesCount = zonesData.Length;
-            List<Zone> zones = new List<Zone>(zonesCount);
+            Dictionary<string, Zone> zones = new Dictionary<string, Zone>(zonesCount);
             for (int i1 = 0; i1 < zonesCount; i1++) {
                 string[] zoneInfo = zonesData[i1].Split(new char[] { '$' });
                 string name = zoneInfo[0];
                 string areaName = zoneInfo[1];
                 float x = (float)double.Parse(zoneInfo[4], CultureInfo.InvariantCulture);
                 float y = (float)double.Parse(zoneInfo[5], CultureInfo.InvariantCulture);
-                Zone zone = new Zone(name, areas[areaIndexMap[areaName]], new Vector2(x, y));
-                zones.Add(zone);
+                Zone zone = new Zone(name, areas[areaName], new Vector2(x, y));
+                zones[zone.name] = zone;
             }
             return zones;
         }
@@ -265,7 +271,7 @@ namespace ExperimentalMap {
         void CreateAreas() {
             List<Area> europeAreas = new List<Area>();
             List<Area> otherAreas = new List<Area>();
-            foreach (Area area in areas) {
+            foreach (Area area in areas.Values) {
                 if (area.counterpart == "SLAV EMPIRE") {
                     europeAreas.Add(area);
                 } else {

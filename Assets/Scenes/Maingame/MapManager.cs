@@ -16,13 +16,9 @@ public class MapManager: MonoBehaviour
 
     public void InitWithSave(MapSaveModel mapSave) {
         foreach (string areaName in mapSave.unlockedAreas) {
-            foreach (Area area in map.areas) {
-                if (area.name == areaName) {
-                    area.state = AreaState.Unlocked;
-                    map.FocusCameraOn(area);
-                    unlockedAreas.Add(area);
-                }
-            }
+            map.areas[areaName].state = AreaState.Unlocked;
+            map.FocusCameraOn(map.areas[areaName]);
+            unlockedAreas.Add(map.areas[areaName]);
         }
         GameManager.instance.zonesManager.RefreshAllZones();
     }
@@ -45,11 +41,12 @@ public class MapManager: MonoBehaviour
 
     public void UpdateMapForBuiltZone(Zone zone) {
         zone.area.state = AreaState.Controlled;
-        //TODO: Unlock neightbour zones
-        //foreach (Province province in map.ProvinceNeighbours(area.index)) {
-        //    if (counterparts[province.countryIndex].areas[province.name].state == AreaState.Locked) {
-        //        counterparts[province.countryIndex].areas[province.name].state = AreaState.Unlocked;
-        //    }
-        //}
+        List<Area> neighbors = map.GetNeighborAreas(zone.area);
+        foreach (Area area in neighbors) {
+            if (area.state == AreaState.Locked) {
+                area.state = AreaState.Unlocked;
+            }
+        }
+        GameManager.instance.zonesManager.RefreshAllZones();
     }
 }

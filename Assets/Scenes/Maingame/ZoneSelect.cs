@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class ZoneSelect : MonoBehaviour {
 
-    public int zoneIndex;
+    public string zoneName;
 
     void OnMouseDown() {
-        GameManager.instance.zonesManager.SelectZoneWithIndex(zoneIndex);
+        GameManager.instance.zonesManager.SelectZoneWithName(zoneName);
     }
 }

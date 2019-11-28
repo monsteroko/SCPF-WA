@@ -20,11 +20,16 @@ namespace ExperimentalMap {
 
         public void SetModelObject(GameObject zoneObj) {
             if (modelObject != null) {
-                UnityEngine.Object.Destroy(modelObject);
+                Object.Destroy(modelObject);
             }
             modelObject = zoneObj;
-            modelObject.transform.localPosition = new Vector3(position.x, position.y, 0);
+            zoneObj.transform.localPosition = new Vector3(position.x, position.y, 0);
+            ZoneSelect selectScript = zoneObj.GetComponent<ZoneSelect>();
+            selectScript.zoneName = name;
+            if (modelObject.activeSelf) {
+                modelObject.SetActive(false);
+                modelObject.SetActive(true);
+            }
         }
-
     }
 }

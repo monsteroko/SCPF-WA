@@ -32,8 +32,8 @@ namespace ExperimentalMap {
     public class TerrainLayouter {
 
         const float PointSize = 0.0003f;
-        const float chunkSize = 0.008f;
-        const int TerrainSizeMark = 5;
+        const float chunkSize = 0.003f;
+        const int TerrainSizeMark = 4;
 
         struct PriorityPath {
             public int priority;
@@ -76,7 +76,7 @@ namespace ExperimentalMap {
                 if (!isInside) continue;
                 bool isTooClose = false;
                 foreach (Vector2 center in chunkCenters) {
-                    if ((newCenter - center).magnitude < chunkSize) {
+                    if ((newCenter - center).magnitude < 3*chunkSize) {
                         isTooClose = true;
                     }
                 }
