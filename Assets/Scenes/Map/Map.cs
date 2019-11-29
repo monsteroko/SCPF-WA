@@ -276,20 +276,27 @@ namespace ExperimentalMap {
         void CreateAreas() {
             List<Area> europeAreas = new List<Area>();
             List<Area> otherAreas = new List<Area>();
+            List<Area> testAreas = new List<Area>();
             foreach (Area area in areas.Values) {
                 if (area.counterpart == "SLAV EMPIRE") {
                     europeAreas.Add(area);
                 } else {
                     otherAreas.Add(area);
                 }
+                if (area.name == "Kharkiv") {
+                    testAreas.Add(area);
+                }
             }
-            new TerrainLayouter().CreateLayoutForAreas(ref europeAreas);
+            List<Terrain> lands = new TerrainLayouter().CreateLandscapesForAreas(ref testAreas);
+            CreateAreaSurface(lands[0], biom3Material, terrainsObject);
+            CreateAreaBorder(lands[0], areaBorderMaterial);
             foreach (Area area in europeAreas) {
                 CreateAreaSurface(area, biom1Material, areaBackgroundObject);
                 CreateAreaTerrainsSurfaces(area);
                 CreateAreaBorder(area, areaBorderMaterial);
                 area.lockedOverlay = CreateAreaSurface(area, areaLockedMaterial, mapOverlayObject);
             }
+            mapOverlayObject.SetActive(false);
             foreach (Area area in otherAreas) {
                 CreateAreaSurface(area, areaBackgroundMaterial, areaBackgroundObject);
                 CreateAreaBorder(area, areaBorderMaterial);

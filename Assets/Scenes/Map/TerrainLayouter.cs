@@ -111,7 +111,6 @@ namespace ExperimentalMap {
                 }
                 
             }
-
         }
 
         public List<Terrain> CreateTerrainChunk(Vector2 center) {
@@ -197,6 +196,98 @@ namespace ExperimentalMap {
                 Debug.Log("Invalid terrain set");
                 return new List<Vector2>();
             }
+        }
+
+        private float LandscapeHeight(Vector2 point) {
+            float seedx = 4.5f;
+            float seedy = 0.5f;
+            Vector2 p = point * 100;
+            float c1 = Mathf.PerlinNoise(seedx + p.x, seedy + p.y);
+            float c2 = 0.5f * Mathf.PerlinNoise((seedx + p.x) * 2.0f, (seedy + p.y) * 2.0f) * c1;
+            float c3 = 0.25f * Mathf.PerlinNoise((seedx + p.x) * 4.0f, (seedy + p.y) * 4.0f) * (c1 + c2);
+            //return Mathf.Pow(c1 + c2 + c3, 2.71828f);
+            return c1 + c2 + c3;
+        }
+
+        public List<Terrain> CreateLandscapesForAreas(ref List<Area> areas) {
+            List<Terrain> terrains = new List<Terrain>();
+            if (areas.Count == 0) {
+                return terrains;
+            }
+            Vector2 minBound = areas[0].borderRect.min;
+            Vector2 maxBound = areas[0].borderRect.max;
+            List<Vector2> chunkCenters = new List<Vector2>();
+            foreach (Area area in areas) {
+                minBound.x = Mathf.Min(minBound.x, area.borderRect.min.x);
+                minBound.y = Mathf.Min(minBound.y, area.borderRect.min.y);
+                maxBound.x = Mathf.Max(maxBound.x, area.borderRect.max.x);
+                maxBound.y = Mathf.Max(maxBound.y, area.borderRect.max.y);
+            }
+            int heightPoints = (int)((maxBound.y - minBound.y) / PointSize);
+            int widthPoints = (int)((maxBound.x - minBound.x) / PointSize);
+            Debug.Log(heightPoints);
+            Debug.Log(widthPoints);
+            bool[,] field = new bool[heightPoints, widthPoints];
+            Vector2 bp = new Vector2(0, 0);
+            float bh = float.MaxValue;
+            for (int i1 = 0; i1 < heightPoints; i1++) {
+                for (int i2 = 0; i2 < widthPoints; i2++) {
+                    Vector2 p = new Vector2(minBound.x + i1 * PointSize, minBound.y + i2 * PointSize);
+                    float h = LandscapeHeight(p);
+                    if (Mathf.Abs(h - 1) < bh) {
+                        bp = p;
+                        bh = Mathf.Abs(h - 1);
+                    }
+                }
+            }
+            List<Vector2> cont = ContourFromPoint(bp);
+            Terrain terrain = new Terrain(cont);
+            terrain.type = 2;
+            terrains.Add(terrain);
+            return terrains;
+        }
+
+        private List<Vector2> ContourFromPoint(Vector2 p) {
+            float step = PointSize;
+            List<Vector2> res = new List<Vector2>();
+            res.Add(p);
+            float pHeight = LandscapeHeight(p);
+            float cx = p.x;
+            float cy = p.y;
+            float cdir = 0;
+            for (int i1 = 0; i1<10000; i1++) {
+                float bx = cx;
+                float by = cy;
+                float bdir = cdir;
+                float bhdiff = float.MaxValue;
+                for (float dir = cdir + Mathf.PI / 2.0f; dir >= cdir - Mathf.PI / 2.0f; dir -= Mathf.PI/10.0f) {
+                    float x = cx + step * Mathf.Cos(dir);
+                    float y = cy + step * Mathf.Sin(dir);
+                    float h = LandscapeHeight(new Vector2(x, y));
+                    if (Mathf.Abs(h - pHeight) < bhdiff) {
+                        bx = x;
+                        by = y;
+                        bdir = dir;
+                        bhdiff = Mathf.Abs(h - pHeight);
+                    }
+                }
+                cx = bx;
+                cy = by;
+                Debug.Log("FUF");
+                Debug.Log(cx);
+                Debug.Log(cy);
+                Debug.Log(cdir);
+                Debug.Log(LandscapeHeight(new Vector2(cx, cy)));
+                cdir = bdir;
+                Vector2 cv = new Vector2(cx, cy);
+                res.Add(cv);
+                if ((cv - p).magnitude < step && i1 > 3) {
+                    return res;
+                }
+            }
+            Debug.Log(pHeight);
+            Debug.Log("Could not create valid contour");
+            return res;
         }
     }
 
