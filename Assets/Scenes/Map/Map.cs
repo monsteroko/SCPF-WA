@@ -12,6 +12,7 @@ namespace ExperimentalMap {
     public class Map : MonoBehaviour {
 
         public static readonly float MapPrecision = 5000000f;
+        public TerrainLayouter terrainLayouter;
         public GameObject terrainsObject;
         public GameObject areaBackgroundObject;
         public GameObject mapBackgroundObject;
@@ -21,19 +22,12 @@ namespace ExperimentalMap {
         public Material areaBorderMaterial;
         public Material areaBackgroundMaterial;
         public Material areaLockedMaterial;
-        public Material biom1Material;
-        public Material biom2Material;
-        public Material biom3Material;
         public Material seaMaterial;
         public Camera camera;
         public Dictionary<string, Area> areas { get; private set; }
         public Dictionary<string, Zone> zones { get; private set; }
-        List<Material> biomMaterials = new List<Material>();
 
         void OnEnable() {
-            biomMaterials.Add(biom1Material);
-            biomMaterials.Add(biom2Material);
-            biomMaterials.Add(biom3Material);
             CreateBackground();
             areas = ReadAreasData();
             zones = ReadZonesData();
@@ -277,26 +271,29 @@ namespace ExperimentalMap {
             List<Area> europeAreas = new List<Area>();
             List<Area> otherAreas = new List<Area>();
             List<Area> testAreas = new List<Area>();
+            ClipperUtility utility = new ClipperUtility();
+            Area targetArea = areas["Kharkiv"];
             foreach (Area area in areas.Values) {
                 if (area.counterpart == "SLAV EMPIRE") {
                     europeAreas.Add(area);
                 } else {
                     otherAreas.Add(area);
                 }
-                if (area.name == "Kharkiv") {
+                if (utility.AreSurfacesNear(area, targetArea)) {
                     testAreas.Add(area);
                 }
             }
-            List<Terrain> lands = new TerrainLayouter().CreateLandscapesForAreas(ref testAreas);
-            CreateAreaSurface(lands[0], biom3Material, terrainsObject);
-            CreateAreaBorder(lands[0], areaBorderMaterial);
+            List<Terrain> lands = terrainLayouter.CreateLandscapesForAreas(ref testAreas);
+            foreach (Terrain terrain in lands) {
+                CreateAreaSurface(terrain, terrainLayouter.MaterialForSurface(terrain), terrainsObject);
+            }
+            
             foreach (Area area in europeAreas) {
-                CreateAreaSurface(area, biom1Material, areaBackgroundObject);
+                CreateAreaSurface(area, terrainLayouter.MaterialForSurface(area), areaBackgroundObject);
                 CreateAreaTerrainsSurfaces(area);
                 CreateAreaBorder(area, areaBorderMaterial);
                 area.lockedOverlay = CreateAreaSurface(area, areaLockedMaterial, mapOverlayObject);
             }
-            mapOverlayObject.SetActive(false);
             foreach (Area area in otherAreas) {
                 CreateAreaSurface(area, areaBackgroundMaterial, areaBackgroundObject);
                 CreateAreaBorder(area, areaBorderMaterial);
@@ -329,7 +326,7 @@ namespace ExperimentalMap {
             GameObject borderSurface = new GameObject("borderSurface");
             borderSurface.hideFlags = HideFlags.DontSave | HideFlags.HideInHierarchy;
             borderSurface.transform.SetParent(areaBackgroundObject.transform, false);
-            borderSurface.transform.localPosition = Vector3.zero;
+            borderSurface.transform.localPosition = new Vector3(0, 0, -0.05f);
             borderSurface.transform.localRotation = Quaternion.Euler(Vector3.zero);
             borderSurface.layer = areaBackgroundObject.layer;
             Mesh mesh = new Mesh();
@@ -393,7 +390,7 @@ namespace ExperimentalMap {
             meshFilter.mesh = mesh;
             surfaceObject.GetComponent<Renderer>().sharedMaterial = material;
             surfaceObject.transform.SetParent(parentObject.transform, false);
-            surfaceObject.transform.localPosition = Vector3.zero;
+            surfaceObject.transform.localPosition = new Vector3(0, 0, -surface.elevation*0.001f);
             surfaceObject.transform.localRotation = Quaternion.Euler(Vector3.zero);
             surfaceObject.layer = gameObject.layer;
             return surfaceObject;
@@ -402,7 +399,7 @@ namespace ExperimentalMap {
         List<GameObject> CreateAreaTerrainsSurfaces(Area area) {
             List<GameObject> surfaces = new List<GameObject>();
             foreach (Terrain terrain in area.terrains) {
-                surfaces.Add(CreateAreaSurface(terrain, biomMaterials[terrain.type], terrainsObject));
+                surfaces.Add(CreateAreaSurface(terrain, terrainLayouter.MaterialForSurface(area), terrainsObject));
             }
             return surfaces;
         }

@@ -29,11 +29,17 @@ namespace ExperimentalMap {
         }
     }
 
-    public class TerrainLayouter {
+    public class TerrainLayouter: MonoBehaviour {
+
+        public Material continental1Material;
+        public Material continental2Material;
+        public Material continental3Material;
 
         const float PointSize = 0.0003f;
         const float chunkSize = 0.003f;
         const int TerrainSizeMark = 4;
+
+        ClipperUtility utility = new ClipperUtility();
 
         struct PriorityPath {
             public int priority;
@@ -42,6 +48,17 @@ namespace ExperimentalMap {
             public PriorityPath(int priority, List<IntPoint> path) {
                 this.priority = priority;
                 this.path = path;
+            }
+        }
+
+        public Material MaterialForSurface(MapSurface surface) {
+            switch (surface.elevation) {
+                case 0:
+                    return continental1Material;
+                case 1:
+                    return continental2Material;
+                default:
+                    return continental3Material;
             }
         }
 
@@ -178,7 +195,7 @@ namespace ExperimentalMap {
         }
 
         public List<Vector2> CalculateSummaryBorder(List<Vector2> border, List<Terrain> terrains) {
-            ClipperUtility utility = new ClipperUtility();
+            
             List<List<IntPoint>> subject = new List<List<IntPoint>>();
             List<List<IntPoint>> addition = new List<List<IntPoint>>();
             List<List<IntPoint>> results = new List<List<IntPoint>>();
@@ -199,17 +216,34 @@ namespace ExperimentalMap {
         }
 
         private float LandscapeHeight(Vector2 point) {
-            float seedx = 4.5f;
+            float seedx = 111.5f;
             float seedy = 0.5f;
             Vector2 p = point * 100;
             float c1 = Mathf.PerlinNoise(seedx + p.x, seedy + p.y);
             float c2 = 0.5f * Mathf.PerlinNoise((seedx + p.x) * 2.0f, (seedy + p.y) * 2.0f) * c1;
             float c3 = 0.25f * Mathf.PerlinNoise((seedx + p.x) * 4.0f, (seedy + p.y) * 4.0f) * (c1 + c2);
-            //return Mathf.Pow(c1 + c2 + c3, 2.71828f);
-            return c1 + c2 + c3;
+            //return (c1 + c2 + c3) / 1.75f;
+            return c1;
+        }
+
+        private float ResidualLandscapeHeight(Vector2 point, List<Terrain> terrains, List<float> heightLevels) {
+            float height = LandscapeHeight(point);
+            ClipperUtility utility = new ClipperUtility();
+            int levels = 0;
+            foreach (Terrain terrain in terrains) {
+                if (utility.IsPointInsideSurface(point, terrain)) {
+                    levels++;
+                }
+            }
+            height -= heightLevels[Mathf.Min(heightLevels.Count-1, levels)];
+            return height;
         }
 
         public List<Terrain> CreateLandscapesForAreas(ref List<Area> areas) {
+            List<float> grassLevels = new List<float>();
+            grassLevels.Add(0.0f);
+            grassLevels.Add(0.55f);
+            grassLevels.Add(0.70f);
             List<Terrain> terrains = new List<Terrain>();
             if (areas.Count == 0) {
                 return terrains;
@@ -227,23 +261,48 @@ namespace ExperimentalMap {
             int widthPoints = (int)((maxBound.x - minBound.x) / PointSize);
             Debug.Log(heightPoints);
             Debug.Log(widthPoints);
-            bool[,] field = new bool[heightPoints, widthPoints];
-            Vector2 bp = new Vector2(0, 0);
-            float bh = float.MaxValue;
-            for (int i1 = 0; i1 < heightPoints; i1++) {
-                for (int i2 = 0; i2 < widthPoints; i2++) {
-                    Vector2 p = new Vector2(minBound.x + i1 * PointSize, minBound.y + i2 * PointSize);
-                    float h = LandscapeHeight(p);
-                    if (Mathf.Abs(h - 1) < bh) {
-                        bp = p;
-                        bh = Mathf.Abs(h - 1);
+            for (int i0=0; i0<10; i0++) {
+            //while (true) {
+                Vector2 bp = new Vector2(0, 0);
+                float bh = 0;
+                for (int i1 = 0; i1 < heightPoints; i1++) {
+                    for (int i2 = 0; i2 < widthPoints; i2++) {
+                        Vector2 p = new Vector2(minBound.x + i1 * PointSize, minBound.y + i2 * PointSize);
+                        float h = ResidualLandscapeHeight(p, terrains, grassLevels);
+                        if (h > bh) {
+                            bp = p;
+                            bh = h;
+                        }
+                    }
+                }
+                int nextLevel = grassLevels.Count - 1;
+                for (int i1=1; i1<grassLevels.Count; i1++) {
+                    if (grassLevels[i1]>bh) {
+                        nextLevel = i1 - 1;
+                        break;
+                    }
+                }
+                int createdLevels = 0;
+                foreach (Terrain terrain in terrains) {
+                    if (utility.IsPointInsideSurface(bp, terrain)) {
+                        createdLevels++;
+                    }
+                }
+                if (nextLevel == 0) {
+                    break;
+                }
+                while (nextLevel>0) {
+                    bp.x += PointSize / 10.0f;
+                    bp.y += PointSize / 50.0f;
+                    if (LandscapeHeight(bp) < grassLevels[createdLevels + nextLevel]) {
+                        List<Vector2> cont = ContourFromPoint(bp);
+                        Terrain terrain = new Terrain(cont);
+                        terrain.elevation = createdLevels + nextLevel;
+                        terrains.Add(terrain);
+                        nextLevel--;
                     }
                 }
             }
-            List<Vector2> cont = ContourFromPoint(bp);
-            Terrain terrain = new Terrain(cont);
-            terrain.type = 2;
-            terrains.Add(terrain);
             return terrains;
         }
 
@@ -264,7 +323,7 @@ namespace ExperimentalMap {
                     float x = cx + step * Mathf.Cos(dir);
                     float y = cy + step * Mathf.Sin(dir);
                     float h = LandscapeHeight(new Vector2(x, y));
-                    if (Mathf.Abs(h - pHeight) < bhdiff) {
+                    if (Mathf.Abs(h - pHeight) < bhdiff && h < pHeight) {
                         bx = x;
                         by = y;
                         bdir = dir;
@@ -273,11 +332,6 @@ namespace ExperimentalMap {
                 }
                 cx = bx;
                 cy = by;
-                Debug.Log("FUF");
-                Debug.Log(cx);
-                Debug.Log(cy);
-                Debug.Log(cdir);
-                Debug.Log(LandscapeHeight(new Vector2(cx, cy)));
                 cdir = bdir;
                 Vector2 cv = new Vector2(cx, cy);
                 res.Add(cv);

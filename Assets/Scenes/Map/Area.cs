@@ -14,6 +14,7 @@ namespace ExperimentalMap {
     public class MapSurface {
         public List<Vector2> border { get; protected set; }
         public Rect borderRect { get; protected set; }
+        public float elevation;
 
         public bool IsValid() {
             return border.Count >= 3;
@@ -31,6 +32,7 @@ namespace ExperimentalMap {
             this.name = name;
             this.counterpart = counterpart;
             this.terrains = new List<Terrain>();
+            this.elevation = 0;
         }
 
         public Vector2 center;
