@@ -21,7 +21,19 @@ namespace ExperimentalMap {
         }
 
         public void ClipSurface(MapSurface surface) {
-            border = (new ClipperUtility()).ClipBorder(border, surface.border);
+            ClipBorder(surface.border);
+        }
+
+        public void ClipBorder(List<Vector2> clipBorder) {
+            border = (new ClipperUtility()).ClipBorder(border, clipBorder);
+        }
+
+        public void IntersectSurface(MapSurface surface) {
+            IntersectBorder(surface.border);
+        }
+
+        public void IntersectBorder(List<Vector2> intersectBorder) {
+            border = (new ClipperUtility()).IntersectBorder(border, intersectBorder);
         }
     }
 

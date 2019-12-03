@@ -59,13 +59,24 @@ namespace ExperimentalMap {
             Clipper c = new Clipper();
             c.AddPaths(s1, PolyType.ptSubject, true);
             c.AddPaths(s2, PolyType.ptClip, true);
-            c.Execute(ClipType.ctUnion, results, PolyFillType.pftNonZero, PolyFillType.pftNonZero);
+            c.Execute(ClipType.ctUnion, results, PolyFillType.pftPositive, PolyFillType.pftPositive);
             if (results.Count > 0) {
                 return ClipperPathToVectorPath(results[0]);
             } else {
                 Debug.Log("Invalid borders to union");
                 return new List<Vector2>();
             }
+        }
+
+        public List<Vector2> UnionBorders(List<List<Vector2>> borders) {
+            if (borders.Count == 0) {
+                return new List<Vector2>();
+            }
+            List<Vector2> result = borders[0];
+            for (int i1 = 1; i1 < borders.Count; i1++) {
+                result = UnionBorders(result, borders[i1]);
+            }
+            return result;
         }
 
         public List<Vector2> ClipBorder(List<Vector2> border1, List<Vector2> border2) {
@@ -82,6 +93,24 @@ namespace ExperimentalMap {
                 return ClipperPathToVectorPath(results[0]);
             } else {
                 Debug.Log("Invalid borders to clip");
+                return new List<Vector2>();
+            }
+        }
+
+        public List<Vector2> IntersectBorder(List<Vector2> border1, List<Vector2> border2) {
+            List<List<IntPoint>> s1 = new List<List<IntPoint>>();
+            List<List<IntPoint>> s2 = new List<List<IntPoint>>();
+            List<List<IntPoint>> results = new List<List<IntPoint>>();
+            s1.Add(VectorPathToClipperPath(border1));
+            s2.Add(VectorPathToClipperPath(border2));
+            Clipper c = new Clipper();
+            c.AddPaths(s1, PolyType.ptSubject, true);
+            c.AddPaths(s2, PolyType.ptClip, true);
+            c.Execute(ClipType.ctIntersection, results, PolyFillType.pftNonZero, PolyFillType.pftNonZero);
+            if (results.Count > 0) {
+                return ClipperPathToVectorPath(results[0]);
+            } else {
+                Debug.Log("Invalid borders to intersect");
                 return new List<Vector2>();
             }
         }

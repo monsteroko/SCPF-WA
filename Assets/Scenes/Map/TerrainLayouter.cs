@@ -216,8 +216,8 @@ namespace ExperimentalMap {
         }
 
         private float LandscapeHeight(Vector2 point) {
-            float seedx = 111.5f;
-            float seedy = 0.5f;
+            float seedx = 10.5f;
+            float seedy = 10.5f;
             Vector2 p = point * 100;
             float c1 = Mathf.PerlinNoise(seedx + p.x, seedy + p.y);
             float c2 = 0.5f * Mathf.PerlinNoise((seedx + p.x) * 2.0f, (seedy + p.y) * 2.0f) * c1;
@@ -302,6 +302,15 @@ namespace ExperimentalMap {
                         nextLevel--;
                     }
                 }
+            }
+            //Clip to borders
+            List<List<Vector2>> areaBorders = new List<List<Vector2>>();
+            foreach (Area area in areas) {
+                areaBorders.Add(area.border);
+            }
+            List<Vector2> summaryBorder = utility.UnionBorders(areaBorders);
+            foreach (Terrain terrain in terrains) {
+                terrain.IntersectBorder(summaryBorder);
             }
             return terrains;
         }
