@@ -11,7 +11,7 @@ namespace ExperimentalMap {
         public List<IntPoint> VectorPathToClipperPath(List<Vector2> border) {
             List<IntPoint> path = new List<IntPoint>();
             foreach (Vector2 realPoint in border) {
-                path.Add(new IntPoint(realPoint.x * ClipperMultiplier, realPoint.y * ClipperMultiplier));
+                path.Add(new IntPoint(Mathf.Round(realPoint.x * ClipperMultiplier), Mathf.Round(realPoint.y * ClipperMultiplier)));
             }
             return path;
         }
