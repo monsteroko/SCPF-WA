@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657868, g: 0.49641263, b: 0.57481706, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -6027,6 +6027,9 @@ MonoBehaviour:
     type: 2}
   continental3Material: {fileID: 2100000, guid: 4c7549bb1ab910243b09e7a751edae23,
     type: 2}
+  field1Material: {fileID: 2100000, guid: e78a53afa992ccf41bf127f48d08e91f, type: 2}
+  field2Material: {fileID: 2100000, guid: f90b7ba98018d6a4e9c37dd86fe05cd7, type: 2}
+  field3Material: {fileID: 2100000, guid: dedfd4bd20fce5f4997a28efdc65611e, type: 2}
 --- !u!1 &1717468207
 GameObject:
   m_ObjectHideFlags: 0

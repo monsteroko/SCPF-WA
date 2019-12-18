@@ -287,6 +287,10 @@ namespace ExperimentalMap {
             foreach (Terrain terrain in lands) {
                 CreateAreaSurface(terrain, terrainLayouter.MaterialForSurface(terrain), terrainsObject);
             }
+            List<Terrain> objs = terrainLayouter.CreateLayoutForAreas(ref testAreas);
+            foreach (Terrain terrain in objs) {
+                CreateAreaSurface(terrain, terrainLayouter.MaterialForSurface(terrain), terrainsObject);
+            }
             
             foreach (Area area in europeAreas) {
                 CreateAreaSurface(area, terrainLayouter.MaterialForSurface(area), areaBackgroundObject);
@@ -357,7 +361,8 @@ namespace ExperimentalMap {
             }
             // Make texture coordinates not depending of area position
             float chunkSize = 0.01f;
-            float textureSizeKoef = chunkSize / surface.borderRect.height;
+            float terrainKoef = terrainLayouter.TextureScaleForSurface(surface);
+            float textureSizeKoef = chunkSize * terrainKoef / surface.borderRect.height;
             Vector2 textureScale = new Vector2(surface.borderRect.height / surface.borderRect.width * textureSizeKoef, textureSizeKoef);
             Vector2 surfaceOffset = new Vector2(surface.borderRect.xMin - chunkSize * (int)(surface.borderRect.xMin / chunkSize),
                 surface.borderRect.yMin - chunkSize * (int)(surface.borderRect.yMin / chunkSize));

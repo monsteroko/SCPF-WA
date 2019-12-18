@@ -6,14 +6,14 @@ using ClipperLib;
 namespace ExperimentalMap {
     public partial class TerrainLayouter : MonoBehaviour {
 
-        public void CreateLayoutForAreas(ref List<Area> areas) {
+        public List<Terrain> CreateLayoutForAreas(ref List<Area> areas) {
+            List<Terrain> terrains = new List<Terrain>();
             if (areas.Count == 0) {
-                return;
+                return terrains;
             }
             Vector2 minBound = areas[0].borderRect.min;
             Vector2 maxBound = areas[0].borderRect.max;
             List<Vector2> chunkCenters = new List<Vector2>();
-            List<Terrain> terrains = new List<Terrain>();
             foreach (Area area in areas) {
                 minBound.x = Mathf.Min(minBound.x, area.borderRect.min.x);
                 minBound.y = Mathf.Min(minBound.y, area.borderRect.min.y);
@@ -22,7 +22,7 @@ namespace ExperimentalMap {
             }
             int counter = 0;
             ClipperUtility utility = new ClipperUtility();
-            while (counter < 100) {
+            while (counter < 10) {
                 counter++;
                 Vector2 newCenter = new Vector2(Random.Range(minBound.x, maxBound.x), Random.Range(minBound.y, maxBound.y));
                 bool isInside = false;
@@ -37,13 +37,13 @@ namespace ExperimentalMap {
                 if (!isInside) continue;
                 bool isTooClose = false;
                 foreach (Vector2 center in chunkCenters) {
-                    if ((newCenter - center).magnitude < 3 * chunkSize) {
+                    if ((newCenter - center).magnitude < 2 * chunkSize) {
                         isTooClose = true;
                     }
                 }
                 if (isTooClose) continue;
                 chunkCenters.Add(newCenter);
-                terrains.AddRange(CreateTerrainChunk(newCenter));
+                terrains.AddRange(CreateAgrarianChunk(newCenter));
                 counter = 0;
             }
             List<int> indeces = new List<int>();
@@ -60,7 +60,8 @@ namespace ExperimentalMap {
                     indeces.Add(-1);
                 }
             }
-            for (int i1 = 0; i1 < terrains.Count; i1++) {
+            return terrains;
+            /*for (int i1 = 0; i1 < terrains.Count; i1++) {
                 if (indeces[i1] >= 0) {
                     for (int i2 = 0; i2 < areas.Count; i2++) {
                         if (i2 == indeces[i1]) {
@@ -70,13 +71,13 @@ namespace ExperimentalMap {
                         }
                     }
                 }
-
-            }
+            }*/
         }
 
-        public List<Terrain> CreateTerrainChunk(Vector2 center) {
-            int heightPoints = (int)(chunkSize / PointSize);
-            int widthPoints = (int)(chunkSize / PointSize);
+        public List<Terrain> CreateAgrarianChunk(Vector2 center) {
+            float localPointSize = PointSize * 0.3f;
+            int heightPoints = (int)(chunkSize / localPointSize);
+            int widthPoints = (int)(chunkSize / localPointSize);
             bool[,] field = new bool[heightPoints, widthPoints];
             for (int i1 = 0; i1 < heightPoints; i1++) {
                 for (int i2 = 0; i2 < widthPoints; i2++) {
@@ -128,10 +129,12 @@ namespace ExperimentalMap {
             foreach (List<IntPoint> path in resultPaths) {
                 List<Vector2> border = new List<Vector2>();
                 for (int i1 = 0; i1 < path.Count; i1++) {
-                    border.Add(new Vector2(center.x - widthPoints / 2 * PointSize + PointSize * path[i1].X, center.y - widthPoints / 2 * PointSize + PointSize * path[i1].Y));
+                    border.Add(new Vector2(center.x - widthPoints / 2 * localPointSize + localPointSize * path[i1].X, center.y - widthPoints / 2 * localPointSize + localPointSize * path[i1].Y));
                 }
                 Terrain terrain = new Terrain(border);
                 terrain.type = Random.Range(0, 3);
+                terrain.elevation = 5 + terrain.type;
+                terrain.terrainType = TerrainType.Agrarian;
                 terrains.Add(terrain);
             }
             return terrains;

@@ -97,6 +97,7 @@ namespace ExperimentalMap {
                         List<Vector2> cont = ContourFromPoint(bp, landscapesNoiseProvider);
                         Terrain terrain = new Terrain(cont);
                         terrain.elevation = createdLevels + nextLevel;
+                        terrain.terrainType = TerrainType.Landscape;
                         terrains.Add(terrain);
                         nextLevel--;
                     }

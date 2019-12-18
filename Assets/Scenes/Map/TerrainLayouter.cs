@@ -5,9 +5,15 @@ using ClipperLib;
 
 namespace ExperimentalMap {
 
+    public enum TerrainType {
+        Landscape = 0,
+        Agrarian = 1,
+    }
+
     public class Terrain: MapSurface {
         public Vector2 center { get; private set; }
         public int type;
+        public TerrainType terrainType;
 
         public Terrain(List<Vector2> border) {
             this.border = border;
@@ -60,9 +66,12 @@ namespace ExperimentalMap {
         public Material continental1Material;
         public Material continental2Material;
         public Material continental3Material;
+        public Material field1Material;
+        public Material field2Material;
+        public Material field3Material;
 
         const float PointSize = 0.0003f;
-        const float chunkSize = 0.003f;
+        const float chunkSize = 0.002f;
         const int TerrainSizeMark = 4;
 
         ClipperUtility utility = new ClipperUtility();
@@ -78,14 +87,41 @@ namespace ExperimentalMap {
         }
 
         public Material MaterialForSurface(MapSurface surface) {
-            switch (surface.elevation) {
-                case 0:
-                    return continental1Material;
-                case 1:
-                    return continental2Material;
-                default:
-                    return continental3Material;
+            if (surface is Terrain) {
+                switch (((Terrain)surface).terrainType) {
+                    case TerrainType.Landscape:
+                        switch (surface.elevation) {
+                            case 0:
+                                return continental1Material;
+                            case 1:
+                                return continental2Material;
+                            default:
+                                return continental3Material;
+                        }
+                    case TerrainType.Agrarian:
+                        switch (((Terrain)surface).type) {
+                            case 0:
+                                return field1Material;
+                            case 1:
+                                return field2Material;
+                            default:
+                                return field3Material;
+                        }
+                }
             }
+            return continental3Material; 
+        }
+
+        public float TextureScaleForSurface(MapSurface surface) {
+            if (surface is Terrain) {
+                switch (((Terrain)surface).terrainType) {
+                    case TerrainType.Agrarian:
+                        return 0.3f;
+                    default:
+                        return 1.0f;
+                }
+            }
+            return 1;
         }
 
         public List<Vector2> CalculateSummaryBorder(List<Vector2> border, List<Terrain> terrains) {
