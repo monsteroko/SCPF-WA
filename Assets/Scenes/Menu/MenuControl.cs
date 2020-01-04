@@ -22,4 +22,8 @@ public class MenuControl : MonoBehaviour
     {
         Application.Quit();
     }
+    public void LinkPressed()
+    {
+        Application.OpenURL("http://scpfoundation.net/");
+    }
 }

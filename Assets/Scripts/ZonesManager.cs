@@ -35,7 +35,7 @@ public class ZonesManager : MonoBehaviour {
         var randomScale = Random.Range(0.8f, 1.2f);
         var rotationAngle = Random.Range(0f, 360f);
         obj.transform.localScale = new Vector3(randomScale, randomScale, randomScale);
-        obj.transform.rotation = Quaternion.Euler(90.0f, 0, 0) * Quaternion.Euler(0.0f, rotationAngle, 0.0f);
+        obj.transform.rotation = Quaternion.Euler(270.0f, 0, 0) * Quaternion.Euler(0.0f, rotationAngle, 0.0f);
         obj.transform.SetParent(map.mapZonesObject.transform, false);
         obj.AddComponent<ZoneSelect>();
         obj.SetActive(state != AreaState.Locked);
