@@ -12,6 +12,7 @@ public class MogSCPFoundPanel : MonoBehaviour
     public Button yesButton;
     public Button noButton;
     private bool resofch;
+    public static int nbsofSCPs = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -43,6 +44,7 @@ public class MogSCPFoundPanel : MonoBehaviour
 
     void Confirm()
     {
+        nbsofSCPs++;
         Baza = GameObject.Find("Base(Clone)");
         Car.SetActive(true);
         resofch = true;
