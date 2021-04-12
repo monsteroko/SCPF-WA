@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LoadScreen : MonoBehaviour
 {
-    public Texture2D screenTexture;
+    public Sprite screenTexture;
     public static LoadScreen instance;
     public static AsyncOperation syncLevel;
     public static bool doneLoadingScene;
@@ -17,8 +18,8 @@ public class LoadScreen : MonoBehaviour
             return;
         }
         instance = this;
-        gameObject.AddComponent<GUITexture>().enabled = false;
-        GetComponent<GUITexture>().texture = screenTexture;
+        gameObject.AddComponent<Image>().enabled = false;
+        GetComponent<Image>().sprite = screenTexture;
         transform.position = new Vector3(0.5f, 0.5f, 0.0f);
         DontDestroyOnLoad(this);
     }
@@ -41,7 +42,7 @@ public class LoadScreen : MonoBehaviour
     {
         if (newLevel != null)
         {
-            instance.GetComponent<GUITexture>().enabled = true;
+            instance.GetComponent<Image>().enabled = true;
             StartCoroutine(LoadCoroutine());
             doneLoadingScene = true;
             newLevel = null;
@@ -49,7 +50,7 @@ public class LoadScreen : MonoBehaviour
         if (syncLevel != null && doneLoadingScene && syncLevel.isDone)
         {
             doneLoadingScene = false;
-            instance.GetComponent<GUITexture>().enabled = false;
+            instance.GetComponent<Image>().enabled = false;
         }
     }
 
