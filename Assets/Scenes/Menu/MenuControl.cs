@@ -6,14 +6,13 @@ using UnityEngine.SceneManagement;
 
 public class MenuControl : MonoBehaviour
 {
-    public Canvas Canvas;
+    public Sprite[] frames; 
+    public Image background;
 
-    string lname;
-    private void Start()
+    void Start()
     {
-       
+        InvokeRepeating("ImageChange", 30.0f, 30.0f);
     }
-
     public void PlayPressed()
     {
         SceneManager.LoadScene("CounterpartsSelection");
@@ -25,5 +24,9 @@ public class MenuControl : MonoBehaviour
     public void LinkPressed()
     {
         Application.OpenURL("http://scpfoundation.net/");
+    }
+    public void ImageChange()
+    {
+        background.sprite = frames[(int)Random.Range(0,frames.Length-1)];
     }
 }
