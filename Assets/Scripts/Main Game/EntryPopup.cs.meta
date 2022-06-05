@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: dd75524d0b362c643bdf4d864ce2625a
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - nameText: {instanceID: 0}
+  - descriptionText: {instanceID: 0}
+  - okButton: {instanceID: 0}
+  - cancButton: {instanceID: 0}
+  - entryPopupObject: {instanceID: 0}
+  - SCP: {fileID: 5901127979000960224, guid: 2062d4e19f4a5924cbbb847eb90eeeb4, type: 3}
+  - onwind: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

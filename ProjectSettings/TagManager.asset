@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - ZoneMan
+  - Base
   layers:
   - Default
   - TransparentFX
