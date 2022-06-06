@@ -33,10 +33,10 @@ public class CreateZoneDialog : MonoBehaviour {
     }
 
     void Confirm() {
-        if (GameManager.Money >= 1000000)
+        if (ResourcesManager.Money >= 1000000)
         {
             GameManager.instance.zonesManager.BuildSelectedZone();
-            GameManager.Money -= 1000000;
+            ResourcesManager.Money -= 1000000;
             ClosePopup();
         }
         else

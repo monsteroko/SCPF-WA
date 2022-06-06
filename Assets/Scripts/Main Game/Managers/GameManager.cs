@@ -7,13 +7,9 @@ public class GameManager : MonoBehaviour {
     public MapManager mapManager;
     public ZonesManager zonesManager;
     public TechManager techManager;
+    public TimeManager timeManager;
+    public ResourcesManager resourcesManager;
     static GameManager _instance;
-
-
-    public static int ClassD = 0;
-    public static double Science = 0;
-    public static double Money = 20000000;
-    public static double Secrecy = 100;
 
     public static GameManager instance {
         get {
@@ -37,8 +33,11 @@ public class GameManager : MonoBehaviour {
     }
 
     IEnumerator ShowEntryPopup() {
-        yield return new WaitForSeconds(30);
-        var popup = EntryPopup.Instance();
-        popup.OpenWithEntry(entryManager.GetRandomEntry());
+        if (!timeManager.isOnPause())
+        {
+            yield return new WaitForSeconds(Random.Range(300, 1000));
+            var popup = EntryPopup.Instance();
+            popup.OpenWithEntry(entryManager.GetRandomEntry());
+        }
     }
 }

@@ -19,6 +19,7 @@ public class EntryPopup : MonoBehaviour {
     public GameObject SCP;
     int ran = 0;
     private static EntryPopup entryPopup;
+    private static ResourcesManager resManager;
     public Sprite[] foundimg = new Sprite[10];
     public Image onwind;
     public string[,] fdtext= new string[10,10];
@@ -26,6 +27,7 @@ public class EntryPopup : MonoBehaviour {
     private void Start()
     {
         entryPopup = FindObjectOfType(typeof(EntryPopup)) as EntryPopup;
+        resManager = FindObjectOfType(typeof(ResourcesManager)) as ResourcesManager;
         entryPopupObject.SetActive(false);
     }
     public static EntryPopup Instance()
@@ -64,13 +66,12 @@ public class EntryPopup : MonoBehaviour {
     }
     public void FocusOnSCP()
     {
-        GameManager.ClassD += eventClassD;
-        GameManager.Money -= eventMoney;
-        GameManager.Science += eventScience;
-        GameManager.Secrecy -= eventSecrecy;
-        GameObject[] bases  =  GameObject.FindGameObjectsWithTag("Base");
-        GameObject baserand = bases[UnityEngine.Random.Range(0,bases.Length - 1)];
-        SpawnSCP(baserand.transform.position);
+        if(resManager.ResourcesChange(eventClassD, eventScience, eventMoney, eventSecrecy))
+        {
+            GameObject[] bases = GameObject.FindGameObjectsWithTag("Base");
+            GameObject baserand = bases[UnityEngine.Random.Range(0, bases.Length - 1)];
+            SpawnSCP(baserand.transform.position);
+        }
     }
 
     private void SpawnSCP(Vector2 coordinates)

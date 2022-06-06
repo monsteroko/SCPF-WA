@@ -23,7 +23,7 @@ namespace ExperimentalMap {
         public Material areaBackgroundMaterial;
         public Material areaLockedMaterial;
         public Material seaMaterial;
-        public Camera camera;
+        public Camera maincamera;
         public Dictionary<string, Area> areas { get; private set; }
         public Dictionary<string, Zone> zones { get; private set; }
 
@@ -63,9 +63,9 @@ namespace ExperimentalMap {
             bool isFocusing = focusCameraPosition != null;
             if (isFocusing) {
                 const float focusSpeed = 0.08f;
-                currentDragVector = (Vector3)focusCameraPosition - camera.transform.position;
+                currentDragVector = (Vector3)focusCameraPosition - maincamera.transform.position;
                 dragDirection = currentDragVector.normalized;
-                currentDragAcceleration += Mathf.Min(focusSpeed * Mathf.Sqrt(mapObject.transform.position.z - camera.transform.position.z), currentDragVector.magnitude);
+                currentDragAcceleration += Mathf.Min(focusSpeed * Mathf.Sqrt(mapObject.transform.position.z - maincamera.transform.position.z), currentDragVector.magnitude);
             }
             // Zoom
             if (isMouseOver && !isFocusing) {
@@ -88,7 +88,7 @@ namespace ExperimentalMap {
                 const float maxZoomSpeed = 0.1f;
                 const float zoomSpeedMultiplier = 2.5f;
                 float zoomSpeed = Mathf.Clamp(zoomAcceleration, -maxZoomSpeed, maxZoomSpeed);
-                camera.transform.Translate(mapObject.transform.forward * zoomSpeed * zoomSpeedMultiplier * Mathf.Sqrt(mapObject.transform.position.z - camera.transform.position.z));
+                maincamera.transform.Translate(mapObject.transform.forward * zoomSpeed * zoomSpeedMultiplier * Mathf.Sqrt(mapObject.transform.position.z - maincamera.transform.position.z));
                 zoomAcceleration *= 0.9f;
                 if (dragAcceleration < maxZoomSpeed/10000.0f) {
                     zoomAcceleration = 0;
@@ -116,23 +116,23 @@ namespace ExperimentalMap {
                 if (pressed) {
                     dragDirection = currentDragVector.normalized;
                     const float keysDragSpeed = 0.05f;
-                    currentDragAcceleration += keysDragSpeed * Mathf.Sqrt(mapObject.transform.position.z - camera.transform.position.z);
+                    currentDragAcceleration += keysDragSpeed * Mathf.Sqrt(mapObject.transform.position.z - maincamera.transform.position.z);
                 }
                 if (isMouseOver && Input.GetMouseButton(0)) {
-                    cameraPositionLast = camera.transform.position;
+                    cameraPositionLast = maincamera.transform.position;
                     mouseDragLast = mouseDragCurrent;
                     mouseDragCurrent = GetMousePosition();
                     if (mouseDragLast != null && mouseDragCurrent != null) {
                         Vector3? mapDragLast = GetRaycast((Vector3)mouseDragLast);
                         Vector3? mapDragCurrent = GetRaycast((Vector3)mouseDragCurrent);
-                        Vector3 scrPointLast = camera.ScreenToWorldPoint(new Vector3(((Vector3)mouseDragLast).x, ((Vector3)mouseDragLast).y, camera.nearClipPlane));
-                        Vector3 scrPointCurrent = camera.ScreenToWorldPoint(new Vector3(((Vector3)mouseDragCurrent).x, ((Vector3)mouseDragCurrent).y, camera.nearClipPlane));
+                        Vector3 scrPointLast = maincamera.ScreenToWorldPoint(new Vector3(((Vector3)mouseDragLast).x, ((Vector3)mouseDragLast).y, maincamera.nearClipPlane));
+                        Vector3 scrPointCurrent = maincamera.ScreenToWorldPoint(new Vector3(((Vector3)mouseDragCurrent).x, ((Vector3)mouseDragCurrent).y, maincamera.nearClipPlane));
                         if (mouseDragLast != null && mapDragCurrent != null) {
-                            float koef = (camera.transform.position - (Vector3)mapDragLast).magnitude / (scrPointLast - (Vector3)mapDragLast).magnitude;
+                            float koef = (maincamera.transform.position - (Vector3)mapDragLast).magnitude / (scrPointLast - (Vector3)mapDragLast).magnitude;
                             Vector3 cameraRay = (scrPointCurrent - (Vector3)mapDragCurrent) * koef;
-                            float distanceKoef = ((camera.transform.position.z - ((Vector3)mapDragLast).z) / cameraRay.z);
+                            float distanceKoef = ((maincamera.transform.position.z - ((Vector3)mapDragLast).z) / cameraRay.z);
                             Vector3 newCamera = (Vector3)mapDragLast + cameraRay * distanceKoef;
-                            currentDragVector = newCamera - camera.transform.position;
+                            currentDragVector = newCamera - maincamera.transform.position;
                             dragDirection = currentDragVector.normalized;
                             currentDragAcceleration += currentDragVector.magnitude;
                         }
@@ -150,7 +150,7 @@ namespace ExperimentalMap {
                 } else {
                     dragAcceleration = currentDragAcceleration;
                 }
-                camera.transform.position = camera.transform.position + dragDirection * currentDragAcceleration;
+                maincamera.transform.position = maincamera.transform.position + dragDirection * currentDragAcceleration;
                 dragAcceleration *= 0.9f;
                 if (Mathf.Abs(dragAcceleration) < stopDistance) {
                     dragAcceleration = 0;
@@ -161,10 +161,10 @@ namespace ExperimentalMap {
         }
 
         void FitCameraPosition() {
-            float pureDistance = Mathf.Clamp(mapObject.transform.position.z - camera.transform.position.z, minCameraDistance, maxCameraDistance);
+            float pureDistance = Mathf.Clamp(mapObject.transform.position.z - maincamera.transform.position.z, minCameraDistance, maxCameraDistance);
             float zPosition = mapObject.transform.position.z - pureDistance;
-            camera.transform.position = new Vector3(camera.transform.position.x, camera.transform.position.y, zPosition);
-            camera.transform.rotation = CameraAngleForDistance(pureDistance);
+            maincamera.transform.position = new Vector3(maincamera.transform.position.x, maincamera.transform.position.y, zPosition);
+            maincamera.transform.rotation = CameraAngleForDistance(pureDistance);
             //TODO: Restrict x and y camera movement
         }
 
@@ -200,7 +200,7 @@ namespace ExperimentalMap {
         }
 
         Vector3? GetRaycast(Vector3 point) {
-            Ray ray = camera.ScreenPointToRay(point);
+            Ray ray = maincamera.ScreenPointToRay(point);
             RaycastHit[] hits = Physics.RaycastAll(ray);
             if (hits.Length > 0) {
                 for (int k = 0; k < hits.Length; k++) {
