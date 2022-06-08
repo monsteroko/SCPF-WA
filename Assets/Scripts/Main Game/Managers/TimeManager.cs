@@ -57,11 +57,18 @@ public class TimeManager : MonoBehaviour
     void Start()
     {
         dt = new DateTime(1890,7,12,12,0,0);
+        UnpauseRealTime();
     }
     void Update()
     {
         dt = dt.AddSeconds(timer);
         DateTime.text = dt.ToShortTimeString() + " "+ dt.ToShortDateString(); 
     }
+    public DateTime GetTime()
+    {
+        return dt;
+    }
+
+
 
 }

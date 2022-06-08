@@ -58,11 +58,15 @@ public class EntryPopup : MonoBehaviour {
         eventScience = UnityEngine.Random.Range(-10, 10);
         eventSecrecy = UnityEngine.Random.Range(0, 10);
         entryPopupObject.SetActive(true);
+        GameManager.instance.timeManager.PauseRealTime();
+        GameManager.instance.timeManager.Stop();
     }
 
     void ClosePopup()
     {
         entryPopupObject.SetActive(false);
+        GameManager.instance.timeManager.UnpauseRealTime();
+        GameManager.instance.timeManager.Play();
     }
     public void FocusOnSCP()
     {
@@ -71,6 +75,8 @@ public class EntryPopup : MonoBehaviour {
             GameObject[] bases = GameObject.FindGameObjectsWithTag("Base");
             GameObject baserand = bases[UnityEngine.Random.Range(0, bases.Length - 1)];
             SpawnSCP(baserand.transform.position);
+            GameManager.instance.timeManager.UnpauseRealTime();
+            GameManager.instance.timeManager.Play();
         }
     }
 

@@ -9,10 +9,7 @@ public class MapManager: MonoBehaviour
     public List<Area> unlockedAreas = new List<Area>();
 
     public MapManager()
-    {
-        //TODO
-        //map.OnCityClick += OnCityClick;
-    }
+    {}
 
     public void InitWithSave(MapSaveModel mapSave) {
         foreach (string areaName in mapSave.unlockedAreas) {

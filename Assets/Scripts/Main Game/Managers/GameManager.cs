@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour {
-    EntryManager entryManager;
+    public EntryManager entryManager;
     public MapManager mapManager;
     public ZonesManager zonesManager;
     public TechManager techManager;
     public TimeManager timeManager;
+    public EventsManager eventsManager;
     public ResourcesManager resourcesManager;
     static GameManager _instance;
 
@@ -29,15 +30,7 @@ public class GameManager : MonoBehaviour {
 #endif
         mapManager.InitWithSave(StartGameSettings.mapSave);
         techManager = new TechManager();
-        StartCoroutine(ShowEntryPopup());
+        eventsManager.CreateEvents();
     }
 
-    IEnumerator ShowEntryPopup() {
-        if (!timeManager.isOnPause())
-        {
-            yield return new WaitForSeconds(Random.Range(300, 1000));
-            var popup = EntryPopup.Instance();
-            popup.OpenWithEntry(entryManager.GetRandomEntry());
-        }
-    }
 }

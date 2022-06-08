@@ -3491,6 +3491,7 @@ GameObject:
   - component: {fileID: 761111152}
   - component: {fileID: 761111153}
   - component: {fileID: 761111154}
+  - component: {fileID: 761111155}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -3513,6 +3514,7 @@ MonoBehaviour:
   mapManager: {fileID: 761111152}
   zonesManager: {fileID: 761111151}
   timeManager: {fileID: 761111153}
+  eventsManager: {fileID: 761111155}
   resourcesManager: {fileID: 761111154}
 --- !u!4 &761111150
 Transform:
@@ -3587,6 +3589,18 @@ MonoBehaviour:
   ScienceText: {fileID: 1025388659}
   MoneyText: {fileID: 162320659}
   SecrecyText: {fileID: 373072895}
+--- !u!114 &761111155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 761111148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 914114fa71f357941b844019d569f18d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &769770652
 GameObject:
   m_ObjectHideFlags: 0
