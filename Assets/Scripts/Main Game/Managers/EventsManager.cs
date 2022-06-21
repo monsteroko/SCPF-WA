@@ -15,8 +15,8 @@ public class EventsManager : MonoBehaviour
         }
         foreach (DateTime eventdate in eventsDates)
         {
-            IEnumerator coroutine = EventActivate(eventdate);
-            StartCoroutine("coroutine", 3f);
+            float eventsec = eventdate.Minute;
+            Invoke("StartEvent", eventsec);
         }
     }
     public void StartEvent()
@@ -24,16 +24,6 @@ public class EventsManager : MonoBehaviour
         if (!GameManager.instance.timeManager.isOnPause()) {
             var popup = EntryPopup.Instance();
             popup.OpenWithEntry(GameManager.instance.entryManager.GetRandomEntry());
-        }
-    }
-
-    IEnumerator EventActivate(DateTime eventDT)
-    {
-        while (true)
-        {
-            /*if (eventDT == GameManager.instance.timeManager.GetTime())
-                StartEvent();*/
-            yield return null;
         }
     }
 }
