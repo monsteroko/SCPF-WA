@@ -6,6 +6,8 @@ TagManager:
   tags:
   - ZoneMan
   - Base
+  - SCP
+  - Car
   layers:
   - Default
   - TransparentFX

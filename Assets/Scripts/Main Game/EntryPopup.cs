@@ -45,18 +45,18 @@ public class EntryPopup : MonoBehaviour {
         }
         ran = UnityEngine.Random.Range(0, 9);
         entry.randscpcat = ran;
+        eventClassD = UnityEngine.Random.Range(-10, 10);
+        eventMoney = UnityEngine.Random.Range(0, 10000000);
+        eventScience = UnityEngine.Random.Range(0,0);
+        eventSecrecy = UnityEngine.Random.Range(0, 10);
         nameText.text = "SCP Found!";
-        descriptionText.text = "Описание: " + fdtext[entry.scpcategory,entry.randscpcat];
+        descriptionText.text = "Description: " + fdtext[entry.scpcategory,entry.randscpcat] + "\n" + "Resources needed: " + "ClassD: " + eventClassD.ToString() + ", Money: " + eventMoney.ToString() + ", Science: " + eventScience.ToString() + ", Secrecy: " + eventSecrecy.ToString();
         onwind.sprite = foundimg[entry.scpcategory];
         okButton.onClick.AddListener(ClosePopup);
         okButton.onClick.RemoveAllListeners();
         okButton.onClick.AddListener(ClosePopup);
         cancButton.onClick.RemoveAllListeners();
         cancButton.onClick.AddListener(ClosePopup);
-        eventClassD = UnityEngine.Random.Range(-10,10);
-        eventMoney = UnityEngine.Random.Range(0, 10000000);
-        eventScience = UnityEngine.Random.Range(-10, 10);
-        eventSecrecy = UnityEngine.Random.Range(0, 10);
         entryPopupObject.SetActive(true);
         GameManager.instance.timeManager.PauseRealTime();
         GameManager.instance.timeManager.Stop();
@@ -78,10 +78,14 @@ public class EntryPopup : MonoBehaviour {
             GameManager.instance.timeManager.UnpauseRealTime();
             GameManager.instance.timeManager.Play();
         }
+        else
+        {
+            descriptionText.text = "You don't have enough resources!" + "\n" + "Resources needed: " + "ClassD: " + eventClassD.ToString() + ", Money: " + eventMoney.ToString() + ", Science: " + eventScience.ToString() + ", Secrecy: " + eventSecrecy.ToString();
+        }
     }
 
     private void SpawnSCP(Vector2 coordinates)
     {
-        Instantiate(SCP, new Vector3(coordinates.x + UnityEngine.Random.Range(-0.3f, 0.3f), coordinates.y+UnityEngine.Random.Range(-0.3f, 0.3f), 0), new Quaternion(270,0,0,0));
+        Instantiate(SCP, new Vector3(coordinates.x + UnityEngine.Random.Range(-0.4f, 0.4f), coordinates.y+UnityEngine.Random.Range(-0.3f, 0.3f), 0), new Quaternion(0,0,0,0));
     }
 }

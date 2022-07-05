@@ -85,8 +85,8 @@ namespace ExperimentalMap {
             }
 
             if (zoomAcceleration != 0) {
-                const float maxZoomSpeed = 0.1f;
-                const float zoomSpeedMultiplier = 2.5f;
+                const float maxZoomSpeed = 1.0f;
+                const float zoomSpeedMultiplier = 1.5f;
                 float zoomSpeed = Mathf.Clamp(zoomAcceleration, -maxZoomSpeed, maxZoomSpeed);
                 maincamera.transform.Translate(mapObject.transform.forward * zoomSpeed * zoomSpeedMultiplier * Mathf.Sqrt(mapObject.transform.position.z - maincamera.transform.position.z));
                 zoomAcceleration *= 0.9f;

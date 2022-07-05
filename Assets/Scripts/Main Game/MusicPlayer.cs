@@ -2,22 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.UI;
 using TMPro;
 
-[RequireComponent(typeof(AudioSource))]
 public class MusicPlayer : MonoBehaviour
 {
     public AudioClip[] tracks;
     public TextMeshProUGUI clipTitleText;
+    public GameObject panel;
     private int currentTrack;
-    private AudioSource source;
+    public AudioSource source;
 
     void Start()
     {
-        source = GetComponent<AudioSource>();
+        panel.SetActive(false);
         PlayMusic();
     }
-
     public void PlayMusic()
     {
         if (source.isPlaying)
@@ -68,6 +68,12 @@ public class MusicPlayer : MonoBehaviour
 
     void ShowCurrentTitle()
     {
-        clipTitleText.text = source.clip.name;
+        //clipTitleText.text = source.clip.name;
+    }
+
+    public void OpenClosePanel()
+    {
+        bool isActive = panel.activeSelf;
+        panel.SetActive(!isActive);
     }
 }

@@ -5,12 +5,15 @@ using UnityEngine;
 public class SCPFoundScript : MonoBehaviour
 {
     public GameObject SCPMogCanv;
-
+    void Start()
+    {
+        SCPMogCanv = GameObject.Find("MogCanvas");
+    }
     void OnMouseDown()
     {
-        if(SCPMogCanv.activeSelf==false)
-            SCPMogCanv.SetActive(true);
+        if(SCPMogCanv.GetComponent<Canvas>().enabled == false)
+            SCPMogCanv.GetComponent<Canvas>().enabled = true;
         else
-            SCPMogCanv.SetActive(false);
+            SCPMogCanv.GetComponent<Canvas>().enabled = false;
     }
 }

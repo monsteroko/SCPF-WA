@@ -5,57 +5,44 @@ using UnityEngine.UI;
 
 public class MogSCPFoundPanel : MonoBehaviour
 {
-    public GameObject SCPMogCanv;
-    public GameObject Baza;
-    public GameObject SCP;
-    public GameObject Car;
+    public GameObject CarPrefab;
     public Button yesButton;
     public Button noButton;
-    private bool resofch;
-    public static int nbsofSCPs = 0;
-    // Start is called before the first frame update
+
+    private GameObject SCPMogCanv;
+    private GameObject Base;
+    private GameObject SCP;
+    private GameObject Car;
+
     void Start()
     {
+        SCPMogCanv = GameObject.Find("MogCanvas");
         yesButton.onClick.AddListener(Confirm);
         noButton.onClick.AddListener(Cancel);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (resofch)
-        {
-            Car.transform.position = Vector3.MoveTowards(Baza.transform.position, SCP.transform.position, 1.0f);
-            if(Car.transform.position == SCP.transform.position)
-            {
-                Car.transform.position = Vector3.MoveTowards(SCP.transform.position, Baza.transform.position, 1.0f);
-                SCP.SetActive(false);
-            }
-            if((Car.transform.position == Baza.transform.position)&&(SCP.activeSelf==false))
-                Car.SetActive(false);
-
-        }   
-    }
-
     void ClosePopup()
     {
-        SCPMogCanv.SetActive(false);
+        SCPMogCanv.GetComponent<Canvas>().enabled = false;
     }
 
     void Confirm()
     {
-        nbsofSCPs++;
-        Baza = GameObject.FindGameObjectWithTag("Base");
-        Car.SetActive(true);
-        resofch = true;
+        Base = GameObject.FindGameObjectWithTag("Base");
+        SCP = GameObject.FindGameObjectWithTag("SCP");
+        Instantiate(CarPrefab, new Vector3(Base.transform.position.x, Base.transform.position.y, 0), new Quaternion(0, 0, 0, 0));
+        Car = GameObject.FindGameObjectWithTag("Car");
         ClosePopup();
+        while (Car.transform.position != SCP.transform.position)
+            Car.transform.position = Vector3.MoveTowards(Car.transform.position, SCP.transform.position, 0.0005f);
+       Destroy(SCP);
+        while (Car.transform.position != Base.transform.position)
+            Car.transform.position = Vector3.MoveTowards(Car.transform.position, Base.transform.position, 0.0005f);
+        Destroy(Car);
     }
 
     void Cancel()
     {
-        Baza = GameObject.FindGameObjectWithTag("Base");
-        resofch = false;
-        Car.SetActive(false);
         ClosePopup();
     }
 }
