@@ -3,14 +3,21 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
+/// <summary>
+/// Manager of SCPs
+/// </summary>
 public class EntryManager {
-
+    /// <summary>
+    /// List of all SCPs
+    /// </summary>
     private List<EntryModel> generalPool = new List<EntryModel>();
 
     public EntryManager() {
         LoadGeneralPool();
     }
-
+    /// <summary>
+    /// Load SCP data from file
+    /// </summary>
     public void LoadGeneralPool() {
         generalPool.Clear();
         var info = new DirectoryInfo(Path.Combine(Directory.GetCurrentDirectory(), AppendedSubPath("")));
@@ -30,7 +37,10 @@ public class EntryManager {
     public static string AppendedSubPath(string filname) {
         return Path.Combine(SubPath, filname);
     }
-
+    /// <summary>
+    /// Get random SCP data
+    /// </summary>
+    /// <returns></returns>
     public EntryModel GetRandomEntry() {
         return generalPool[Random.Range(0, generalPool.Count)];
     }

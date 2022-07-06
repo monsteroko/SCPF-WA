@@ -33,8 +33,17 @@ public class MapManager: MonoBehaviour
             }
         }
     }
-
-    //Mutating
+    public Area onWhatRegion(Vector2 point)
+    {
+        foreach(Area area in unlockedAreas)
+        {
+            if (new ClipperUtility().IsPointInsideSurface(point, area))
+            {
+                return area;
+            }
+        }
+        return unlockedAreas[Random.Range(0,unlockedAreas.Count-1)];
+    }
 
     public void UpdateMapForBuiltZone(Zone zone) {
         zone.area.state = AreaState.Controlled;

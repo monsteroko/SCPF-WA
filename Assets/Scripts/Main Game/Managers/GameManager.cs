@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour {
+
     public EntryManager entryManager;
     public MapManager mapManager;
     public ZonesManager zonesManager;
@@ -30,7 +31,6 @@ public class GameManager : MonoBehaviour {
 #endif
         mapManager.InitWithSave(StartGameSettings.mapSave);
         techManager = new TechManager();
-        eventsManager.CreateEvents();
     }
 
 }

@@ -11,17 +11,20 @@ using Random = UnityEngine.Random;
 public class MovingText : MonoBehaviour
 {
     public TextMeshProUGUI movingText;
-    string[] text;
+    /// <summary>
+    /// Array of messages
+    /// </summary>
+    private string[] text;
 
     void Start()
     {
-        using (StreamReader sr = new StreamReader(@"Assets/Scenes/Maingame/movingText.txt"))
-        {
-            text = sr.ReadToEnd().Split(';');
-        }
+        text= File.ReadAllLines(@"Assets/Data/Other/movingText.txt", System.Text.Encoding.Default);
         StartCoroutine(TextGen());
     }
-
+    /// <summary>
+    /// Take text from array
+    /// </summary>
+    /// <returns></returns>
     IEnumerator TextGen()
     {
         while (true)
@@ -33,6 +36,10 @@ public class MovingText : MonoBehaviour
         }
 
     }
+    /// <summary>
+    /// Move panel with text
+    /// </summary>
+    /// <returns></returns>
     IEnumerator MovePanel()
     {
         for (int i = 1280; i >= 0; i--)

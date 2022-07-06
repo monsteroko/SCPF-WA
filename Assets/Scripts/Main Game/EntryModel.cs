@@ -6,17 +6,51 @@ using UnityEngine;
 
 [System.Serializable]
 public class EntryModel {
-    public string name;//название SCP
-    public int code;//его порядковый номер
-    public string type;//тип, например эвклид
-    public string description;//описание исследованного объекта
-    public string procedures;//условия содержания
-    public int scpcategory;//категория сцп для отображения текста и картинки при нахождении
-    public int randscpcat;//переменная для запоминания текста описания при нахождении
-    public double grabcoef;//необходимое кол-во людей для захвата на базу
-    public int probesc;//вероятность побега
-    public double addsci;//добавление науки после исследования
-    public double addinf;//добавление влияния после исследования
+    /// <summary>
+    /// SCP name
+    /// </summary>
+    public string name;
+    /// <summary>
+    /// SCP Number, like 173
+    /// </summary>
+    public int code;
+    /// <summary>
+    /// SCP type, like evklid
+    /// </summary>
+    public string type;
+    /// <summary>
+    /// Description of SCP
+    /// </summary>
+    public string description;
+    /// <summary>
+    /// Conditions of detenion
+    /// </summary>
+    public string procedures;
+    /// <summary>
+    /// SCP Category
+    /// </summary>
+    public int scpcategory;
+    /// <summary>
+    /// Random text when finded
+    /// </summary>
+    public int randscpcat;
+    /// <summary>
+    /// Count of MOG to grab
+    /// </summary>
+    public double grabcoef;
+    /// <summary>
+    /// Escape probability
+    /// </summary>
+    public int probesc;
+    /// <summary>
+    /// Science addition
+    /// </summary>
+    public double addsci;
+    /// <summary>
+    /// Influence addition
+    /// </summary>
+    public double addinf;
+
     public static EntryModel LoadFromFile(string filename) {
         var text = File.ReadAllText(EntryManager.AppendedSubPath(filename), System.Text.Encoding.UTF8);
         return JsonUtility.FromJson<EntryModel>(text);

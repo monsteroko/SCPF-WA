@@ -10,36 +10,24 @@ public class EventsManager : MonoBehaviour
     void Start()
     {
         CreateEvents();
-    }
-
-    void Update()
-    {
-        foreach (var e in eventsDates)
-        { 
-            if (DateTime.Compare(e,GameManager.instance.timeManager.GetTime())<=0)
-            {
-                eventsDates.Remove(e);
-                StartEvent();
-            }  
-        }
+        InvokeRepeating("StartEvent", 0, 1.0f);
     }
 
     public void CreateEvents()
     {
-
         for (int i = 0; i < UnityEngine.Random.Range(100,300); i++)
         {
-            
             eventsDates.Add(new DateTime(UnityEngine.Random.Range(1891, 1900), UnityEngine.Random.Range(1, 12), UnityEngine.Random.Range(1, 28), 12, 0, 0));
-            Debug.Log(eventsDates[i]);
         }
         eventsDates.Add(new DateTime(1890, 7, 12, 16, 0, 0));
-
+        eventsDates.Sort();
     }
     public void StartEvent()
     {
-        if (!GameManager.instance.timeManager.isOnPause() && GameObject.FindGameObjectWithTag("Base")!=null)
+        if ((DateTime.Compare(eventsDates[0], GameManager.instance.timeManager.GetTime()) < 0)&& (!GameManager.instance.timeManager.isOnPause()) && (GameObject.FindGameObjectWithTag("Base") != null))
         {
+            Debug.Log("EventStarted");
+            eventsDates.RemoveAt(0);
             var popup = EntryPopup.Instance();
             popup.OpenWithEntry(GameManager.instance.entryManager.GetRandomEntry());
         }
