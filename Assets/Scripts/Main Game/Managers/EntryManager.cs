@@ -44,4 +44,18 @@ public class EntryManager {
     public EntryModel GetRandomEntry() {
         return generalPool[Random.Range(0, generalPool.Count)];
     }
+
+    public EntryModel GetEntryByName(string name)
+    {
+        return generalPool.Find(x => x.name == name);
+    }
+
+    public void UpdateEntry(EntryModel model)
+    {
+        if (generalPool.Find(x => x.name == model.name) != null)
+        {
+            int index = generalPool.IndexOf(generalPool.Find(x => x.name == model.name));
+            generalPool[index] = model;
+        }
+    }
 }

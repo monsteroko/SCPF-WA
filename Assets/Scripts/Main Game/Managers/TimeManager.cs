@@ -77,7 +77,7 @@ public class TimeManager : MonoBehaviour
     }
     void Start()
     {
-        dt = new DateTime(1890,7,12,12,0,0);
+        dt = new DateTime(1891,1,1,0,0,0);
         UnpauseRealTime();
     }
     void Update()

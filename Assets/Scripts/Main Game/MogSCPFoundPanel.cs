@@ -2,21 +2,42 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class MogSCPFoundPanel : MonoBehaviour
 {
     public GameObject CarPrefab;
+    public TextMeshProUGUI mogMsg;
 
     private GameObject SCPMogCanv;
     private GameObject Base;
     private GameObject SCP;
     private GameObject Car;
 
+    private static EntryModel model;
+    private static MogSCPFoundPanel mogSCPFoundPanel;
+
     void Start()
     {
+        mogSCPFoundPanel = FindObjectOfType(typeof(MogSCPFoundPanel)) as MogSCPFoundPanel;
         SCPMogCanv = GameObject.Find("MogCanvas");
     }
 
+    public static MogSCPFoundPanel Instance()
+    {
+        return mogSCPFoundPanel;
+    }
+    public void OpenWithEntry(EntryModel entry)
+    {
+        model = entry;
+        SCPMogCanv.GetComponent<Canvas>().enabled = true;
+        mogMsg.text = "To catch this SCP you need " + model.grabcoef + " MOG squads. Wanna try?";
+    }
+
+    public void Open()
+    {
+        SCPMogCanv.GetComponent<Canvas>().enabled = true;
+    }
     void ClosePopup()
     {
         SCPMogCanv.GetComponent<Canvas>().enabled = false;
@@ -25,11 +46,24 @@ public class MogSCPFoundPanel : MonoBehaviour
     public void Confirm()
     {
         Base = GameObject.FindGameObjectWithTag("Base");
-        SCP = GameObject.FindGameObjectWithTag("SCP");
-        Instantiate(CarPrefab, new Vector3(Base.transform.position.x, Base.transform.position.y, 0), new Quaternion(0, 0, 0, 0));
-        Car = GameObject.FindGameObjectWithTag("Car");
-        ClosePopup();
-        StartCoroutine("MoveCar");
+        string s = Base.name.Substring(5);
+        BaseModel baza = GameManager.instance.zonesResourcesManager.GetBase(s);
+        if (baza.amountofMog >= model.grabcoef)
+        {
+            baza.listofSCPs.Add(model);
+            SCP = GameObject.FindGameObjectWithTag("SCP");
+            Instantiate(CarPrefab, new Vector3(Base.transform.position.x, Base.transform.position.y, 0), new Quaternion(0, 0, 0, 0));
+            Car = GameObject.FindGameObjectWithTag("Car");
+            GameManager.instance.zonesResourcesManager.UpdateBase(baza);
+            model.isCatched = true;
+            GameManager.instance.entryManager.UpdateEntry(model);
+            ClosePopup();
+            StartCoroutine("MoveCar");
+        }
+        else
+        {
+            mogMsg.text = "To catch this SCP you need " + model.grabcoef + " MOG squads, but you have " + baza.amountofMog;
+        }
     }
 
     public void Cancel()

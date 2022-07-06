@@ -37,7 +37,7 @@ public class EntryModel {
     /// <summary>
     /// Count of MOG to grab
     /// </summary>
-    public double grabcoef;
+    public int grabcoef;
     /// <summary>
     /// Escape probability
     /// </summary>
@@ -50,6 +50,18 @@ public class EntryModel {
     /// Influence addition
     /// </summary>
     public double addinf;
+    /// <summary>
+    /// Initial description
+    /// </summary>
+    public string descriptionInit;
+    /// <summary>
+    /// Is on Base
+    /// </summary>
+    public bool isCatched = false;
+    /// <summary>
+    /// Is Researched
+    /// </summary>
+    public bool isResearched = false;
 
     public static EntryModel LoadFromFile(string filename) {
         var text = File.ReadAllText(EntryManager.AppendedSubPath(filename), System.Text.Encoding.UTF8);

@@ -17,7 +17,7 @@ public class ResourcesManager : MonoBehaviour
     /// <summary>
     /// Total amount of money
     /// </summary>
-    public static double Money = 20000000;
+    public static double Money = 200000000;
     /// <summary>
     /// Amount of secrecy
     /// </summary>
@@ -71,8 +71,8 @@ public class ResourcesManager : MonoBehaviour
     {
         if (Secrecy > 0)
             Secrecy -= TimeManager.timer * LevelCoefficient * UnityEngine.Random.Range(0.0001f, 0.00002f) * GameManager.instance.zonesManager.CountofBases;
-        if (ClassD < 10000)
-            ClassD += (int)(TimeManager.timer * LevelCoefficient * UnityEngine.Random.Range(1, 2) * GameManager.instance.zonesManager.CountofBases); 
+       /* if (ClassD < 10000)
+            ClassD += (int)(TimeManager.timer * LevelCoefficient * UnityEngine.Random.Range(1, 2) * GameManager.instance.zonesManager.CountofBases);*/
         if (Money < 20000000)
             Money += TimeManager.timer * LevelCoefficient * UnityEngine.Random.Range(200f, 500f) * GameManager.instance.zonesManager.CountofBases;
 
@@ -85,6 +85,6 @@ public class ResourcesManager : MonoBehaviour
         ClassDText.text = "Class D: "+ ClassD.ToString();
         ScienceText.text = "Science: "+ Math.Round(Science).ToString();
         MoneyText.text = "Money:" + Math.Round(Money).ToString();
-        SecrecyText.text ="Secrecy: "+ Math.Round(Secrecy).ToString();
+        SecrecyText.text ="Influence: "+ Math.Round(Secrecy).ToString();
     }
 }

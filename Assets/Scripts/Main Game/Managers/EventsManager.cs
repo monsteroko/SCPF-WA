@@ -19,7 +19,7 @@ public class EventsManager : MonoBehaviour
         {
             eventsDates.Add(new DateTime(UnityEngine.Random.Range(1891, 1900), UnityEngine.Random.Range(1, 12), UnityEngine.Random.Range(1, 28), 12, 0, 0));
         }
-        eventsDates.Add(new DateTime(1890, 7, 12, 16, 0, 0));
+        eventsDates.Add(new DateTime(1891, 1, 1, 12, 0, 0));
         eventsDates.Sort();
     }
     public void StartEvent()

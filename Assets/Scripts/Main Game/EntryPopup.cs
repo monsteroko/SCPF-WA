@@ -36,6 +36,7 @@ public class EntryPopup : MonoBehaviour {
     private Vector2 baseCoordinates;
     private static EntryPopup entryPopup;
     private static ResourcesManager resManager;
+    private static EntryModel entryModel;
 
     private void Start()
     {
@@ -67,16 +68,15 @@ public class EntryPopup : MonoBehaviour {
         eventMoney = (int)(UnityEngine.Random.Range(0, 10000000) * correction);
         eventScience = (int)(UnityEngine.Random.Range(0,0) * correction);
         eventSecrecy = (int)(UnityEngine.Random.Range(0, 10) * correction);
-        string descstring = desctext[UnityEngine.Random.Range(0, desctext.Length - 1)];
+        string descstring = GenerateDescription(desctext[UnityEngine.Random.Range(0, desctext.Length - 1)], baseCoordinates);
         nameText.text = "SCP Found!";
-        descriptionText.text = "Description: " + GenerateDescription(descstring, baseCoordinates) + "\n" + "Resources needed: " + "Class D: " + eventClassD.ToString() + ", Money: " + eventMoney.ToString() + ", Science: " + eventScience.ToString() + ", Secrecy: " + eventSecrecy.ToString();
+        entry.descriptionInit = descstring;
+        descriptionText.text = "Description: " + descstring + "\n" + "Resources needed: " + "Class D: " + eventClassD.ToString() + ", Money: " + eventMoney.ToString() + ", Science: " + eventScience.ToString() + ", Secrecy: " + eventSecrecy.ToString();
         onwind.sprite = foundimg[entry.scpcategory];
-        okButton.onClick.AddListener(ClosePopup);
-        okButton.onClick.RemoveAllListeners();
-        okButton.onClick.AddListener(ClosePopup);
         cancButton.onClick.RemoveAllListeners();
         cancButton.onClick.AddListener(ClosePopup);
         GameManager.instance.timeManager.Pause();
+        entryModel = entry;
         entryPopupObject.SetActive(true);
     }
 
@@ -93,8 +93,7 @@ public class EntryPopup : MonoBehaviour {
         if(resManager.ResourcesChange(eventClassD, eventScience, eventMoney, eventSecrecy))
         {
             SpawnSCP(baseCoordinates);
-            GameManager.instance.timeManager.UnpauseRealTime();
-            GameManager.instance.timeManager.Play();
+            ClosePopup();
         }
         else
         {
@@ -145,5 +144,10 @@ public class EntryPopup : MonoBehaviour {
         points[1] = UnityEngine.Random.Range(-f1, -f2);
         float devitation = points[UnityEngine.Random.Range(0, points.Length - 1)];
         return devitation;
+    }
+
+    public EntryModel GetEntryModel()
+    {
+        return entryModel;
     }
 }

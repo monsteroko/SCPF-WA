@@ -44,7 +44,7 @@ public class ZonesManager : MonoBehaviour {
         var rotationAngle = Random.Range(0f, 360f);
         if (state==AreaState.Controlled && !obj.name.StartsWith("Base "))
         {
-            obj.name = "Base " + Random.Range(0, 1000);
+            obj.name = "Base " + selectedZoneName;
             obj.tag = "Base";
         }
         if (state == AreaState.Unlocked)
@@ -69,7 +69,6 @@ public class ZonesManager : MonoBehaviour {
     }
     public void BuildSelectedZone() {
         BuildZone(map.zones[selectedZoneName]);
-        Debug.Log(selectedZoneName);
         GameManager.instance.zonesResourcesManager.AddBase(selectedZoneName);
         countofBases++;
     }
