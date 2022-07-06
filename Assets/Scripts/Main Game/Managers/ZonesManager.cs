@@ -4,8 +4,16 @@ using UnityEngine;
 using ExperimentalMap;
 
 public class ZonesManager : MonoBehaviour {
-    private int countofBases=0;
+    private int countofBases = 0;
     private Map map;
+
+    public int CountofBases
+    {
+        get
+        {
+            return countofBases;
+        }
+    }
     public GameObject zonePlaceModel;
     public GameObject basicZoneModel;
     public string selectedZoneName { get; private set; }
@@ -54,15 +62,15 @@ public class ZonesManager : MonoBehaviour {
     public void SelectZoneWithName(string name) {
         selectedZoneName = name;
         if (map.zones[name].isBuilt) {
-            ZoneMenu.Instance().zoneName = selectedZoneName;
-            ZoneMenu.Instance().RollOut();
+            ZoneMenu.Instance().RollOut(selectedZoneName);
         } else {
             CreateZoneDialog.Instance().Open();
         }
     }
-
     public void BuildSelectedZone() {
         BuildZone(map.zones[selectedZoneName]);
+        Debug.Log(selectedZoneName);
+        GameManager.instance.zonesResourcesManager.AddBase(selectedZoneName);
         countofBases++;
     }
 }

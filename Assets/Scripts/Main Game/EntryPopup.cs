@@ -62,29 +62,28 @@ public class EntryPopup : MonoBehaviour {
             desctext = File.ReadAllLines(SubPath + "/" + entry.scpcategory.ToString()+ ".txt");
         else
             desctext = File.ReadAllLines(SubPath + "/-1.txt");
-        eventClassD = UnityEngine.Random.Range(-10, 10);
-        eventMoney = UnityEngine.Random.Range(0, 10000000);
-        eventScience = UnityEngine.Random.Range(0,0);
-        eventSecrecy = UnityEngine.Random.Range(0, 10);
+        double correction= (1/(GameManager.instance.resourcesManager.LevelCoefficient))/(1+(0.1f*GameManager.instance.zonesManager.CountofBases));
+        eventClassD = (int)(UnityEngine.Random.Range(-10, 10)* correction);
+        eventMoney = (int)(UnityEngine.Random.Range(0, 10000000) * correction);
+        eventScience = (int)(UnityEngine.Random.Range(0,0) * correction);
+        eventSecrecy = (int)(UnityEngine.Random.Range(0, 10) * correction);
         string descstring = desctext[UnityEngine.Random.Range(0, desctext.Length - 1)];
         nameText.text = "SCP Found!";
-        descriptionText.text = "Description: " + GenerateDescription(descstring, baseCoordinates) + "\n" + "Resources needed: " + "ClassD: " + eventClassD.ToString() + ", Money: " + eventMoney.ToString() + ", Science: " + eventScience.ToString() + ", Secrecy: " + eventSecrecy.ToString();
+        descriptionText.text = "Description: " + GenerateDescription(descstring, baseCoordinates) + "\n" + "Resources needed: " + "Class D: " + eventClassD.ToString() + ", Money: " + eventMoney.ToString() + ", Science: " + eventScience.ToString() + ", Secrecy: " + eventSecrecy.ToString();
         onwind.sprite = foundimg[entry.scpcategory];
         okButton.onClick.AddListener(ClosePopup);
         okButton.onClick.RemoveAllListeners();
         okButton.onClick.AddListener(ClosePopup);
         cancButton.onClick.RemoveAllListeners();
         cancButton.onClick.AddListener(ClosePopup);
+        GameManager.instance.timeManager.Pause();
         entryPopupObject.SetActive(true);
-        GameManager.instance.timeManager.PauseRealTime();
-        GameManager.instance.timeManager.Stop();
     }
 
     void ClosePopup()
     {
         entryPopupObject.SetActive(false);
-        GameManager.instance.timeManager.UnpauseRealTime();
-        GameManager.instance.timeManager.Play();
+        GameManager.instance.timeManager.UnPause();
     }
     /// <summary>
     /// Accept event and spawn SCP
@@ -109,7 +108,7 @@ public class EntryPopup : MonoBehaviour {
     /// <param name="coordinates"></param>
     private void SpawnSCP(Vector2 coordinates)
     {
-        Instantiate(SCP, new Vector3(coordinates.x + UnityEngine.Random.Range(-0.4f, 0.4f), coordinates.y+UnityEngine.Random.Range(-0.3f, 0.3f), 0), new Quaternion(0,0,0,0));
+        Instantiate(SCP, new Vector3(coordinates.x + GenerateDevitation(0.2f, 0.4f), coordinates.y + GenerateDevitation(0.2f, 0.4f), 0), new Quaternion(0,0,0,0));
     }
 
     /// <summary>
@@ -137,5 +136,14 @@ public class EntryPopup : MonoBehaviour {
         desc = desc.Replace("&", regName);
         desc = desc.Replace("#", agentName);
         return desc;
+    }
+
+    private float GenerateDevitation(float f1, float f2)
+    {
+        float[] points = new float[2];
+        points[0] = UnityEngine.Random.Range(f1,f2);
+        points[1] = UnityEngine.Random.Range(-f1, -f2);
+        float devitation = points[UnityEngine.Random.Range(0, points.Length - 1)];
+        return devitation;
     }
 }

@@ -26,7 +26,6 @@ public class EventsManager : MonoBehaviour
     {
         if ((DateTime.Compare(eventsDates[0], GameManager.instance.timeManager.GetTime()) < 0)&& (!GameManager.instance.timeManager.isOnPause()) && (GameObject.FindGameObjectWithTag("Base") != null))
         {
-            Debug.Log("EventStarted");
             eventsDates.RemoveAt(0);
             var popup = EntryPopup.Instance();
             popup.OpenWithEntry(GameManager.instance.entryManager.GetRandomEntry());

@@ -11,6 +11,7 @@ public class TimeManager : MonoBehaviour
     public TextMeshProUGUI DateTime;
     private DateTime dt;
     public static float timer;
+    private static float pauseTimer=1f;
 
     public void Play()
     {
@@ -28,6 +29,26 @@ public class TimeManager : MonoBehaviour
     {
         timer = 32f;   
     }
+    /// <summary>
+    /// Pause time (ex. for events)
+    /// </summary>
+    public void Pause()
+    {
+        pauseTimer = timer;
+        timer = 0;
+    }
+    /// <summary>
+    /// Unpause time
+    /// </summary>
+    public void UnPause()
+    {
+        timer = pauseTimer;
+    }
+    /// <summary>
+    /// Get time with multiplier for events
+    /// </summary>
+    /// <param name="time"></param>
+    /// <returns></returns>
     public float GetTime(float time)
     {
         if (timer != 0)

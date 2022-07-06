@@ -11,8 +11,15 @@ using UnityEngine.EventSystems;
 
 public class ZoneMenu : MonoBehaviour
 {
+    public GameObject SCPs;
+    public GameObject Parameters;
+    public GameObject Employees;
+
+    public Button SCPsButton;
+    public Button ParaButton;
+    public Button EmpButton;
+
     public TextMeshProUGUI zoneNameText;
-    public string zoneName;
     public RectTransform ZoneManagementObject;
     private static ZoneMenu zoneMenu;
     public Animation anim;
@@ -21,6 +28,12 @@ public class ZoneMenu : MonoBehaviour
     void Start()
     {
         zoneMenu = FindObjectOfType(typeof(ZoneMenu)) as ZoneMenu;
+        Employees.SetActive(false);
+        SCPs.SetActive(false);
+        Parameters.SetActive(true);
+        SCPsButton.onClick.AddListener(SCPList);
+        EmpButton.onClick.AddListener(Personnel);
+        ParaButton.onClick.AddListener(BaseManagement);
     }
 
     public static ZoneMenu Instance() {
@@ -39,10 +52,30 @@ public class ZoneMenu : MonoBehaviour
         isMoving = false;
     }
 
-    public void RollOut()
+    void Personnel()
     {
-        
-        zoneNameText.text = zoneName;
+        Employees.SetActive(true);
+        SCPs.SetActive(false);
+        Parameters.SetActive(false);
+    }
+
+    void SCPList()
+    {
+        Employees.SetActive(false);
+        SCPs.SetActive(true);
+        Parameters.SetActive(false);
+    }
+
+    void BaseManagement()
+    {
+        Employees.SetActive(false);
+        SCPs.SetActive(false);
+        Parameters.SetActive(true);
+    }
+    public void RollOut(string zoneName)
+    {
+        BaseModel activeBase = GameManager.instance.zonesResourcesManager.GetBase(zoneName);
+        zoneNameText.text = activeBase.name;
         if (Input.GetKeyDown(KeyCode.Mouse0) && !isMoving)
         {
             if (!trigger && !EventSystem.current.IsPointerOverGameObject())

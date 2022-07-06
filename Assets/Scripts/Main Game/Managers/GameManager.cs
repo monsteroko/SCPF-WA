@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour {
     public TimeManager timeManager;
     public EventsManager eventsManager;
     public ResourcesManager resourcesManager;
+    public ZonesResourcesManager zonesResourcesManager;
     static GameManager _instance;
 
     public static GameManager instance {

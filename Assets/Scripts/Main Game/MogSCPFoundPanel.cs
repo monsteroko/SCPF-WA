@@ -41,11 +41,11 @@ public class MogSCPFoundPanel : MonoBehaviour
     {
         Car.transform.LookAt(SCP.transform);
         while (Car.transform.position != SCP.transform.position)
-            Car.transform.position = Vector3.MoveTowards(Car.transform.position, SCP.transform.position, 0.000005f);
+            Car.transform.position = Vector3.MoveTowards(Car.transform.position, SCP.transform.position, 0.0005f);
         Destroy(SCP);
         Car.transform.LookAt(Base.transform);
         while (Car.transform.position != Base.transform.position)
-            Car.transform.position = Vector3.MoveTowards(Car.transform.position, Base.transform.position, 0.000005f);
+            Car.transform.position = Vector3.MoveTowards(Car.transform.position, Base.transform.position, 0.0005f);
         Destroy(Car);
         yield return null;
     }

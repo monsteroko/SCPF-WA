@@ -1,9 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.Events;
 using System;
 
 public class CreateZoneDialog : MonoBehaviour {
@@ -11,6 +8,10 @@ public class CreateZoneDialog : MonoBehaviour {
     public Button noButton;
     public TextMeshProUGUI Message;
     public GameObject createZoneDialogObject;
+
+    public int defaultCostOfBase = 10000000;
+
+    private int actualBaseCost;
     private static CreateZoneDialog createZoneDialog;
 
     void Start() {
@@ -25,18 +26,24 @@ public class CreateZoneDialog : MonoBehaviour {
     }
 
     public void Open() {
+        GameManager.instance.timeManager.Pause();
+        actualBaseCost = (int)(defaultCostOfBase / GameManager.instance.resourcesManager.LevelCoefficient * (1 + 0.25 * GameManager.instance.zonesManager.CountofBases));
         createZoneDialogObject.SetActive(true);
+        Message.text = "Are you want to build base here? \n It cost " + Convert.ToString(actualBaseCost);
     }
 
     void ClosePopup() {
+        GameManager.instance.timeManager.UnPause();
         createZoneDialogObject.SetActive(false);
     }
 
     void Confirm() {
-        if (ResourcesManager.Money >= 1000000)
+        actualBaseCost = (int)(defaultCostOfBase / GameManager.instance.resourcesManager.LevelCoefficient * (1 + 0.1 * GameManager.instance.zonesManager.CountofBases));
+        if (ResourcesManager.Money >= actualBaseCost)
         {
             GameManager.instance.zonesManager.BuildSelectedZone();
-            ResourcesManager.Money -= 1000000;
+            ResourcesManager.Money -= actualBaseCost;
+            GameManager.instance.resourcesManager.GetValues();
             ClosePopup();
         }
         else
@@ -46,7 +53,6 @@ public class CreateZoneDialog : MonoBehaviour {
     }
 
     void Cancel() {
-        Message.text = "Are you want to build base?";
         ClosePopup();
     }
 }

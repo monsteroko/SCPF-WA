@@ -6,11 +6,30 @@ using System;
 
 public class ResourcesManager : MonoBehaviour
 {
-
-    public static int ClassD;
-    public static double Science;
-    public static double Money;
-    public static double Secrecy;
+    /// <summary>
+    /// Total amount of Class D 
+    /// </summary>
+    public static int ClassD = 0;
+    /// <summary>
+    /// Total amount of science
+    /// </summary>
+    public static double Science = 0;
+    /// <summary>
+    /// Total amount of money
+    /// </summary>
+    public static double Money = 20000000;
+    /// <summary>
+    /// Amount of secrecy
+    /// </summary>
+    public static double Secrecy = 100;
+    /// <summary>
+    /// Complexity, less - harder
+    /// </summary>
+    private static double levelCoefficient = 1.0f;
+    public double LevelCoefficient
+    {
+        get { return levelCoefficient; }
+    }
     public TextMeshProUGUI ClassDText;
     public TextMeshProUGUI ScienceText;
     public TextMeshProUGUI MoneyText;
@@ -18,18 +37,17 @@ public class ResourcesManager : MonoBehaviour
 
     void Start()
     {
-        Secrecy = 100;
-        Money = 20000000;
-        Science = 0;
-        ClassD = 0;
+        InvokeRepeating("AddValues", 0, 1f);
+        InvokeRepeating("GetValues", 0, 1f);
     }
-    void Update()
-    {
-        addValues();
-        GetValues();
-    }
-
-
+    /// <summary>
+    /// Check if resources can be changed, if can, change
+    /// </summary>
+    /// <param name="CD">Class D</param>
+    /// <param name="Sc">Science</param>
+    /// <param name="M">Money</param>
+    /// <param name="Se">Secrecy</param>
+    /// <returns></returns>
     public bool ResourcesChange(int CD, double Sc, double M, double Se)
     {
         if (ClassD - CD < 0)
@@ -46,19 +64,23 @@ public class ResourcesManager : MonoBehaviour
         Secrecy -= Se;
         return true;
     }
-
-    private void addValues()
+    /// <summary>
+    /// Add values every time interval
+    /// </summary>
+    private void AddValues()
     {
         if (Secrecy > 0)
-            Secrecy -= TimeManager.timer * UnityEngine.Random.Range(0.0001f, 0.00002f);
+            Secrecy -= TimeManager.timer * LevelCoefficient * UnityEngine.Random.Range(0.0001f, 0.00002f) * GameManager.instance.zonesManager.CountofBases;
         if (ClassD < 10000)
-            ClassD += (int)TimeManager.timer * UnityEngine.Random.Range(1, 2);
+            ClassD += (int)(TimeManager.timer * LevelCoefficient * UnityEngine.Random.Range(1, 2) * GameManager.instance.zonesManager.CountofBases); 
         if (Money < 20000000)
-            Money += TimeManager.timer * UnityEngine.Random.Range(200f, 500f);
+            Money += TimeManager.timer * LevelCoefficient * UnityEngine.Random.Range(200f, 500f) * GameManager.instance.zonesManager.CountofBases;
 
     }
-
-    private void GetValues()
+    /// <summary>
+    /// Update info about resources
+    /// </summary>
+    public void GetValues()
     {
         ClassDText.text = "Class D: "+ ClassD.ToString();
         ScienceText.text = "Science: "+ Math.Round(Science).ToString();
