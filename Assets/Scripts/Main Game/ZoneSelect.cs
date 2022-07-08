@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class ZoneSelect : MonoBehaviour {
@@ -6,6 +7,7 @@ public class ZoneSelect : MonoBehaviour {
     public string zoneName;
 
     void OnMouseDown() {
-        GameManager.instance.zonesManager.SelectZoneWithName(zoneName);
+        if (!EventSystem.current.IsPointerOverGameObject())
+            GameManager.instance.zonesManager.SelectZoneWithName(zoneName);
     }
 }

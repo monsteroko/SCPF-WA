@@ -6,6 +6,7 @@ using ExperimentalMap;
 using UnityEditor;
 using System.Globalization;
 using System.IO;
+using UnityEngine.EventSystems;
 
 namespace ExperimentalMap {
 
@@ -68,7 +69,7 @@ namespace ExperimentalMap {
                 currentDragAcceleration += Mathf.Min(focusSpeed * Mathf.Sqrt(mapObject.transform.position.z - maincamera.transform.position.z), currentDragVector.magnitude);
             }
             // Zoom
-            if (isMouseOver && !isFocusing) {
+            if (isMouseOver && !isFocusing && !EventSystem.current.IsPointerOverGameObject()) {
                 float currentAcceleration = Input.GetAxis("Mouse ScrollWheel");
                 zoomAcceleration += currentAcceleration;
                 // Touch Screen
@@ -83,7 +84,6 @@ namespace ExperimentalMap {
                     zoomAcceleration += deltaMagnitudeDiff;
                 }
             }
-
             if (zoomAcceleration != 0) {
                 const float maxZoomSpeed = 1.0f;
                 const float zoomSpeedMultiplier = 1.5f;
@@ -118,7 +118,7 @@ namespace ExperimentalMap {
                     const float keysDragSpeed = 0.05f;
                     currentDragAcceleration += keysDragSpeed * Mathf.Sqrt(mapObject.transform.position.z - maincamera.transform.position.z);
                 }
-                if (isMouseOver && Input.GetMouseButton(0)) {
+                if (isMouseOver && Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject()) {
                     cameraPositionLast = maincamera.transform.position;
                     mouseDragLast = mouseDragCurrent;
                     mouseDragCurrent = GetMousePosition();

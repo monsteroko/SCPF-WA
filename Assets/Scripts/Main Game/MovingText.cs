@@ -30,7 +30,7 @@ public class MovingText : MonoBehaviour
         while (true)
         {
             movingText.transform.localPosition = new Vector3(1920, 0);
-            movingText.text = text[Random.Range(0, text.Length)];
+            movingText.text = text[Random.Range(0, text.Length-1)];
             StartCoroutine(MovePanel());
             yield return new WaitForSecondsRealtime(60f);
         }
@@ -42,7 +42,7 @@ public class MovingText : MonoBehaviour
     /// <returns></returns>
     IEnumerator MovePanel()
     {
-        for (int i = 1280; i >= 0; i--)
+        for (int i = 1340; i >= 0; i--)
         {
             movingText.transform.Translate(Vector3.left);
             yield return new WaitForSecondsRealtime(0.01f);

@@ -10,6 +10,7 @@ public class MogSCPFoundPanel : MonoBehaviour
     public TextMeshProUGUI mogMsg;
 
     private GameObject SCPMogCanv;
+    private GameObject[] Bases;
     private GameObject Base;
     private GameObject SCP;
     private GameObject Car;
@@ -45,12 +46,14 @@ public class MogSCPFoundPanel : MonoBehaviour
 
     public void Confirm()
     {
-        Base = GameObject.FindGameObjectWithTag("Base");
+        Bases = GameObject.FindGameObjectsWithTag("Base");
+        Base = FindClosestBase(Bases);
         string s = Base.name.Substring(5);
         BaseModel baza = GameManager.instance.zonesResourcesManager.GetBase(s);
         if (baza.amountofMog >= model.grabcoef)
         {
             baza.listofSCPs.Add(model);
+            baza.amountofMog-=model.grabcoef;
             SCP = GameObject.FindGameObjectWithTag("SCP");
             Instantiate(CarPrefab, new Vector3(Base.transform.position.x, Base.transform.position.y, 0), new Quaternion(0, 0, 0, 0));
             Car = GameObject.FindGameObjectWithTag("Car");
@@ -62,7 +65,7 @@ public class MogSCPFoundPanel : MonoBehaviour
         }
         else
         {
-            mogMsg.text = "To catch this SCP you need " + model.grabcoef + " MOG squads, but you have " + baza.amountofMog;
+            mogMsg.text = "To catch this SCP you need " + model.grabcoef + " MOG squads at "+ s +" base, but you have " + baza.amountofMog;
         }
     }
 
@@ -82,5 +85,23 @@ public class MogSCPFoundPanel : MonoBehaviour
             Car.transform.position = Vector3.MoveTowards(Car.transform.position, Base.transform.position, 0.0005f);
         Destroy(Car);
         yield return null;
+    }
+
+    GameObject FindClosestBase(GameObject[] objects)
+    {
+        GameObject closest = new GameObject();
+        float distance = Mathf.Infinity;
+        Vector3 position = transform.position;
+        foreach (GameObject go in objects)
+        {
+            Vector3 diff = go.transform.position - position;
+            float curDistance = diff.sqrMagnitude;
+            if (curDistance < distance)
+            {
+                closest = go;
+                distance = curDistance;
+            }
+        }
+        return closest;
     }
 }
