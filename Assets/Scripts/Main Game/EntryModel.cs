@@ -51,6 +51,14 @@ public class EntryModel {
     /// </summary>
     public double addinf;
     /// <summary>
+    /// Class D to research
+    /// </summary>
+    public int classD;
+    /// <summary>
+    /// Money to research
+    /// </summary>
+    public int money;
+    /// <summary>
     /// Initial description
     /// </summary>
     public string descriptionInit;

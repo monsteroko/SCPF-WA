@@ -6,10 +6,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
+using System.IO;
 
 public class ZoneMenu : MonoBehaviour
 {
-    public Sprite[] foundimg = new Sprite[10];
     public GameObject SCPs;
     public GameObject Parameters;
     public GameObject Employees;
@@ -39,6 +39,7 @@ public class ZoneMenu : MonoBehaviour
     public ScrollRect SCPScrollrect;
     public Animation anim;
 
+    private Sprite SCPimg;
     private float buycoefficient;
     private static ZoneMenu zoneMenu;
     private bool trigger = false, isMoving = false;
@@ -219,7 +220,16 @@ public class ZoneMenu : MonoBehaviour
         SCPChoice.gameObject.SetActive(true);
         if (CurrentSCP.isResearched)
         {
-            SCPImage.sprite = foundimg[CurrentSCP.scpcategory];
+            string SubPath = Path.Combine("Assets", "Data", "Entries", "Images");
+            if (File.Exists(SubPath + "/" + CurrentSCP.code + ".jpg"))
+            {
+                SCPimg = Resources.Load<Sprite>(SubPath + "/" + CurrentSCP.code + ".jpg");
+            }
+            else
+            {
+                SCPimg = Resources.Load<Sprite>(SubPath + "/-1.jpg");
+            } 
+            SCPImage.sprite = SCPimg;
             SCPImage.gameObject.SetActive(true);
             SCPText.text = "Name: " + CurrentSCP.name + " " + CurrentSCP.code + ", Description: " + CurrentSCP.description + "\n";
             SCPText.gameObject.SetActive(true);
