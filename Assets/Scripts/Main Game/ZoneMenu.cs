@@ -156,7 +156,6 @@ public class ZoneMenu : MonoBehaviour
             activeBase.amountofMog += 10;
             GameManager.instance.zonesResourcesManager.UpdateBase(activeBase);
             mogHiretext.text = "Mog's hired!";
-            GameManager.instance.resourcesManager.GetValues();
             mogAmounttext.text = "You have " + activeBase.amountofMog +"/100 MOG groups in this zone";
         }
         else
@@ -194,7 +193,6 @@ public class ZoneMenu : MonoBehaviour
         if (GameManager.instance.resourcesManager.ResourcesChange(-100, 0, (int)(activeBase.amountofMog / 10 * buycoefficient), (int)(activeBase.amountofMog / 100 * (buycoefficient/1000))))
         {
             classDHiretext.text = "Class D hired!";
-            GameManager.instance.resourcesManager.GetValues();
         }
         else
         {
@@ -237,7 +235,7 @@ public class ZoneMenu : MonoBehaviour
         }
         else
         {
-            SCPUnknownText.text = CurrentSCP.descriptionInit;
+            SCPUnknownText.text = CurrentSCP.descriptionInit + "\n \n For research, you need " + CurrentSCP.classD + " Class D and " + CurrentSCP.money + " money.";
             SCPUnknownText.gameObject.SetActive(true);
             SCPResearchButton.gameObject.SetActive(true);
         }
@@ -246,9 +244,14 @@ public class ZoneMenu : MonoBehaviour
     public void ResearchSCP()
     {
         EntryModel CurrentSCP = GameManager.instance.entryManager.GetEntryByName(SCPDropdown.options[SCPDropdown.value].text);
-        CurrentSCP.isResearched = true;
-        GameManager.instance.entryManager.UpdateEntry(CurrentSCP);
-        SCPSelected();
+        if (GameManager.instance.resourcesManager.ResourcesChange(CurrentSCP.classD, 0, CurrentSCP.money, 0))
+        {
+            CurrentSCP.isResearched = true;
+            GameManager.instance.entryManager.UpdateEntry(CurrentSCP);
+            SCPSelected();
+        }
+        else
+            SCPUnknownText.text = "You don't have enough resources!";
     }
     void UpdateSCPData()
     {

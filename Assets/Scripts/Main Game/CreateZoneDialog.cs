@@ -39,11 +39,9 @@ public class CreateZoneDialog : MonoBehaviour {
 
     void Confirm() {
         actualBaseCost = (int)(defaultCostOfBase / GameManager.instance.resourcesManager.LevelCoefficient * (1 + 0.1 * GameManager.instance.zonesManager.CountofBases));
-        if (ResourcesManager.Money >= actualBaseCost)
+        if (GameManager.instance.resourcesManager.ResourcesChange(0,0,actualBaseCost,0))
         {
             GameManager.instance.zonesManager.BuildSelectedZone();
-            ResourcesManager.Money -= actualBaseCost;
-            GameManager.instance.resourcesManager.GetValues();
             ClosePopup();
         }
         else

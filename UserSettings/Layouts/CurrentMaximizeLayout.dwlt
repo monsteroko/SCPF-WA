@@ -24,7 +24,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 200}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 79
+  controlID: 16
 --- !u!114 &2
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -144,7 +144,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 80
+  controlID: 17
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -169,7 +169,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 81
+  controlID: 18
 --- !u!114 &5
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -228,7 +228,7 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: c8570000
+      m_SelectedIDs: 8e170000
       m_LastClickedID: 0
       m_ExpandedIDs: 2cfbffff
       m_RenameOverlay:
@@ -529,9 +529,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 399.379, y: 54.301205, z: 527.6538}
+    m_Target: {x: 548.4603, y: 0.36713916, z: 704.7515}
     speed: 2
-    m_Value: {x: 399.379, y: 54.301205, z: 527.6538}
+    m_Value: {x: 548.4603, y: 0.36713916, z: 704.7515}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -578,13 +578,13 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: -0.17631532, y: 0.027161524, z: -0.0048666587, w: -0.98394907}
+    m_Target: {x: -0.14565821, y: 0.121948324, z: -0.01809477, w: -0.981626}
     speed: 2
-    m_Value: {x: -0.17631495, y: 0.027161466, z: -0.0048666485, w: -0.983947}
+    m_Value: {x: -0.14565788, y: 0.12194805, z: -0.01809473, w: -0.98162377}
   m_Size:
-    m_Target: 440.53705
+    m_Target: 531.4697
     speed: 2
-    m_Value: 440.53705
+    m_Value: 531.4697
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -679,22 +679,22 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Data/Entries
+    - Assets/Scripts/Main Game
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
   m_StartGridSize: 60
   m_LastFolders:
-  - Assets/Data/Entries
+  - Assets/Scripts/Main Game
   m_LastFoldersGridSize: 60
   m_LastProjectPath: D:\Projects\Unity\SCPF-WA
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 79}
-    m_SelectedIDs: 90570000
-    m_LastClickedID: 22416
-    m_ExpandedIDs: 0000000032570000345700004457000050570000545700009057000000ca9a3bffffff7f
+    scrollPos: {x: 0, y: 158}
+    m_SelectedIDs: 50570000
+    m_LastClickedID: 22352
+    m_ExpandedIDs: 0000000032570000345700004057000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -747,8 +747,8 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: c8570000
-    m_LastClickedInstanceID: 22472
+    m_SelectedInstanceIDs: 8e170000
+    m_LastClickedInstanceID: 6030
     m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: c62300003a5800007e5400003080000000000000
     m_RenameOverlay:
@@ -774,7 +774,7 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
     m_NewAssetIndexInList: -1
-    m_ScrollPosition: {x: 0, y: 0}
+    m_ScrollPosition: {x: 0, y: 48}
     m_GridSize: 60
   m_SkipHiddenPackages: 0
   m_DirectoriesAreaWidth: 207

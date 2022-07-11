@@ -62,6 +62,7 @@ public class ResourcesManager : MonoBehaviour
         Science -= Sc;
         Money -= M;
         Secrecy -= Se;
+        GetValues();
         return true;
     }
     /// <summary>
