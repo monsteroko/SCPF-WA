@@ -25,12 +25,11 @@ public class GameManager : MonoBehaviour {
 
     void Start() {
         entryManager = new EntryManager();
-#if UNITY_EDITOR
         if (StartGameSettings.mapSave == null) {
             mapManager.InitWithSave(MapSaveModel.NewGameSave("eeu"));
-        } else
-#endif
-        mapManager.InitWithSave(StartGameSettings.mapSave);
+        } 
+        else
+            mapManager.InitWithSave(StartGameSettings.mapSave);
         techManager = new TechManager();
     }
 

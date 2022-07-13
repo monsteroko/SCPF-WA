@@ -389,7 +389,7 @@ namespace ExperimentalMap {
             }
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();
-            MeshUtility.Optimize(mesh);
+            //MeshUtility.Optimize(mesh);
 
             MeshFilter meshFilter = surfaceObject.GetComponent<MeshFilter>();
             meshFilter.mesh = mesh;

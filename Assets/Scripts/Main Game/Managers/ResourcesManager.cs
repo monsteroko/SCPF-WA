@@ -37,7 +37,8 @@ public class ResourcesManager : MonoBehaviour
 
     void Start()
     {
-        InvokeRepeating("AddValues", 0, 1f);
+        InvokeRepeating("AddInitValues", 0, 1f);
+        InvokeRepeating("AddSCPsValues", 0, 10f);
         InvokeRepeating("GetValues", 0, 1f);
     }
     /// <summary>
@@ -68,16 +69,36 @@ public class ResourcesManager : MonoBehaviour
     /// <summary>
     /// Add values every time interval
     /// </summary>
-    private void AddValues()
+    private void AddInitValues()
     {
         if (Secrecy > 0)
             Secrecy -= TimeManager.timer * LevelCoefficient * UnityEngine.Random.Range(0.0001f, 0.00002f) * GameManager.instance.zonesManager.CountofBases;
-       /* if (ClassD < 10000)
-            ClassD += (int)(TimeManager.timer * LevelCoefficient * UnityEngine.Random.Range(1, 2) * GameManager.instance.zonesManager.CountofBases);*/
         if (Money < 20000000)
             Money += TimeManager.timer * LevelCoefficient * UnityEngine.Random.Range(200f, 500f) * GameManager.instance.zonesManager.CountofBases;
-
     }
+
+    /// <summary>
+    /// Add values from every SCP
+    /// </summary>
+    private void AddSCPsValues()
+    {
+        List<BaseModel> bases = GameManager.instance.zonesResourcesManager.GetAllBases();
+        foreach(BaseModel baza in bases)
+        {
+            if(baza.listofSCPs.Count!=0)
+            {
+                foreach(EntryModel scp in baza.listofSCPs)
+                {
+                    if(scp.isResearched)
+                    {
+                        Secrecy += TimeManager.timer * scp.addinf;
+                        Science += TimeManager.timer * scp.addsci;
+                    }
+                }
+            }
+        }
+    }
+
     /// <summary>
     /// Update info about resources
     /// </summary>

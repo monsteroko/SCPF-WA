@@ -32,6 +32,7 @@ public class ZoneMenu : MonoBehaviour
 
     public TextMeshProUGUI SCPUnknownText;
     public TextMeshProUGUI SCPText;
+    public TextMeshProUGUI SCPBuffsText;
     public Image SCPImage;
     public Button SCPChoice;
     public TMP_Dropdown SCPDropdown;
@@ -184,6 +185,7 @@ public class ZoneMenu : MonoBehaviour
             SCPUnknownText.gameObject.SetActive(false);
             SCPScrollrect.gameObject.SetActive(false);
             SCPText.gameObject.SetActive(false);
+            SCPBuffsText.gameObject.SetActive(false);
             SCPImage.gameObject.SetActive(false);
             SCPResearchButton.gameObject.SetActive(false);
         }
@@ -210,6 +212,7 @@ public class ZoneMenu : MonoBehaviour
         SCPChoice.gameObject.SetActive(false);
         SCPUnknownText.gameObject.SetActive(false);
         SCPText.gameObject.SetActive(false);
+        SCPBuffsText.gameObject.SetActive(false);
         SCPScrollrect.gameObject.SetActive(false);
         SCPImage.gameObject.SetActive(false);
         SCPResearchButton.gameObject.SetActive(false);
@@ -231,6 +234,8 @@ public class ZoneMenu : MonoBehaviour
             SCPImage.gameObject.SetActive(true);
             SCPText.text = "Name: " + CurrentSCP.name + " " + CurrentSCP.code + ", Description: " + CurrentSCP.description + "\n";
             SCPText.gameObject.SetActive(true);
+            SCPBuffsText.text = "Science: " + CurrentSCP.addsci + "\n Influence: " + CurrentSCP.addinf + "\n";
+            SCPBuffsText.gameObject.SetActive(true);
             SCPScrollrect.gameObject.SetActive(true);
         }
         else
