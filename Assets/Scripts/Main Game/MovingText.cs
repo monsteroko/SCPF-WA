@@ -18,7 +18,7 @@ public class MovingText : MonoBehaviour
 
     void Start()
     {
-        text= File.ReadAllLines(@"Assets/Data/Other/movingText.txt", System.Text.Encoding.Default);
+        text= File.ReadAllLines(Application.streamingAssetsPath +"/Data/Other/movingText.txt", System.Text.Encoding.Default);
         StartCoroutine(TextGen());
     }
     /// <summary>

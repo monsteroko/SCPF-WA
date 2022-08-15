@@ -9,11 +9,11 @@ EditorBuildSettings:
     path: Assets/Scenes/Menu/Menu.unity
     guid: 0836773016972594e87f3e375ccbb420
   - enabled: 1
+    path: Assets/Scenes/RegionSelection/RegionSelection.unity
+    guid: ff504da7db2b15e4d82a3e1814ae223f
+  - enabled: 1
     path: Assets/Scenes/Maingame/Game.unity
     guid: a69a1acfc96a32545a9a5458969abea3
-  - enabled: 1
-    path: Assets/Scenes/Counterparts selection/CounterpartsSelection.unity
-    guid: a1af52d20340903409ccfd9108d5f46c
   - enabled: 1
     path: Assets/Scenes/Tech/Tech.unity
     guid: f74fdcaba5e667c44aa0940d3740f7de

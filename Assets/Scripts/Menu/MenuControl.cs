@@ -15,7 +15,7 @@ public class MenuControl : MonoBehaviour
     }
     public void PlayPressed()
     {
-        SceneManager.LoadScene("CounterpartsSelection");
+        SceneManager.LoadScene("RegionSelection");
     }
     public void ExitPressed()
     {

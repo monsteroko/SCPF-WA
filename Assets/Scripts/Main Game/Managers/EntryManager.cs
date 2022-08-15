@@ -33,7 +33,7 @@ public class EntryManager {
         }
     }
 
-    private static string SubPath = Path.Combine("Assets","Data","Entries");
+    private static string SubPath = Application.streamingAssetsPath + "/Data/Entries/";
     public static string AppendedSubPath(string filname) {
         return Path.Combine(SubPath, filname);
     }

@@ -227,7 +227,7 @@ namespace ExperimentalMap {
 
         Dictionary<string, Area> ReadAreasData() {
             string stringData;
-            using (StreamReader sr = new StreamReader(@"Assets/Data/Geodata/areas.txt")) {
+            using (StreamReader sr = new StreamReader(Application.streamingAssetsPath + "/Data/Geodata/areas.txt")) {
                 stringData = sr.ReadToEnd();
             }
             string[] areasData = stringData.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
@@ -249,7 +249,7 @@ namespace ExperimentalMap {
 
         Dictionary<string, Zone> ReadZonesData() {
             string stringData;
-            using (StreamReader sr = new StreamReader(@"Assets/Data/Geodata/zone_places.txt")) {
+            using (StreamReader sr = new StreamReader(Application.streamingAssetsPath + "/Data/Geodata/zone_places.txt")) {
                 stringData = sr.ReadToEnd();
             }
             string[] zonesData = stringData.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);

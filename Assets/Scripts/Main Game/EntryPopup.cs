@@ -58,7 +58,7 @@ public class EntryPopup : MonoBehaviour {
         GameObject[] bases = GameObject.FindGameObjectsWithTag("Base");
         GameObject baserand = bases[UnityEngine.Random.Range(0, bases.Length - 1)];
         baseCoordinates = baserand.transform.position;
-        string SubPath = Path.Combine("Assets", "Data", "Entries", "Descriptions");
+        string SubPath = Application.streamingAssetsPath + "/Data/Entries/Descriptions/";
         if(File.Exists(SubPath + "/" + entry.scpcategory.ToString() + ".txt"))
             desctext = File.ReadAllLines(SubPath + "/" + entry.scpcategory.ToString()+ ".txt");
         else
@@ -119,7 +119,7 @@ public class EntryPopup : MonoBehaviour {
     private string GenerateDescription(string line, Vector2 baseCoordinates)
     {
         string desc = line;
-        string[] names = File.ReadAllLines(@"Assets/Data/Other/names.txt");
+        string[] names = File.ReadAllLines(Application.streamingAssetsPath + "/Data/Other/names.txt");
         string regName = GameManager.instance.mapManager.onWhatRegion(baseCoordinates).name;
         string agentName = names[UnityEngine.Random.Range(0, names.Length - 1)];
         while ((desc.LastIndexOf('(') != -1) || (desc.LastIndexOf(')') != -1))
