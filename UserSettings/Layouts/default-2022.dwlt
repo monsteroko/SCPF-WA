@@ -367,21 +367,21 @@ MonoBehaviour:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: 9680feffd280fefff681feff6282feff6c82feff9e82feff0c2affffd22cffff7c2fffffb083000008840000
+      m_ExpandedIDs: 10e8ffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
-        m_Name: Description
-        m_OriginalName: Description
+        m_Name: 
+        m_OriginalName: 
         m_EditFieldRect:
           serializedVersion: 2
           x: 0
           y: 0
           width: 0
           height: 0
-        m_UserData: 33728
+        m_UserData: 0
         m_IsWaitingForDelay: 0
         m_IsRenaming: 0
-        m_OriginalEventType: 0
+        m_OriginalEventType: 11
         m_IsRenamingFilename: 0
         m_ClientGUIView: {fileID: 7}
       m_SearchString: 
@@ -864,7 +864,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: b6400000
     m_LastClickedID: 16566
-    m_ExpandedIDs: 00000000b640000000ca9a3bffffff7f
+    m_ExpandedIDs: 000000009c5b00009e5b0000a05b0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -892,7 +892,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: c0830000
     m_LastClickedID: 0
-    m_ExpandedIDs: ffffffffb640000082410000f6420000
+    m_ExpandedIDs: 000000009c5b00009e5b0000a05b0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
